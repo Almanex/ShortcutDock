@@ -41,8 +41,7 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     private bool _startWithWindows = false;
 
-    [ObservableProperty]
-    private bool _isEditMode = false;
+
 
     [ObservableProperty]
     private System.Windows.Controls.Orientation _panelOrientation = System.Windows.Controls.Orientation.Horizontal;
@@ -80,7 +79,6 @@ public partial class MainViewModel : ObservableObject
         BackdropType = Panel.BackdropType ?? "None";
         ShowAddButton = Panel.ShowAddButton;
         StartWithWindows = AutoStartService.IsAutoStartEnabled();
-        IsEditMode = Panel.IsEditMode;
         UpdatePanelOrientation();
 
         Shortcuts.Clear();
@@ -132,11 +130,6 @@ public partial class MainViewModel : ObservableObject
         Persist();
     }
 
-    partial void OnIsEditModeChanged(bool value)
-    {
-        Panel.IsEditMode = value;
-        Persist();
-    }
 
     private void UpdatePanelOrientation()
     {

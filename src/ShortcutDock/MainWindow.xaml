@@ -67,13 +67,7 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Border ToolTip="{Binding Name}"
-                                    Background="Transparent"
-                                    AllowDrop="True"
-                                    PreviewMouseLeftButtonDown="Item_PreviewMouseLeftButtonDown"
-                                    PreviewMouseLeftButtonUp="Item_PreviewMouseLeftButtonUp"
-                                    PreviewMouseMove="Item_PreviewMouseMove"
-                                    DragOver="Item_DragOver"
-                                    Drop="Item_Drop">
+                                    Background="Transparent">
                                 <Border.Style>
                                     <Style TargetType="Border">
                                         <Style.Triggers>
@@ -106,6 +100,10 @@
                                     <Border.RenderTransform>
                                         <ScaleTransform x:Name="IconScale" ScaleX="1" ScaleY="1" />
                                     </Border.RenderTransform>
+                                    <Border.InputBindings>
+                                        <MouseBinding MouseAction="LeftClick"
+                                                      Command="{Binding LaunchCommand}" />
+                                    </Border.InputBindings>
 
                                     <Image Source="{Binding IconPath}"
                                            Margin="4"

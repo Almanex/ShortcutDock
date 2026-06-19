@@ -4,7 +4,7 @@
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         xmlns:vm="clr-namespace:ShortcutDock.ViewModels"
         Title="Настройки ShortcutDock"
-        Height="500" Width="380"
+        Height="460" Width="380"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
         ShowInTaskbar="False"
@@ -80,19 +80,11 @@
                 </ui:CardControl>
 
                 <!-- Start with Windows -->
-                <ui:CardControl Header="Запускать вместе с Windows" Margin="0,0,0,8">
+                <ui:CardControl Header="Запускать вместе с Windows" Margin="0,0,0,16">
                     <ui:CardControl.Icon>
                         <ui:SymbolIcon Symbol="WindowApps24" />
                     </ui:CardControl.Icon>
                     <ui:ToggleSwitch IsChecked="{Binding StartWithWindows, Mode=TwoWay}" />
-                </ui:CardControl>
-
-                <!-- Edit Mode (Reordering) -->
-                <ui:CardControl Header="Режим изменения порядка значков" Margin="0,0,0,16">
-                    <ui:CardControl.Icon>
-                        <ui:SymbolIcon Symbol="Navigation24" />
-                    </ui:CardControl.Icon>
-                    <ui:ToggleSwitch IsChecked="{Binding IsEditMode, Mode=TwoWay}" />
                 </ui:CardControl>
 
                 <Button Content="Закрыть" 
