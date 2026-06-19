@@ -39,6 +39,9 @@ public partial class MainViewModel : ObservableObject
     private bool _showAddButton = false;
 
     [ObservableProperty]
+    private bool _startWithWindows = false;
+
+    [ObservableProperty]
     private System.Windows.Controls.Orientation _panelOrientation = System.Windows.Controls.Orientation.Horizontal;
 
     public string IconSizeString
@@ -73,6 +76,7 @@ public partial class MainViewModel : ObservableObject
         KeepOnTop = Panel.KeepOnTop;
         BackdropType = Panel.BackdropType ?? "None";
         ShowAddButton = Panel.ShowAddButton;
+        StartWithWindows = AutoStartService.IsAutoStartEnabled();
         UpdatePanelOrientation();
 
         Shortcuts.Clear();
@@ -114,6 +118,13 @@ public partial class MainViewModel : ObservableObject
     partial void OnShowAddButtonChanged(bool value)
     {
         Panel.ShowAddButton = value;
+        Persist();
+    }
+
+    partial void OnStartWithWindowsChanged(bool value)
+    {
+        Panel.StartWithWindows = value;
+        AutoStartService.SetAutoStart(value);
         Persist();
     }
 

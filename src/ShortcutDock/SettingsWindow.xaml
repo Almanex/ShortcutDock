@@ -4,7 +4,7 @@
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         xmlns:vm="clr-namespace:ShortcutDock.ViewModels"
         Title="Настройки ShortcutDock"
-        Height="410" Width="380"
+        Height="460" Width="380"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
         ShowInTaskbar="False"
@@ -72,11 +72,19 @@
                 </ui:CardControl>
 
                 <!-- Show Add Button -->
-                <ui:CardControl Header="Показывать кнопку «+» на панели" Margin="0,0,0,16">
+                <ui:CardControl Header="Показывать кнопку «+» на панели" Margin="0,0,0,8">
                     <ui:CardControl.Icon>
                         <ui:SymbolIcon Symbol="AddCircle24" />
                     </ui:CardControl.Icon>
                     <ui:ToggleSwitch IsChecked="{Binding ShowAddButton, Mode=TwoWay}" />
+                </ui:CardControl>
+
+                <!-- Start with Windows -->
+                <ui:CardControl Header="Запускать вместе с Windows" Margin="0,0,0,16">
+                    <ui:CardControl.Icon>
+                        <ui:SymbolIcon Symbol="WindowApps24" />
+                    </ui:CardControl.Icon>
+                    <ui:ToggleSwitch IsChecked="{Binding StartWithWindows, Mode=TwoWay}" />
                 </ui:CardControl>
 
                 <Button Content="Закрыть" 

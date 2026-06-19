@@ -21,4 +21,7 @@ public sealed class PanelSettings
 
     [JsonPropertyName("ShowAddButton")]
     public bool ShowAddButton { get; set; } = false;
+
+    [JsonPropertyName("StartWithWindows")]
+    public bool StartWithWindows { get; set; } = false;
 }
