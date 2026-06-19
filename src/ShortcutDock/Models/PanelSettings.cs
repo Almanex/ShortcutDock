@@ -24,4 +24,7 @@ public sealed class PanelSettings
 
     [JsonPropertyName("StartWithWindows")]
     public bool StartWithWindows { get; set; } = false;
+
+    [JsonPropertyName("ShowRecycleBin")]
+    public bool ShowRecycleBin { get; set; } = false;
 }

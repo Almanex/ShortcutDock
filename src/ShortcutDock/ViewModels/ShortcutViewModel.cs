@@ -30,6 +30,8 @@ public partial class ShortcutViewModel : ObservableObject
         _iconPath = SettingsService.GetExpandedPath(model.IconPath);
     }
 
+    public bool IsRecycleBin => Model.TargetPath == "shell:::{645FF040-5081-101B-9F08-00AA002F954E}";
+
     [RelayCommand]
     private void Launch() => _launcher.Start(Model.TargetPath, runAsAdmin: false);
 
@@ -38,6 +40,16 @@ public partial class ShortcutViewModel : ObservableObject
 
     [RelayCommand]
     private void Remove() => _onRemove(this);
+
+    [RelayCommand]
+    private void EmptyRecycleBin()
+    {
+        RecycleBinService.EmptyRecycleBin();
+        if (App.Current.MainWindow?.DataContext is MainViewModel mainVM)
+        {
+            mainVM.CheckRecycleBinState();
+        }
+    }
 
     [RelayCommand]
     private void ChangeIcon()

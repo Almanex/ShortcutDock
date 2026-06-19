@@ -126,4 +126,65 @@ public sealed class IconExtractor
             Marshal.Release(ptr);
         }
     }
+
+    [DllImport("shell32.dll", EntryPoint = "SHGetFileInfoW", CharSet = CharSet.Unicode)]
+    private static extern IntPtr SHGetFileInfo(IntPtr ppidl, uint dwFileAttributes,
+        ref SHFILEINFO psfi, uint cbSizeFileInfo, uint uFlags);
+
+    [DllImport("shell32.dll")]
+    private static extern int SHGetSpecialFolderLocation(IntPtr hwndOwner, int nFolder, out IntPtr ppidl);
+
+    public string ExtractRecycleBinIcon()
+    {
+        Directory.CreateDirectory(SettingsService.CacheFolder);
+
+        bool isFull = RecycleBinService.IsRecycleBinFull();
+        var stateName = isFull ? "recycle_full" : "recycle_empty";
+        var cachePath = Path.Combine(SettingsService.CacheFolder, $"{stateName}.png");
+
+        if (File.Exists(cachePath)) return cachePath;
+
+        using var icon = GetRecycleBinIconFromSystem() ?? SystemIcons.Application;
+        using var bmp = icon.ToBitmap();
+        bmp.Save(cachePath, ImageFormat.Png);
+        return cachePath;
+    }
+
+    private static Icon? GetRecycleBinIconFromSystem()
+    {
+        IntPtr pidl;
+        // CSIDL_BITBUCKET = 10
+        if (SHGetSpecialFolderLocation(IntPtr.Zero, 10, out pidl) == 0 && pidl != IntPtr.Zero)
+        {
+            try
+            {
+                var shfi = new SHFILEINFO();
+                // SHGFI_PIDL = 0x8, SHGFI_SYSICONINDEX = 0x4000
+                SHGetFileInfo(pidl, 0, ref shfi, (uint)Marshal.SizeOf<SHFILEINFO>(), 0x8 | 0x4000);
+
+                foreach (var listId in new[] { SHIL_JUMBO, SHIL_EXTRALARGE })
+                {
+                    if (TryGetIconFromImageList(listId, shfi.iIcon, out var hIcon) && hIcon != IntPtr.Zero)
+                    {
+                        try { return Icon.FromHandle(hIcon); }
+                        catch { DestroyIcon(hIcon); }
+                    }
+                }
+
+                // Fallback to SHGFI_ICON
+                var shfi2 = new SHFILEINFO();
+                SHGetFileInfo(pidl, 0, ref shfi2, (uint)Marshal.SizeOf<SHFILEINFO>(), 0x8 | 0x100 | 0x0);
+                if (shfi2.hIcon != IntPtr.Zero)
+                {
+                    try { return Icon.FromHandle(shfi2.hIcon); }
+                    catch { DestroyIcon(shfi2.hIcon); }
+                }
+            }
+            finally
+            {
+                Marshal.FreeCoTaskMem(pidl);
+            }
+        }
+        return null;
+    }
 }

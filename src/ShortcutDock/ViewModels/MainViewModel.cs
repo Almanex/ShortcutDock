@@ -41,6 +41,9 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     private bool _startWithWindows = false;
 
+    [ObservableProperty]
+    private bool _showRecycleBin = false;
+
 
 
     [ObservableProperty]
@@ -81,6 +84,14 @@ public partial class MainViewModel : ObservableObject
         StartWithWindows = AutoStartService.IsAutoStartEnabled();
         UpdatePanelOrientation();
 
+        // Clean up old cached Recycle Bin icons to query fresh ones from current system theme
+        try
+        {
+            File.Delete(Path.Combine(SettingsService.CacheFolder, "recycle_empty.png"));
+            File.Delete(Path.Combine(SettingsService.CacheFolder, "recycle_full.png"));
+        }
+        catch {}
+
         Shortcuts.Clear();
         foreach (var item in settings.Shortcuts)
         {
@@ -89,6 +100,10 @@ public partial class MainViewModel : ObservableObject
                 continue;
             Shortcuts.Add(new ShortcutViewModel(item, _launcher, Remove, Persist));
         }
+
+        ShowRecycleBin = Panel.ShowRecycleBin;
+        UpdateRecycleBinItem();
+        StartRecycleBinTimer();
     }
 
     partial void OnPositionChanged(string value)
@@ -127,6 +142,13 @@ public partial class MainViewModel : ObservableObject
     {
         Panel.StartWithWindows = value;
         AutoStartService.SetAutoStart(value);
+        Persist();
+    }
+
+    partial void OnShowRecycleBinChanged(bool value)
+    {
+        Panel.ShowRecycleBin = value;
+        UpdateRecycleBinItem();
         Persist();
     }
 
@@ -188,8 +210,60 @@ public partial class MainViewModel : ObservableObject
         var settings = new Settings
         {
             PanelSettings = Panel,
-            Shortcuts = Shortcuts.Select(s => s.Model).ToList()
+            Shortcuts = Shortcuts.Where(s => !s.IsRecycleBin).Select(s => s.Model).ToList()
         };
         _settingsService.Save(settings);
+    }
+
+    private System.Windows.Threading.DispatcherTimer? _recycleBinTimer;
+
+    private void StartRecycleBinTimer()
+    {
+        _recycleBinTimer = new System.Windows.Threading.DispatcherTimer
+        {
+            Interval = TimeSpan.FromSeconds(2)
+        };
+        _recycleBinTimer.Tick += (s, e) => CheckRecycleBinState();
+        _recycleBinTimer.Start();
+    }
+
+    public void CheckRecycleBinState()
+    {
+        if (!ShowRecycleBin) return;
+
+        var bin = Shortcuts.FirstOrDefault(s => s.IsRecycleBin);
+        if (bin != null)
+        {
+            var newIconPath = _iconExtractor.ExtractRecycleBinIcon();
+            if (bin.IconPath != newIconPath)
+            {
+                bin.IconPath = newIconPath;
+            }
+        }
+    }
+
+    private void UpdateRecycleBinItem()
+    {
+        var existing = Shortcuts.FirstOrDefault(s => s.IsRecycleBin);
+        if (ShowRecycleBin)
+        {
+            if (existing == null)
+            {
+                var item = new ShortcutItem
+                {
+                    Name = "Корзина",
+                    TargetPath = "shell:::{645FF040-5081-101B-9F08-00AA002F954E}",
+                    IconPath = _iconExtractor.ExtractRecycleBinIcon()
+                };
+                Shortcuts.Add(new ShortcutViewModel(item, _launcher, Remove, Persist));
+            }
+        }
+        else
+        {
+            if (existing != null)
+            {
+                Shortcuts.Remove(existing);
+            }
+        }
     }
 }
