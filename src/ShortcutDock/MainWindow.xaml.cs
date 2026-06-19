@@ -164,21 +164,24 @@ public partial class MainWindow : Window
         var workArea = SystemParameters.WorkArea;
         var isVertical = _viewModel.PanelOrientation == System.Windows.Controls.Orientation.Vertical;
 
+        // Shift by 7 DIPs to compensate for transparent resize borders in Windows 10/11
+        const double borderOffset = 7;
+
         if (isVertical)
         {
             Top = workArea.Top + (workArea.Height - ActualHeight) / 2;
             if (_viewModel.Position == "Left")
-                Left = workArea.Left + 4;
+                Left = workArea.Left - borderOffset;
             else
-                Left = workArea.Right - ActualWidth - 4;
+                Left = workArea.Right - ActualWidth + borderOffset;
         }
         else
         {
             Left = workArea.Left + (workArea.Width - ActualWidth) / 2;
             if (_viewModel.Position == "Top")
-                Top = workArea.Top + 4;
+                Top = workArea.Top - borderOffset;
             else
-                Top = workArea.Bottom - ActualHeight - 4;
+                Top = workArea.Bottom - ActualHeight + borderOffset;
         }
     }
 

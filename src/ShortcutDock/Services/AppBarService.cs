@@ -206,18 +206,34 @@ public sealed class AppBarService
             double dipWidth = _window.ActualWidth;
             if (dipWidth == 0) dipWidth = 400; // fallback
             double scaleX = src.CompositionTarget.TransformToDevice.M11;
+            double scaleY = src.CompositionTarget.TransformToDevice.M22;
             int widthPx = (int)Math.Ceiling(dipWidth * scaleX);
 
             leftPx = _reservedLeft + (_reservedRight - _reservedLeft - widthPx) / 2;
+
+            // Compensate for transparent resize borders (7 DIPs)
+            int borderOffsetY = (int)Math.Round(7 * scaleY);
+            if (_edge == 1) // Top
+                topPx = _reservedTop - borderOffsetY;
+            else // Bottom
+                topPx = _reservedTop + borderOffsetY;
         }
         else // Вертикальная панель (Left / Right)
         {
             double dipHeight = _window.ActualHeight;
             if (dipHeight == 0) dipHeight = 400; // fallback
+            double scaleX = src.CompositionTarget.TransformToDevice.M11;
             double scaleY = src.CompositionTarget.TransformToDevice.M22;
             int heightPx = (int)Math.Ceiling(dipHeight * scaleY);
 
             topPx = _reservedTop + (_reservedBottom - _reservedTop - heightPx) / 2;
+
+            // Compensate for transparent resize borders (7 DIPs)
+            int borderOffsetX = (int)Math.Round(7 * scaleX);
+            if (_edge == 0) // Left
+                leftPx = _reservedLeft - borderOffsetX;
+            else // Right
+                leftPx = _reservedLeft + borderOffsetX;
         }
 
         // Проверяем, изменились ли координаты

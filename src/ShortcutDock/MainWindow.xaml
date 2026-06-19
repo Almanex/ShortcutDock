@@ -49,7 +49,7 @@
                         </DataTrigger>
                         <DataTrigger Binding="{Binding PanelOrientation}" Value="Vertical">
                             <Setter Property="Margin" Value="0,6" />
-                            <Setter Property="Padding" Value="4,6" />
+                            <Setter Property="Padding" Value="2,6" />
                             <Setter Property="VerticalAlignment" Value="Center" />
                             <Setter Property="HorizontalAlignment" Value="Stretch" />
                         </DataTrigger>
