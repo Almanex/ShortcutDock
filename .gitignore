@@ -1,0 +1,21 @@
+# Build folders
+[Bb]in/
+[Oo]bj/
+
+# User-specific files
+*.user
+*.userosscache
+*.sln.docstates
+
+# Visual Studio cache and settings
+.vs/
+.idea/
+*.suo
+*.user
+*.dtbcache
+*.suo.template
+
+# Operating system files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
