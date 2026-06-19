@@ -11,14 +11,15 @@ public sealed class ProcessLauncher
 {
     public void Start(string targetPath, bool runAsAdmin = false)
     {
-        if (string.IsNullOrWhiteSpace(targetPath) || !File.Exists(targetPath))
+        if (string.IsNullOrWhiteSpace(targetPath) || (!File.Exists(targetPath) && !Directory.Exists(targetPath)))
             return;
 
+        var isDir = Directory.Exists(targetPath);
         var psi = new ProcessStartInfo
         {
             FileName = targetPath,
             UseShellExecute = true,
-            WorkingDirectory = Path.GetDirectoryName(targetPath) ?? string.Empty
+            WorkingDirectory = isDir ? targetPath : (Path.GetDirectoryName(targetPath) ?? string.Empty)
         };
 
         if (runAsAdmin)

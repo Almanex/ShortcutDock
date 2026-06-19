@@ -19,17 +19,26 @@ public sealed class ShortcutResolver
     /// <summary>Создаёт ShortcutItem из перетаскиваемого/выбранного пути.</summary>
     public ShortcutItem Resolve(string sourcePath)
     {
-        if (string.IsNullOrWhiteSpace(sourcePath) || !File.Exists(sourcePath))
-            throw new FileNotFoundException("Файл не найден", sourcePath);
+        if (string.IsNullOrWhiteSpace(sourcePath) || (!File.Exists(sourcePath) && !Directory.Exists(sourcePath)))
+            throw new FileNotFoundException("Файл или папка не найдены", sourcePath);
 
         string targetPath = sourcePath;
-        string name = Path.GetFileNameWithoutExtension(sourcePath);
+        var cleanPath = sourcePath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        string name = Path.GetFileNameWithoutExtension(cleanPath);
+        if (string.IsNullOrEmpty(name))
+        {
+            name = sourcePath;
+        }
 
         if (sourcePath.EndsWith(".lnk", StringComparison.OrdinalIgnoreCase))
         {
             targetPath = ResolveLnkTarget(sourcePath);
-            // Имя берём из целевого exe.
-            name = Path.GetFileNameWithoutExtension(targetPath);
+            var cleanTarget = targetPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+            name = Path.GetFileNameWithoutExtension(cleanTarget);
+            if (string.IsNullOrEmpty(name))
+            {
+                name = targetPath;
+            }
         }
 
         return new ShortcutItem

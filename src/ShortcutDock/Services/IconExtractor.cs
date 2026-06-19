@@ -53,15 +53,19 @@ public sealed class IconExtractor
     [DllImport("user32.dll", SetLastError = true)]
     private static extern bool DestroyIcon(IntPtr hIcon);
 
-    /// <summary>Извлекает иконку из exe/dll и сохраняет PNG. Возвращает путь к PNG.</summary>
+    /// <summary>Извлекает иконку из exe/dll/папки и сохраняет PNG. Возвращает путь к PNG.</summary>
     public string ExtractToPng(string targetPath)
     {
-        if (!File.Exists(targetPath))
-            throw new FileNotFoundException("Целевой файл не найден", targetPath);
+        if (!File.Exists(targetPath) && !Directory.Exists(targetPath))
+            throw new FileNotFoundException("Целевой файл или папка не найдены", targetPath);
 
         Directory.CreateDirectory(SettingsService.CacheFolder);
 
-        var baseName = Path.GetFileNameWithoutExtension(targetPath);
+        var cleanPath = targetPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+        var baseName = Path.GetFileNameWithoutExtension(cleanPath);
+        if (string.IsNullOrEmpty(baseName))
+            baseName = "folder";
+
         var cachePath = Path.Combine(SettingsService.CacheFolder,
             $"{baseName}_{targetPath.GetHashCode():X}.png");
 
