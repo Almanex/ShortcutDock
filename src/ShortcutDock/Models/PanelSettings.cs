@@ -24,4 +24,7 @@ public sealed class PanelSettings
 
     [JsonPropertyName("StartWithWindows")]
     public bool StartWithWindows { get; set; } = false;
+
+    [JsonPropertyName("IsEditMode")]
+    public bool IsEditMode { get; set; } = false;
 }

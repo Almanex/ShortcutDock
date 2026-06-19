@@ -212,12 +212,27 @@ public partial class MainWindow : Window
 
     private void Item_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
     {
-        _isMouseDown = false;
+        if (_isMouseDown)
+        {
+            _isMouseDown = false;
+            if (!_viewModel.IsEditMode)
+            {
+                var border = sender as Border;
+                if (border != null && border.IsMouseOver)
+                {
+                    var shortcutVM = border.DataContext as ShortcutViewModel;
+                    if (shortcutVM != null && shortcutVM.LaunchCommand.CanExecute(null))
+                    {
+                        shortcutVM.LaunchCommand.Execute(null);
+                    }
+                }
+            }
+        }
     }
 
     private void Item_PreviewMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
     {
-        if (_isMouseDown && e.LeftButton == MouseButtonState.Pressed)
+        if (_viewModel.IsEditMode && _isMouseDown && e.LeftButton == MouseButtonState.Pressed)
         {
             System.Windows.Point position = e.GetPosition(null);
             if (Math.Abs(position.X - _dragStartPoint.X) > SystemParameters.MinimumHorizontalDragDistance ||
@@ -237,7 +252,7 @@ public partial class MainWindow : Window
 
     private void Item_DragOver(object sender, System.Windows.DragEventArgs e)
     {
-        if (e.Data.GetDataPresent("ShortcutViewModel"))
+        if (_viewModel.IsEditMode && e.Data.GetDataPresent("ShortcutViewModel"))
         {
             e.Effects = System.Windows.DragDropEffects.Move;
             e.Handled = true;
@@ -245,12 +260,13 @@ public partial class MainWindow : Window
         else
         {
             e.Effects = System.Windows.DragDropEffects.None;
+            e.Handled = true;
         }
     }
 
     private void Item_Drop(object sender, System.Windows.DragEventArgs e)
     {
-        if (e.Data.GetDataPresent("ShortcutViewModel"))
+        if (_viewModel.IsEditMode && e.Data.GetDataPresent("ShortcutViewModel"))
         {
             var droppedData = e.Data.GetData("ShortcutViewModel") as ShortcutViewModel;
             var targetData = (sender as FrameworkElement)?.DataContext as ShortcutViewModel;
