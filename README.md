@@ -2,6 +2,20 @@
 
 Настольная dock-панель быстрого запуска с поддержкой эффектов Mica/Acrylic/полной прозрачности, автоматическим переключением вертикальной/горизонтальной ориентации, поддержкой Drag-and-Drop, системной интеграцией (AppBar) и интеграцией с системным треем.
 
+## Скриншоты проекта
+
+<p align="center">
+  <img src="screenshots/screenshot1.png" width="48%" alt="ShortcutDock Horizontal Bottom" />
+  <img src="screenshots/screenshot2.png" width="48%" alt="ShortcutDock Vertical Left" />
+</p>
+<p align="center">
+  <img src="screenshots/screenshot3.png" width="48%" alt="ShortcutDock Settings" />
+  <img src="screenshots/screenshot4.png" width="48%" alt="ShortcutDock Context Menu" />
+</p>
+<p align="center">
+  <img src="screenshots/screenshot5.png" width="98%" alt="ShortcutDock Top Position" />
+</p>
+
 ## Стек технологий
 
 | Компонент | Технология | Версия |
