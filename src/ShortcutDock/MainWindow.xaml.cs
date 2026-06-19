@@ -107,6 +107,9 @@ public partial class MainWindow : Window
             SizeToContent = SizeToContent.Width;
         }
 
+        // Force synchronous layout recalculation so ActualWidth/ActualHeight update immediately
+        UpdateLayout();
+
         ApplyBackdrop(_viewModel.BackdropType);
 
         if (_appBar != null && _viewModel.KeepOnTop)
