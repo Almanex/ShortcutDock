@@ -74,7 +74,9 @@ public sealed class AppBarService
     private int _appBarHeightPx;
     private FrameworkElement? _window;
     private bool _isUpdating;
+    private bool _positionUpdatePending;
     private int _edge = ABE_BOTTOM;
+    private double _appBarSizeDip;
 
     // Хранят последние зарезервированные системой координаты для нашего AppBar
     private int _reservedLeft;
@@ -89,6 +91,7 @@ public sealed class AppBarService
     {
         _window = window;
         _hwnd = hwnd;
+        _appBarSizeDip = appBarSizeDip;
 
         _edge = position switch
         {
@@ -123,6 +126,32 @@ public sealed class AppBarService
         return true;
     }
 
+    /// <summary>Обновляет параметры существующего AppBar (размер и положение) без перерегистрации.</summary>
+    public void UpdateSettings(double appBarSizeDip, string position)
+    {
+        if (!_registered || _hwnd == IntPtr.Zero) return;
+
+        _edge = position switch
+        {
+            "Left" => 0,
+            "Top" => 1,
+            "Right" => 2,
+            _ => 3 // "Bottom"
+        };
+
+        if (_source?.CompositionTarget != null)
+        {
+            double dpiScale = _edge == 0 || _edge == 2 
+                ? _source.CompositionTarget.TransformToDevice.M11 
+                : _source.CompositionTarget.TransformToDevice.M22;
+
+            _appBarHeightPx = (int)Math.Ceiling(appBarSizeDip * dpiScale);
+        }
+        _appBarSizeDip = appBarSizeDip;
+
+        UpdatePosition();
+    }
+
     /// <summary>Снимает регистрацию AppBar (вызывать при закрытии окна).</summary>
     public void Unregister()
     {
@@ -140,34 +169,44 @@ public sealed class AppBarService
     /// <summary>Пересчитывает и резервирует область на рабочем столе (вызывается системой при изменении окружения).</summary>
     public void UpdatePosition()
     {
-        if (!_registered || _hwnd == IntPtr.Zero || _isUpdating) return;
+        if (!_registered || _hwnd == IntPtr.Zero) return;
+
+        if (_isUpdating)
+        {
+            _positionUpdatePending = true;
+            return;
+        }
 
         _isUpdating = true;
         try
         {
-            var abd = NewAppBarData(_edge);
+            do
+            {
+                _positionUpdatePending = false;
+                var abd = NewAppBarData(_edge);
 
-            // Запрашиваем доступную область, уточняем высоту и низ.
-            SHAppBarMessage(ABM_QUERYPOS, ref abd);
-            
-            if (_edge == 3) // ABE_BOTTOM
-                abd.rc.Top = abd.rc.Bottom - _appBarHeightPx;
-            else if (_edge == 1) // ABE_TOP
-                abd.rc.Bottom = abd.rc.Top + _appBarHeightPx;
-            else if (_edge == 0) // ABE_LEFT
-                abd.rc.Right = abd.rc.Left + _appBarHeightPx;
-            else if (_edge == 2) // ABE_RIGHT
-                abd.rc.Left = abd.rc.Right - _appBarHeightPx;
+                // Запрашиваем доступную область, уточняем высоту и низ.
+                SHAppBarMessage(ABM_QUERYPOS, ref abd);
+                
+                if (_edge == 3) // ABE_BOTTOM
+                    abd.rc.Top = abd.rc.Bottom - _appBarHeightPx;
+                else if (_edge == 1) // ABE_TOP
+                    abd.rc.Bottom = abd.rc.Top + _appBarHeightPx;
+                else if (_edge == 0) // ABE_LEFT
+                    abd.rc.Right = abd.rc.Left + _appBarHeightPx;
+                else if (_edge == 2) // ABE_RIGHT
+                    abd.rc.Left = abd.rc.Right - _appBarHeightPx;
 
-            SHAppBarMessage(ABM_SETPOS, ref abd);
+                SHAppBarMessage(ABM_SETPOS, ref abd);
 
-            // Сохраняем выданные системой координаты
-            _reservedLeft = abd.rc.Left;
-            _reservedRight = abd.rc.Right;
-            _reservedTop = abd.rc.Top;
-            _reservedBottom = abd.rc.Bottom;
+                // Сохраняем выданные системой координаты
+                _reservedLeft = abd.rc.Left;
+                _reservedRight = abd.rc.Right;
+                _reservedTop = abd.rc.Top;
+                _reservedBottom = abd.rc.Bottom;
 
-            UpdateWindowPositionInternal();
+                UpdateWindowPositionInternal();
+            } while (_positionUpdatePending);
         }
         finally
         {
@@ -178,12 +217,22 @@ public sealed class AppBarService
     /// <summary>Корректирует только положение окна без изменения размера и резервирования места (вызывается при изменении размера содержимого панели WPF).</summary>
     public void UpdateWindowPosition()
     {
-        if (!_registered || _hwnd == IntPtr.Zero || _isUpdating) return;
+        if (!_registered || _hwnd == IntPtr.Zero) return;
+
+        if (_isUpdating)
+        {
+            _positionUpdatePending = true;
+            return;
+        }
 
         _isUpdating = true;
         try
         {
-            UpdateWindowPositionInternal();
+            do
+            {
+                _positionUpdatePending = false;
+                UpdateWindowPositionInternal();
+            } while (_positionUpdatePending);
         }
         finally
         {
@@ -198,44 +247,63 @@ public sealed class AppBarService
         var src = PresentationSource.FromVisual(_window) as HwndSource ?? HwndSource.FromHwnd(_hwnd);
         if (src?.CompositionTarget == null) return;
 
+        var window = _window as Window;
+        if (window == null) return;
+
+        var content = window.Content as FrameworkElement;
+        if (content == null) return;
+
         int leftPx = _reservedLeft;
         int topPx = _reservedTop;
+        int widthPx = 0;
+        int heightPx = 0;
+
+        double scaleX = src.CompositionTarget.TransformToDevice.M11;
+        double scaleY = src.CompositionTarget.TransformToDevice.M22;
 
         if (_edge == 1 || _edge == 3) // Горизонтальная панель (Top / Bottom)
         {
-            double dipWidth = _window.ActualWidth;
+            content.Measure(new System.Windows.Size(double.PositiveInfinity, _appBarSizeDip));
+            double dipWidth = content.DesiredSize.Width;
             if (dipWidth == 0) dipWidth = 400; // fallback
-            double scaleX = src.CompositionTarget.TransformToDevice.M11;
-            int widthPx = (int)Math.Ceiling(dipWidth * scaleX);
+            double dipHeight = _appBarSizeDip;
+
+            widthPx = (int)Math.Ceiling(dipWidth * scaleX);
+            heightPx = (int)Math.Ceiling(dipHeight * scaleY);
 
             leftPx = _reservedLeft + (_reservedRight - _reservedLeft - widthPx) / 2;
         }
         else // Вертикальная панель (Left / Right)
         {
-            double dipHeight = _window.ActualHeight;
+            content.Measure(new System.Windows.Size(_appBarSizeDip, double.PositiveInfinity));
+            double dipHeight = content.DesiredSize.Height;
             if (dipHeight == 0) dipHeight = 400; // fallback
-            double scaleY = src.CompositionTarget.TransformToDevice.M22;
-            int heightPx = (int)Math.Ceiling(dipHeight * scaleY);
+            double dipWidth = _appBarSizeDip;
+
+            widthPx = (int)Math.Ceiling(dipWidth * scaleX);
+            heightPx = (int)Math.Ceiling(dipHeight * scaleY);
 
             topPx = _reservedTop + (_reservedBottom - _reservedTop - heightPx) / 2;
         }
 
-        // Проверяем, изменились ли координаты
+        // Проверяем, изменились ли координаты и размеры
         if (GetWindowRect(_hwnd, out var currentRect))
         {
-            if (currentRect.Left == leftPx && currentRect.Top == topPx)
+            int currentWidth = currentRect.Right - currentRect.Left;
+            int currentHeight = currentRect.Bottom - currentRect.Top;
+            if (currentRect.Left == leftPx && currentRect.Top == topPx &&
+                currentWidth == widthPx && currentHeight == heightPx)
             {
-                // Позиция уже совпадает, прерываем перемещение во избежание бесконечного цикла
+                // Все параметры совпадают, прерываем перемещение во избежание бесконечного цикла
                 return;
             }
         }
 
-        // Перемещаем окно. SWP_NOSIZE предотвращает изменение размеров со стороны Win32,
-        // что устраняет конфликт с WPF SizeToContent и исключает бесконечные перерисовки.
+        // Перемещаем и масштабируем окно, позволяя изменять размеры (не передаем SWP_NOSIZE)
         SetWindowPos(_hwnd, IntPtr.Zero,
             leftPx, topPx,
-            0, 0, // Игнорируются благодаря SWP_NOSIZE
-            SWP_NOZORDER | SWP_NOACTIVATE | SWP_NOSIZE);
+            widthPx, heightPx,
+            SWP_NOZORDER | SWP_NOACTIVATE);
     }
 
     private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)

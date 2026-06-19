@@ -18,6 +18,7 @@ public partial class MainWindow : Window
     private readonly AppBarService? _appBar;
     private System.Windows.Point _dragStartPoint;
     private bool _isMouseDown;
+    private bool _isApplyingSettings;
 
     public MainWindow(MainViewModel viewModel, AppBarService? appBar = null)
     {
@@ -81,55 +82,70 @@ public partial class MainWindow : Window
 
     private void ApplySettings()
     {
-        var helper = new WindowInteropHelper(this);
-        var hwnd = helper.Handle;
-        if (hwnd == IntPtr.Zero) return;
-
-        Topmost = _viewModel.KeepOnTop;
-
-        var isVertical = _viewModel.PanelOrientation == System.Windows.Controls.Orientation.Vertical;
-        double panelSize = _viewModel.IconSize + 10;
-
-        if (isVertical)
+        _isApplyingSettings = true;
+        try
         {
-            Width = panelSize;
-            Height = double.NaN;
-            MinHeight = 100;
-            MinWidth = panelSize;
-            SizeToContent = SizeToContent.Height;
-        }
-        else
-        {
-            Height = panelSize;
-            Width = double.NaN;
-            MinWidth = 100;
-            MinHeight = panelSize;
-            SizeToContent = SizeToContent.Width;
-        }
+            var helper = new WindowInteropHelper(this);
+            var hwnd = helper.Handle;
+            if (hwnd == IntPtr.Zero) return;
 
-        // Force synchronous layout recalculation so ActualWidth/ActualHeight update immediately
-        UpdateLayout();
+            Topmost = _viewModel.KeepOnTop;
 
-        ApplyBackdrop(_viewModel.BackdropType);
+            var isVertical = _viewModel.PanelOrientation == System.Windows.Controls.Orientation.Vertical;
+            double panelSize = _viewModel.IconSize + 10;
 
-        if (_appBar != null && _viewModel.KeepOnTop)
-        {
-            if (_appBar.IsRegistered)
+            if (isVertical)
             {
-                _appBar.Unregister();
+                Width = panelSize;
+                Height = double.NaN;
+                MinHeight = 100;
+                MinWidth = panelSize;
+                SizeToContent = SizeToContent.Height;
             }
-            if (IsVisible)
+            else
             {
-                _appBar.Register(this, hwnd, panelSize, _viewModel.Position);
+                Height = panelSize;
+                Width = double.NaN;
+                MinWidth = 100;
+                MinHeight = panelSize;
+                SizeToContent = SizeToContent.Width;
+            }
+
+            // Force synchronous layout recalculation so ActualWidth/ActualHeight update immediately
+            UpdateLayout();
+
+            ApplyBackdrop(_viewModel.BackdropType);
+
+            if (_appBar != null && _viewModel.KeepOnTop)
+            {
+                if (IsVisible)
+                {
+                    if (!_appBar.IsRegistered)
+                    {
+                        _appBar.Register(this, hwnd, panelSize, _viewModel.Position);
+                    }
+                    else
+                    {
+                        _appBar.UpdateSettings(panelSize, _viewModel.Position);
+                    }
+                }
+                else if (_appBar.IsRegistered)
+                {
+                    _appBar.Unregister();
+                }
+            }
+            else
+            {
+                if (_appBar != null && _appBar.IsRegistered)
+                {
+                    _appBar.Unregister();
+                }
+                CenterWindow();
             }
         }
-        else
+        finally
         {
-            if (_appBar != null && _appBar.IsRegistered)
-            {
-                _appBar.Unregister();
-            }
-            CenterWindow();
+            _isApplyingSettings = false;
         }
     }
 
@@ -154,6 +170,8 @@ public partial class MainWindow : Window
 
     private void OnSizeChanged(object sender, SizeChangedEventArgs e)
     {
+        if (_isApplyingSettings) return;
+
         if (_appBar != null && _appBar.IsRegistered)
         {
             _appBar.UpdateWindowPosition();
