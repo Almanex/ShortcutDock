@@ -17,6 +17,7 @@ public partial class MainWindow : Window
     private readonly MainViewModel _viewModel;
     private readonly AppBarService? _appBar;
     private System.Windows.Point _dragStartPoint;
+    private bool _isMouseDown;
 
     public MainWindow(MainViewModel viewModel, AppBarService? appBar = null)
     {
@@ -206,21 +207,29 @@ public partial class MainWindow : Window
     private void Item_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
         _dragStartPoint = e.GetPosition(null);
+        _isMouseDown = true;
+    }
+
+    private void Item_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+    {
+        _isMouseDown = false;
     }
 
     private void Item_PreviewMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
     {
-        if (e.LeftButton == MouseButtonState.Pressed)
+        if (_isMouseDown && e.LeftButton == MouseButtonState.Pressed)
         {
             System.Windows.Point position = e.GetPosition(null);
             if (Math.Abs(position.X - _dragStartPoint.X) > SystemParameters.MinimumHorizontalDragDistance ||
                 Math.Abs(position.Y - _dragStartPoint.Y) > SystemParameters.MinimumVerticalDragDistance)
             {
+                _isMouseDown = false; // Предотвращаем повторный запуск
                 var border = sender as Border;
                 var shortcutVM = border?.DataContext as ShortcutViewModel;
                 if (shortcutVM != null)
                 {
-                    System.Windows.DragDrop.DoDragDrop(border, shortcutVM, System.Windows.DragDropEffects.Move);
+                    var data = new System.Windows.DataObject("ShortcutViewModel", shortcutVM);
+                    System.Windows.DragDrop.DoDragDrop(border, data, System.Windows.DragDropEffects.Move);
                 }
             }
         }
@@ -228,7 +237,7 @@ public partial class MainWindow : Window
 
     private void Item_DragOver(object sender, System.Windows.DragEventArgs e)
     {
-        if (e.Data.GetDataPresent(typeof(ShortcutViewModel)))
+        if (e.Data.GetDataPresent("ShortcutViewModel"))
         {
             e.Effects = System.Windows.DragDropEffects.Move;
             e.Handled = true;
@@ -241,9 +250,9 @@ public partial class MainWindow : Window
 
     private void Item_Drop(object sender, System.Windows.DragEventArgs e)
     {
-        if (e.Data.GetDataPresent(typeof(ShortcutViewModel)))
+        if (e.Data.GetDataPresent("ShortcutViewModel"))
         {
-            var droppedData = e.Data.GetData(typeof(ShortcutViewModel)) as ShortcutViewModel;
+            var droppedData = e.Data.GetData("ShortcutViewModel") as ShortcutViewModel;
             var targetData = (sender as FrameworkElement)?.DataContext as ShortcutViewModel;
             
             if (droppedData != null && targetData != null && droppedData != targetData)

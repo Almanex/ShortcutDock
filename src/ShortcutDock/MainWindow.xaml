@@ -67,8 +67,10 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <Border ToolTip="{Binding Name}"
+                                    Background="Transparent"
                                     AllowDrop="True"
                                     PreviewMouseLeftButtonDown="Item_PreviewMouseLeftButtonDown"
+                                    PreviewMouseLeftButtonUp="Item_PreviewMouseLeftButtonUp"
                                     PreviewMouseMove="Item_PreviewMouseMove"
                                     DragOver="Item_DragOver"
                                     Drop="Item_Drop">
