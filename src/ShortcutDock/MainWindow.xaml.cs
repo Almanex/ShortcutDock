@@ -16,6 +16,8 @@ public partial class MainWindow : Window
 {
     private readonly MainViewModel _viewModel;
     private readonly AppBarService? _appBar;
+    private System.Windows.Point _dragStartPoint;
+    private bool _isMouseDown;
 
     public MainWindow(MainViewModel viewModel, AppBarService? appBar = null)
     {
@@ -209,9 +211,91 @@ public partial class MainWindow : Window
 
     private void OnDragOver(object sender, System.Windows.DragEventArgs e)
     {
-        var allowed = IsFileDrop(e.Data);
-        e.Effects = allowed ? System.Windows.DragDropEffects.Copy : System.Windows.DragDropEffects.None;
-        e.Handled = true;
+        if (IsFileDrop(e.Data))
+        {
+            e.Effects = System.Windows.DragDropEffects.Copy;
+            e.Handled = true;
+        }
+    }
+
+    private void Item_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+    {
+        _dragStartPoint = e.GetPosition(null);
+        _isMouseDown = true;
+    }
+
+    private void Item_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+    {
+        if (_isMouseDown)
+        {
+            _isMouseDown = false;
+            var border = sender as Border;
+            if (border != null && border.IsMouseOver)
+            {
+                var shortcutVM = border.DataContext as ShortcutViewModel;
+                if (shortcutVM != null && shortcutVM.LaunchCommand.CanExecute(null))
+                {
+                    shortcutVM.LaunchCommand.Execute(null);
+                }
+            }
+        }
+    }
+
+    private void Item_PreviewMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+    {
+        if (_isMouseDown && e.LeftButton == MouseButtonState.Pressed)
+        {
+            System.Windows.Point position = e.GetPosition(null);
+            if (Math.Abs(position.X - _dragStartPoint.X) > SystemParameters.MinimumHorizontalDragDistance ||
+                Math.Abs(position.Y - _dragStartPoint.Y) > SystemParameters.MinimumVerticalDragDistance)
+            {
+                _isMouseDown = false; // Предотвращаем запуск приложения при отпускании кнопки
+                var border = sender as Border;
+                var shortcutVM = border?.DataContext as ShortcutViewModel;
+                // Запрещаем перетаскивать саму Корзину
+                if (shortcutVM != null && !shortcutVM.IsRecycleBin)
+                {
+                    var data = new System.Windows.DataObject("ShortcutViewModel", shortcutVM);
+                    System.Windows.DragDrop.DoDragDrop(border, data, System.Windows.DragDropEffects.Move);
+                }
+            }
+        }
+    }
+
+    private void Item_DragOver(object sender, System.Windows.DragEventArgs e)
+    {
+        var targetData = (sender as FrameworkElement)?.DataContext as ShortcutViewModel;
+        if (e.Data.GetDataPresent("ShortcutViewModel") && targetData != null && !targetData.IsRecycleBin)
+        {
+            e.Effects = System.Windows.DragDropEffects.Move;
+            e.Handled = true;
+        }
+        else
+        {
+            e.Effects = System.Windows.DragDropEffects.None;
+            e.Handled = true;
+        }
+    }
+
+    private void Item_Drop(object sender, System.Windows.DragEventArgs e)
+    {
+        if (e.Data.GetDataPresent("ShortcutViewModel"))
+        {
+            var droppedData = e.Data.GetData("ShortcutViewModel") as ShortcutViewModel;
+            var targetData = (sender as FrameworkElement)?.DataContext as ShortcutViewModel;
+            
+            if (droppedData != null && targetData != null && droppedData != targetData && !droppedData.IsRecycleBin && !targetData.IsRecycleBin)
+            {
+                int oldIndex = _viewModel.Shortcuts.IndexOf(droppedData);
+                int newIndex = _viewModel.Shortcuts.IndexOf(targetData);
+                if (oldIndex >= 0 && newIndex >= 0)
+                {
+                    _viewModel.Shortcuts.Move(oldIndex, newIndex);
+                    _viewModel.Persist();
+                }
+            }
+            e.Handled = true;
+        }
     }
 
     private void OnDrop(object sender, System.Windows.DragEventArgs e)
