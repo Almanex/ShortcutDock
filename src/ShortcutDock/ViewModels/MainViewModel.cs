@@ -85,7 +85,7 @@ public partial class MainViewModel : ObservableObject
             // Пропускаем записи с отсутствующей иконкой/целью.
             if (!File.Exists(SettingsService.GetExpandedPath(item.IconPath)))
                 continue;
-            Shortcuts.Add(new ShortcutViewModel(item, _launcher, Remove));
+            Shortcuts.Add(new ShortcutViewModel(item, _launcher, Remove, Persist));
         }
     }
 
@@ -143,7 +143,7 @@ public partial class MainViewModel : ObservableObject
             var item = _resolver.Resolve(path);
             item.IconPath = _iconExtractor.ExtractToPng(item.TargetPath);
 
-            Shortcuts.Add(new ShortcutViewModel(item, _launcher, Remove));
+            Shortcuts.Add(new ShortcutViewModel(item, _launcher, Remove, Persist));
             Persist();
         }
         catch (Exception ex)
@@ -180,7 +180,7 @@ public partial class MainViewModel : ObservableObject
     }
 
     /// <summary>Сохраняет текущее состояние в settings.json.</summary>
-    private void Persist()
+    public void Persist()
     {
         var settings = new Settings
         {
