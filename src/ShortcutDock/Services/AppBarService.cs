@@ -22,6 +22,14 @@ public sealed class AppBarService
 
     private const int ABN_POSCHANGED = 0x0000001;
 
+    private const int ABM_ACTIVATE = 0x00000006;
+    private const int ABM_WINDOWPOSCHANGED = 0x00000009;
+
+    private const int WM_ACTIVATE = 0x0006;
+    private const int WM_WINDOWPOSCHANGED = 0x0047;
+    private const int WM_SETTINGCHANGE = 0x001A;
+    private const int WM_DISPLAYCHANGE = 0x007E;
+ 
     private const uint SWP_NOSIZE = 0x0001;
     private const uint SWP_NOZORDER = 0x0004;
     private const uint SWP_NOACTIVATE = 0x0010;
@@ -309,7 +317,23 @@ public sealed class AppBarService
     private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
     {
         if ((uint)msg == _callbackMessage && (int)wParam == ABN_POSCHANGED)
+        {
             UpdatePosition();
+        }
+        else if (msg == WM_ACTIVATE)
+        {
+            var abd = NewAppBarData(_edge);
+            SHAppBarMessage(ABM_ACTIVATE, ref abd);
+        }
+        else if (msg == WM_WINDOWPOSCHANGED)
+        {
+            var abd = NewAppBarData(_edge);
+            SHAppBarMessage(ABM_WINDOWPOSCHANGED, ref abd);
+        }
+        else if (msg == WM_DISPLAYCHANGE || msg == WM_SETTINGCHANGE)
+        {
+            UpdatePosition();
+        }
         return IntPtr.Zero;
     }
 
