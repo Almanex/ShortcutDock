@@ -332,7 +332,12 @@ public sealed class AppBarService
         }
         else if (msg == WM_DISPLAYCHANGE || msg == WM_SETTINGCHANGE)
         {
-            UpdatePosition();
+            // Игнорируем системные сообщения, вызванные нашими собственными вызовами в UpdatePosition,
+            // чтобы предотвратить бесконечный цикл обратной связи.
+            if (!_isUpdating)
+            {
+                UpdatePosition();
+            }
         }
         return IntPtr.Zero;
     }
