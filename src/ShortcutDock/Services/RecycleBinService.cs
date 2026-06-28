@@ -5,7 +5,7 @@ namespace ShortcutDock.Services;
 
 public static class RecycleBinService
 {
-    [StructLayout(LayoutKind.Sequential, Pack = 4)]
+    [StructLayout(LayoutKind.Sequential)]
     private struct SHQUERYRBINFO
     {
         public int cbSize;

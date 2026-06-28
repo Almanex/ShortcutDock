@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics;
 using System.IO;
 
@@ -11,20 +12,50 @@ public sealed class ProcessLauncher
 {
     public void Start(string targetPath, bool runAsAdmin = false)
     {
-        if (string.IsNullOrWhiteSpace(targetPath) || (!File.Exists(targetPath) && !Directory.Exists(targetPath)))
+        if (string.IsNullOrWhiteSpace(targetPath))
             return;
 
-        var isDir = Directory.Exists(targetPath);
-        var psi = new ProcessStartInfo
+        // Если путь не существует как файл или папка на диске, проверим, не является ли он системной ссылкой (shell:) или URL.
+        bool isSpecial = targetPath.StartsWith("shell:", StringComparison.OrdinalIgnoreCase) || 
+                         targetPath.StartsWith("http:", StringComparison.OrdinalIgnoreCase) || 
+                         targetPath.StartsWith("https:", StringComparison.OrdinalIgnoreCase) ||
+                         targetPath.Contains(":::{");
+
+        if (!isSpecial && !File.Exists(targetPath) && !Directory.Exists(targetPath))
+            return;
+
+        try
         {
-            FileName = targetPath,
-            UseShellExecute = true,
-            WorkingDirectory = isDir ? targetPath : (Path.GetDirectoryName(targetPath) ?? string.Empty)
-        };
+            var isDir = !isSpecial && Directory.Exists(targetPath);
+            string workingDirectory = string.Empty;
 
-        if (runAsAdmin)
-            psi.Verb = "runas";
+            if (!isSpecial)
+            {
+                try
+                {
+                    workingDirectory = isDir ? targetPath : (Path.GetDirectoryName(targetPath) ?? string.Empty);
+                }
+                catch
+                {
+                    // Игнорируем ошибки извлечения директории для некорректных путей
+                }
+            }
 
-        Process.Start(psi);
+            var psi = new ProcessStartInfo
+            {
+                FileName = targetPath,
+                UseShellExecute = true,
+                WorkingDirectory = workingDirectory
+            };
+
+            if (runAsAdmin)
+                psi.Verb = "runas";
+
+            Process.Start(psi);
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[ShortcutDock] Не удалось запустить {targetPath}: {ex.Message}");
+        }
     }
 }
