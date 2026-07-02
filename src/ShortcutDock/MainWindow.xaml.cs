@@ -116,32 +116,43 @@ public partial class MainWindow : Window
 
             ApplyBackdrop(_viewModel.BackdropType);
 
-            if (_appBar != null && _viewModel.KeepOnTop)
+            Dispatcher.BeginInvoke(new Action(() =>
             {
-                if (IsVisible)
+                _isApplyingSettings = true;
+                try
                 {
-                    if (!_appBar.IsRegistered)
+                    if (_appBar != null && _viewModel.KeepOnTop)
                     {
-                        _appBar.Register(this, hwnd, panelSize, _viewModel.Position);
+                        if (IsVisible)
+                        {
+                            if (!_appBar.IsRegistered)
+                            {
+                                _appBar.Register(this, hwnd, panelSize, _viewModel.Position);
+                            }
+                            else
+                            {
+                                _appBar.UpdateSettings(panelSize, _viewModel.Position);
+                            }
+                        }
+                        else if (_appBar.IsRegistered)
+                        {
+                            _appBar.Unregister();
+                        }
                     }
                     else
                     {
-                        _appBar.UpdateSettings(panelSize, _viewModel.Position);
+                        if (_appBar != null && _appBar.IsRegistered)
+                        {
+                            _appBar.Unregister();
+                        }
+                        CenterWindow();
                     }
                 }
-                else if (_appBar.IsRegistered)
+                finally
                 {
-                    _appBar.Unregister();
+                    _isApplyingSettings = false;
                 }
-            }
-            else
-            {
-                if (_appBar != null && _appBar.IsRegistered)
-                {
-                    _appBar.Unregister();
-                }
-                CenterWindow();
-            }
+            }), System.Windows.Threading.DispatcherPriority.Loaded);
         }
         finally
         {
@@ -182,26 +193,72 @@ public partial class MainWindow : Window
         }
     }
 
+    private Rect GetCurrentMonitorWorkArea()
+    {
+        var helper = new WindowInteropHelper(this);
+        var hwnd = helper.Handle;
+        if (hwnd != IntPtr.Zero)
+        {
+            var mon = Native.Win32.MonitorFromWindow(hwnd, Native.Win32.MONITOR_DEFAULTTONEAREST);
+            var mi = new Native.Win32.MONITORINFO { cbSize = System.Runtime.InteropServices.Marshal.SizeOf<Native.Win32.MONITORINFO>() };
+            if (Native.Win32.GetMonitorInfo(mon, ref mi))
+            {
+                var src = PresentationSource.FromVisual(this) as HwndSource ?? HwndSource.FromHwnd(hwnd);
+                if (src?.CompositionTarget != null)
+                {
+                    double scaleX = src.CompositionTarget.TransformToDevice.M11;
+                    double scaleY = src.CompositionTarget.TransformToDevice.M22;
+
+                    return new Rect(
+                        mi.rcWork.Left / scaleX,
+                        mi.rcWork.Top / scaleY,
+                        (mi.rcWork.Right - mi.rcWork.Left) / scaleX,
+                        (mi.rcWork.Bottom - mi.rcWork.Top) / scaleY
+                    );
+                }
+            }
+        }
+        return SystemParameters.WorkArea;
+    }
+
     private void CenterWindow()
     {
-        var workArea = SystemParameters.WorkArea;
+        var workArea = GetCurrentMonitorWorkArea();
         var isVertical = _viewModel.PanelOrientation == System.Windows.Controls.Orientation.Vertical;
+
+        double width = ActualWidth;
+        double height = ActualHeight;
+
+        var content = Content as FrameworkElement;
+        if (content != null)
+        {
+            // Используем DesiredSize контента, так как ActualWidth/ActualHeight окна
+            // могут быть еще не обновлены ОС после изменения размеров.
+            width = isVertical ? (MinWidth > 0 ? MinWidth : content.DesiredSize.Width) : content.DesiredSize.Width;
+            height = isVertical ? content.DesiredSize.Height : (MinHeight > 0 ? MinHeight : content.DesiredSize.Height);
+
+            if (width == 0) width = ActualWidth;
+            if (height == 0) height = ActualHeight;
+        }
+
+        if (width == 0) width = 400; // fallback
+        if (height == 0) height = _viewModel.IconSize + 10; // fallback
 
         if (isVertical)
         {
-            Top = workArea.Top + (workArea.Height - ActualHeight) / 2;
+            Top = workArea.Top + (workArea.Height - height) / 2;
             if (_viewModel.Position == "Left")
                 Left = workArea.Left;
             else
-                Left = workArea.Right - ActualWidth;
+                Left = workArea.Right - width;
         }
         else
         {
-            Left = workArea.Left + (workArea.Width - ActualWidth) / 2;
+            Left = workArea.Left + (workArea.Width - width) / 2;
             if (_viewModel.Position == "Top")
                 Top = workArea.Top;
             else
-                Top = workArea.Bottom - ActualHeight;
+                Top = workArea.Bottom - height;
         }
     }
 

@@ -280,6 +280,11 @@ public sealed class AppBarService
             heightPx = (int)Math.Ceiling(dipHeight * scaleY);
 
             leftPx = _reservedLeft + (_reservedRight - _reservedLeft - widthPx) / 2;
+
+            if (_edge == 3) // ABE_BOTTOM: прижимаем к нижней границе резервирования (к панели задач)
+            {
+                topPx = _reservedBottom - heightPx;
+            }
         }
         else // Вертикальная панель (Left / Right)
         {
@@ -292,6 +297,11 @@ public sealed class AppBarService
             heightPx = (int)Math.Ceiling(dipHeight * scaleY);
 
             topPx = _reservedTop + (_reservedBottom - _reservedTop - heightPx) / 2;
+
+            if (_edge == 2) // ABE_RIGHT: прижимаем к правой границе экрана
+            {
+                leftPx = _reservedRight - widthPx;
+            }
         }
 
         // Проверяем, изменились ли координаты и размеры
