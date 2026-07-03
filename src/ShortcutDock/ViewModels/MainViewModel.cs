@@ -202,6 +202,7 @@ public partial class MainViewModel : ObservableObject
 
             Shortcuts.Add(new ShortcutViewModel(item, _launcher, Remove, Persist));
             Persist();
+            UpdateRunningAppsStatus();
         }
         catch (Exception ex)
         {
