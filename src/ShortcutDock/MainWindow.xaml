@@ -37,9 +37,9 @@
         
         <!-- Анимация отскока (прыгающей иконки) при клике -->
         <Storyboard x:Key="BounceStoryboard">
-            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="RenderTransform.(TransformGroup.Children)[1].(TranslateTransform.Y)">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="RenderTransform.(TranslateTransform.Y)">
                 <EasingDoubleKeyFrame KeyTime="0:0:0.0" Value="0" />
-                <EasingDoubleKeyFrame KeyTime="0:0:0.15" Value="-22">
+                <EasingDoubleKeyFrame KeyTime="0:0:0.15" Value="-20">
                     <EasingDoubleKeyFrame.EasingFunction>
                         <CircleEase EasingMode="EaseOut" />
                     </EasingDoubleKeyFrame.EasingFunction>
@@ -203,11 +203,17 @@
                                     </Border.RenderTransform>
 
                                     <Grid>
-                                        <Image Source="{Binding IconPath}"
+                                        <Image x:Name="IconImage"
+                                               Source="{Binding IconPath}"
                                                Margin="4,4,4,8"
                                                Stretch="Uniform"
                                                RenderOptions.BitmapScalingMode="HighQuality"
-                                               HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                               HorizontalAlignment="Center" VerticalAlignment="Center"
+                                               RenderTransformOrigin="0.5,0.5">
+                                            <Image.RenderTransform>
+                                                <TranslateTransform X="0" Y="0" />
+                                            </Image.RenderTransform>
+                                        </Image>
 
                                         <!-- Точка-индикатор запущенной программы -->
                                         <Ellipse Width="5" Height="5"

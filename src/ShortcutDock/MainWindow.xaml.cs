@@ -347,11 +347,12 @@ public partial class MainWindow : Window
                     var sb = Resources["BounceStoryboard"] as Storyboard;
                     if (sb != null)
                     {
-                        var container = (border.FindName("IconContainer") as FrameworkElement) 
-                                     ?? (border.Child as FrameworkElement) 
-                                     ?? border;
-                        var clone = sb.Clone();
-                        clone.Begin(container);
+                        var container = border.FindName("IconImage") as FrameworkElement;
+                        if (container != null)
+                        {
+                            var clone = sb.Clone();
+                            clone.Begin(container);
+                        }
                     }
                 }
             }
@@ -570,7 +571,7 @@ public partial class MainWindow : Window
                 double distance = isVertical ? Math.Abs(mousePos.Y - center.Y) : Math.Abs(mousePos.X - center.X);
 
                 double maxScale = 1.35;
-                double range = 80.0;
+                double range = 45.0;
                 double scale = 1.0 + (maxScale - 1.0) * Math.Exp(-distance * distance / (2.0 * range * range));
 
                 var transformGroup = container.RenderTransform as TransformGroup;

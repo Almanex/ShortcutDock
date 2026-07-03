@@ -114,7 +114,7 @@
                 <!-- Show Running Indicators -->
                 <ui:CardControl Header="Индикаторы запущенных программ" Margin="0,0,0,16">
                     <ui:CardControl.Icon>
-                        <ui:SymbolIcon Symbol="StatusCircle24" />
+                        <ui:SymbolIcon Symbol="Status24" />
                     </ui:CardControl.Icon>
                     <ui:ToggleSwitch IsChecked="{Binding ShowRunningIndicators, Mode=TwoWay}" />
                 </ui:CardControl>
