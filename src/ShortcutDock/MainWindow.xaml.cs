@@ -28,6 +28,10 @@ public partial class MainWindow : Window
 
         InitializeComponent();
 
+        // Отслеживаем системную тему и автоматически обновляем тему приложения
+        Wpf.Ui.Appearance.SystemThemeWatcher.Watch(this);
+        Wpf.Ui.Appearance.ApplicationThemeManager.Changed += OnThemeChanged;
+
         Loaded += OnLoaded;
         Closed += OnClosed;
         IsVisibleChanged += OnIsVisibleChanged;
@@ -166,8 +170,9 @@ public partial class MainWindow : Window
         var hwnd = helper.Handle;
         if (hwnd == IntPtr.Zero) return;
 
-        // Включаем Immersive Dark Mode для DWM, чтобы размытие Mica/Acrylic рендерилось в темных тонах
-        int darkMode = 1;
+        // Управляем Immersive Dark Mode для DWM динамически в зависимости от текущей темы приложения
+        bool isDark = Wpf.Ui.Appearance.ApplicationThemeManager.GetAppTheme() == Wpf.Ui.Appearance.ApplicationTheme.Dark;
+        int darkMode = isDark ? 1 : 0;
         Native.Win32.DwmSetWindowAttribute(hwnd, Native.Win32.DWMWA_USE_IMMERSIVE_DARK_MODE, ref darkMode, sizeof(int));
 
         int backdropType = type switch
@@ -266,7 +271,17 @@ public partial class MainWindow : Window
         }
     }
 
-    private void OnClosed(object? sender, EventArgs e) => _appBar?.Unregister();
+    private void OnClosed(object? sender, EventArgs e)
+    {
+        Wpf.Ui.Appearance.ApplicationThemeManager.Changed -= OnThemeChanged;
+        _appBar?.Unregister();
+    }
+
+    private void OnThemeChanged(Wpf.Ui.Appearance.ApplicationTheme currentTheme, System.Windows.Media.Color systemAccent)
+    {
+        // Переприменяем размытие с новыми параметрами темной/светлой темы
+        ApplyBackdrop(_viewModel.BackdropType);
+    }
 
     private void OnCloseClick(object sender, RoutedEventArgs e) => Close();
 
