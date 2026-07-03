@@ -21,7 +21,9 @@
         PreviewDragOver="OnDragOver"
         UseLayoutRounding="True"
         SnapsToDevicePixels="True"
-        SizeChanged="OnSizeChanged">
+        SizeChanged="OnSizeChanged"
+        PreviewMouseMove="Window_PreviewMouseMove"
+        MouseLeave="Window_MouseLeave">
 
     <shell:WindowChrome.WindowChrome>
         <shell:WindowChrome GlassFrameThickness="-1"
@@ -32,6 +34,23 @@
 
     <Window.Resources>
         <BooleanToVisibilityConverter x:Key="BoolToVis" />
+        
+        <!-- Анимация отскока (прыгающей иконки) при клике -->
+        <Storyboard x:Key="BounceStoryboard">
+            <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="RenderTransform.(TransformGroup.Children)[1].(TranslateTransform.Y)">
+                <EasingDoubleKeyFrame KeyTime="0:0:0.0" Value="0" />
+                <EasingDoubleKeyFrame KeyTime="0:0:0.15" Value="-22">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <CircleEase EasingMode="EaseOut" />
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="0">
+                    <EasingDoubleKeyFrame.EasingFunction>
+                        <BounceEase Bounces="1" Bounciness="2.5" EasingMode="EaseIn" />
+                    </EasingDoubleKeyFrame.EasingFunction>
+                </EasingDoubleKeyFrame>
+            </DoubleAnimationUsingKeyFrames>
+        </Storyboard>
     </Window.Resources>
 
     <Grid>
@@ -107,7 +126,7 @@
                                     </Style>
                                 </Border.Style>
                                 <Border.ContextMenu>
-                                    <ContextMenu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+                                    <ContextMenu Opened="ContextMenu_Opened" Closed="ContextMenu_Closed" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
                                         <MenuItem Header="Запустить от имени администратора"
                                                   Command="{Binding RunAsAdminCommand}">
                                             <MenuItem.Style>
@@ -177,42 +196,41 @@
                                         RenderTransformOrigin="0.5,0.5"
                                         Cursor="Hand">
                                     <Border.RenderTransform>
-                                        <ScaleTransform x:Name="IconScale" ScaleX="1" ScaleY="1" />
+                                        <TransformGroup>
+                                            <ScaleTransform x:Name="IconScale" ScaleX="1" ScaleY="1" />
+                                            <TranslateTransform x:Name="IconTranslate" X="0" Y="0" />
+                                        </TransformGroup>
                                     </Border.RenderTransform>
 
+                                    <Grid>
+                                        <Image Source="{Binding IconPath}"
+                                               Margin="4,4,4,8"
+                                               Stretch="Uniform"
+                                               RenderOptions.BitmapScalingMode="HighQuality"
+                                               HorizontalAlignment="Center" VerticalAlignment="Center" />
 
-                                    <Image Source="{Binding IconPath}"
-                                           Margin="4"
-                                           Stretch="Uniform"
-                                           RenderOptions.BitmapScalingMode="HighQuality"
-                                           HorizontalAlignment="Center" VerticalAlignment="Center" />
-
-                                    <Border.Style>
-                                        <Style TargetType="Border">
-                                            <Style.Triggers>
-                                                <EventTrigger RoutedEvent="MouseEnter">
-                                                    <BeginStoryboard>
-                                                        <Storyboard>
-                                                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleX)"
-                                                                             To="1.18" Duration="0:0:0.12" />
-                                                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleY)"
-                                                                             To="1.18" Duration="0:0:0.12" />
-                                                        </Storyboard>
-                                                    </BeginStoryboard>
-                                                </EventTrigger>
-                                                <EventTrigger RoutedEvent="MouseLeave">
-                                                    <BeginStoryboard>
-                                                        <Storyboard>
-                                                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleX)"
-                                                                             To="1" Duration="0:0:0.12" />
-                                                            <DoubleAnimation Storyboard.TargetProperty="RenderTransform.(ScaleTransform.ScaleY)"
-                                                                             To="1" Duration="0:0:0.12" />
-                                                        </Storyboard>
-                                                    </BeginStoryboard>
-                                                </EventTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Border.Style>
+                                        <!-- Точка-индикатор запущенной программы -->
+                                        <Ellipse Width="5" Height="5"
+                                                 Fill="{DynamicResource SystemAccentColorBrush}"
+                                                 HorizontalAlignment="Center"
+                                                 VerticalAlignment="Bottom"
+                                                 Margin="0,0,0,2">
+                                            <Ellipse.Style>
+                                                <Style TargetType="Ellipse">
+                                                    <Setter Property="Visibility" Value="Collapsed" />
+                                                    <Style.Triggers>
+                                                        <MultiDataTrigger>
+                                                            <MultiDataTrigger.Conditions>
+                                                                <Condition Binding="{Binding IsRunning}" Value="True" />
+                                                                <Condition Binding="{Binding IsRecycleBin}" Value="False" />
+                                                            </MultiDataTrigger.Conditions>
+                                                            <Setter Property="Visibility" Value="Visible" />
+                                                        </MultiDataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Ellipse.Style>
+                                        </Ellipse>
+                                    </Grid>
                                 </Border>
                             </Border>
                         </DataTemplate>
@@ -248,7 +266,7 @@
         </Border>
 
         <Grid.ContextMenu>
-            <ContextMenu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+            <ContextMenu Opened="ContextMenu_Opened" Closed="ContextMenu_Closed" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
                 <MenuItem Header="Добавить приложение"
                           Command="{Binding AddViaDialogCommand}" />
                 <MenuItem Header="Настройки панели"

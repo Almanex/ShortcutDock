@@ -44,6 +44,15 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     private bool _showRecycleBin = false;
 
+    [ObservableProperty]
+    private bool _autoHide = false;
+
+    [ObservableProperty]
+    private bool _hoverZoom = true;
+
+    [ObservableProperty]
+    private bool _showRunningIndicators = true;
+
 
 
     [ObservableProperty]
@@ -82,6 +91,9 @@ public partial class MainViewModel : ObservableObject
         BackdropType = Panel.BackdropType ?? "None";
         ShowAddButton = Panel.ShowAddButton;
         StartWithWindows = AutoStartService.IsAutoStartEnabled();
+        AutoHide = Panel.AutoHide;
+        HoverZoom = Panel.HoverZoom;
+        ShowRunningIndicators = Panel.ShowRunningIndicators;
         UpdatePanelOrientation();
 
         // Clean up old cached Recycle Bin icons to query fresh ones from current system theme
@@ -104,6 +116,7 @@ public partial class MainViewModel : ObservableObject
         ShowRecycleBin = Panel.ShowRecycleBin;
         UpdateRecycleBinItem();
         StartRecycleBinTimer();
+        StartProcessTracker();
     }
 
     partial void OnPositionChanged(string value)
@@ -149,6 +162,25 @@ public partial class MainViewModel : ObservableObject
     {
         Panel.ShowRecycleBin = value;
         UpdateRecycleBinItem();
+        Persist();
+    }
+
+    partial void OnAutoHideChanged(bool value)
+    {
+        Panel.AutoHide = value;
+        Persist();
+    }
+
+    partial void OnHoverZoomChanged(bool value)
+    {
+        Panel.HoverZoom = value;
+        Persist();
+    }
+
+    partial void OnShowRunningIndicatorsChanged(bool value)
+    {
+        Panel.ShowRunningIndicators = value;
+        UpdateRunningAppsStatus();
         Persist();
     }
 
@@ -264,6 +296,68 @@ public partial class MainViewModel : ObservableObject
             {
                 Shortcuts.Remove(existing);
             }
+        }
+    }
+
+    private System.Windows.Threading.DispatcherTimer? _processTrackerTimer;
+
+    private void StartProcessTracker()
+    {
+        _processTrackerTimer = new System.Windows.Threading.DispatcherTimer
+        {
+            Interval = TimeSpan.FromSeconds(1.5)
+        };
+        _processTrackerTimer.Tick += (s, e) => UpdateRunningAppsStatus();
+        _processTrackerTimer.Start();
+    }
+
+    public void UpdateRunningAppsStatus()
+    {
+        if (!ShowRunningIndicators)
+        {
+            foreach (var s in Shortcuts)
+            {
+                if (s.IsRunning) s.IsRunning = false;
+            }
+            return;
+        }
+
+        try
+        {
+            var runningPaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var processes = System.Diagnostics.Process.GetProcesses();
+            foreach (var p in processes)
+            {
+                try
+                {
+                    if (p.HasExited) continue;
+                    var path = p.MainModule?.FileName;
+                    if (!string.IsNullOrEmpty(path))
+                    {
+                        runningPaths.Add(path);
+                    }
+                }
+                catch
+                {
+                    // Игнорируем системные процессы
+                }
+            }
+
+            foreach (var s in Shortcuts)
+            {
+                if (s.IsRecycleBin) continue;
+
+                var expandedPath = SettingsService.GetExpandedPath(s.Model.TargetPath);
+                bool isRunningNow = runningPaths.Contains(expandedPath);
+                if (s.IsRunning != isRunningNow)
+                {
+                    s.IsRunning = isRunningNow;
+                }
+            }
+        }
+        catch
+        {
+            // Безопасность
         }
     }
 }

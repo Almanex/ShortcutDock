@@ -88,11 +88,35 @@
                 </ui:CardControl>
 
                 <!-- Show Recycle Bin -->
-                <ui:CardControl Header="Отображать Корзину на панели" Margin="0,0,0,16">
+                <ui:CardControl Header="Отображать Корзину на панели" Margin="0,0,0,8">
                     <ui:CardControl.Icon>
                         <ui:SymbolIcon Symbol="Delete24" />
                     </ui:CardControl.Icon>
                     <ui:ToggleSwitch IsChecked="{Binding ShowRecycleBin, Mode=TwoWay}" />
+                </ui:CardControl>
+
+                <!-- Auto Hide -->
+                <ui:CardControl Header="Автоматически скрывать панель (Auto-Hide)" Margin="0,0,0,8">
+                    <ui:CardControl.Icon>
+                        <ui:SymbolIcon Symbol="EyeOff24" />
+                    </ui:CardControl.Icon>
+                    <ui:ToggleSwitch IsChecked="{Binding AutoHide, Mode=TwoWay}" />
+                </ui:CardControl>
+
+                <!-- Hover Zoom -->
+                <ui:CardControl Header="Эффект увеличения при наведении (Hover Zoom)" Margin="0,0,0,8">
+                    <ui:CardControl.Icon>
+                        <ui:SymbolIcon Symbol="ZoomIn24" />
+                    </ui:CardControl.Icon>
+                    <ui:ToggleSwitch IsChecked="{Binding HoverZoom, Mode=TwoWay}" />
+                </ui:CardControl>
+
+                <!-- Show Running Indicators -->
+                <ui:CardControl Header="Индикаторы запущенных программ" Margin="0,0,0,16">
+                    <ui:CardControl.Icon>
+                        <ui:SymbolIcon Symbol="StatusCircle24" />
+                    </ui:CardControl.Icon>
+                    <ui:ToggleSwitch IsChecked="{Binding ShowRunningIndicators, Mode=TwoWay}" />
                 </ui:CardControl>
 
                 <Button Content="Закрыть" 

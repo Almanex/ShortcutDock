@@ -2,6 +2,8 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
+using System.Windows.Media;
+using System.Windows.Media.Animation;
 using ShortcutDock.Services;
 using ShortcutDock.ViewModels;
 
@@ -37,6 +39,8 @@ public partial class MainWindow : Window
         IsVisibleChanged += OnIsVisibleChanged;
         viewModel.PropertyChanged += OnViewModelPropertyChanged;
         viewModel.Load();
+
+        StartAutoHideTimer();
     }
 
     protected override void OnSourceInitialized(EventArgs e)
@@ -78,7 +82,10 @@ public partial class MainWindow : Window
         if (e.PropertyName == nameof(MainViewModel.Position) ||
             e.PropertyName == nameof(MainViewModel.IconSize) ||
             e.PropertyName == nameof(MainViewModel.KeepOnTop) ||
-            e.PropertyName == nameof(MainViewModel.BackdropType))
+            e.PropertyName == nameof(MainViewModel.BackdropType) ||
+            e.PropertyName == nameof(MainViewModel.AutoHide) ||
+            e.PropertyName == nameof(MainViewModel.HoverZoom) ||
+            e.PropertyName == nameof(MainViewModel.ShowRunningIndicators))
         {
             Dispatcher.BeginInvoke(new Action(ApplySettings));
         }
@@ -125,7 +132,7 @@ public partial class MainWindow : Window
                 _isApplyingSettings = true;
                 try
                 {
-                    if (_appBar != null && _viewModel.KeepOnTop)
+                    if (_appBar != null && _viewModel.KeepOnTop && !_viewModel.AutoHide)
                     {
                         if (IsVisible)
                         {
@@ -151,6 +158,11 @@ public partial class MainWindow : Window
                         }
                         CenterWindow();
                     }
+
+                    // Сохраняем нормальные координаты для авто-скрытия
+                    _normalTop = Top;
+                    _normalLeft = Left;
+                    _isSlidOut = false;
                 }
                 finally
                 {
@@ -330,6 +342,17 @@ public partial class MainWindow : Window
                 if (shortcutVM != null && shortcutVM.LaunchCommand.CanExecute(null))
                 {
                     shortcutVM.LaunchCommand.Execute(null);
+
+                    // Запуск анимации отскока (Bounce)
+                    var sb = Resources["BounceStoryboard"] as Storyboard;
+                    if (sb != null)
+                    {
+                        var container = (border.FindName("IconContainer") as FrameworkElement) 
+                                     ?? (border.Child as FrameworkElement) 
+                                     ?? border;
+                        var clone = sb.Clone();
+                        clone.Begin(container);
+                    }
                 }
             }
         }
@@ -405,4 +428,226 @@ public partial class MainWindow : Window
 
     private static bool IsFileDrop(System.Windows.IDataObject data) =>
         data.GetDataPresent(System.Windows.DataFormats.FileDrop);
+
+    // =========================================================================
+    // НОВЫЙ ФУНКЦИОНАЛ: АВТО-СКРЫТИЕ (AUTO-HIDE) И УВЕЛИЧЕНИЕ (HOVER ZOOM)
+    // =========================================================================
+
+    private System.Windows.Threading.DispatcherTimer? _autoHideTimer;
+    private bool _isSlidOut;
+    private double _normalTop;
+    private double _normalLeft;
+    private bool _isContextMenuOpen;
+
+    private void StartAutoHideTimer()
+    {
+        _autoHideTimer = new System.Windows.Threading.DispatcherTimer
+        {
+            Interval = TimeSpan.FromMilliseconds(600)
+        };
+        _autoHideTimer.Tick += (s, e) =>
+        {
+            _autoHideTimer.Stop();
+            SlideOut();
+        };
+    }
+
+    private void SlideIn()
+    {
+        if (!_viewModel.AutoHide || !_isSlidOut) return;
+        _isSlidOut = false;
+
+        AnimateWindowPosition(_normalLeft, _normalTop);
+    }
+
+    private void SlideOut()
+    {
+        if (!_viewModel.AutoHide || _isSlidOut || this.IsMouseOver || _isContextMenuOpen) return;
+        _isSlidOut = true;
+
+        _normalTop = Top;
+        _normalLeft = Left;
+
+        var helper = new WindowInteropHelper(this);
+        var mon = Native.Win32.MonitorFromWindow(helper.Handle, Native.Win32.MONITOR_DEFAULTTONEAREST);
+        var mi = new Native.Win32.MONITORINFO { cbSize = System.Runtime.InteropServices.Marshal.SizeOf<Native.Win32.MONITORINFO>() };
+        
+        double targetTop = Top;
+        double targetLeft = Left;
+
+        if (Native.Win32.GetMonitorInfo(mon, ref mi))
+        {
+            var src = PresentationSource.FromVisual(this) as HwndSource ?? HwndSource.FromHwnd(helper.Handle);
+            if (src?.CompositionTarget != null)
+            {
+                double scaleX = src.CompositionTarget.TransformToDevice.M11;
+                double scaleY = src.CompositionTarget.TransformToDevice.M22;
+
+                double monLeft = mi.rcMonitor.Left / scaleX;
+                double monRight = mi.rcMonitor.Right / scaleX;
+                double monTop = mi.rcMonitor.Top / scaleY;
+                double monBottom = mi.rcMonitor.Bottom / scaleY;
+
+                double sliver = 2.0; // полоска в 2px на краю экрана для вызова
+
+                if (_viewModel.Position == "Bottom")
+                {
+                    targetTop = monBottom - sliver;
+                }
+                else if (_viewModel.Position == "Top")
+                {
+                    targetTop = monTop - ActualHeight + sliver;
+                }
+                else if (_viewModel.Position == "Left")
+                {
+                    targetLeft = monLeft - ActualWidth + sliver;
+                }
+                else if (_viewModel.Position == "Right")
+                {
+                    targetLeft = monRight - sliver;
+                }
+            }
+        }
+
+        AnimateWindowPosition(targetLeft, targetTop);
+    }
+
+    private void AnimateWindowPosition(double targetLeft, double targetTop)
+    {
+        var duration = TimeSpan.FromMilliseconds(250);
+        var ease = new CubicEase { EasingMode = EasingMode.EaseOut };
+
+        if (Math.Abs(Left - targetLeft) > 0.1)
+        {
+            var anim = new DoubleAnimation(targetLeft, duration) { EasingFunction = ease };
+            anim.Completed += (s, e) =>
+            {
+                this.BeginAnimation(Window.LeftProperty, null);
+                this.Left = targetLeft;
+            };
+            this.BeginAnimation(Window.LeftProperty, anim);
+        }
+
+        if (Math.Abs(Top - targetTop) > 0.1)
+        {
+            var anim = new DoubleAnimation(targetTop, duration) { EasingFunction = ease };
+            anim.Completed += (s, e) =>
+            {
+                this.BeginAnimation(Window.TopProperty, null);
+                this.Top = targetTop;
+            };
+            this.BeginAnimation(Window.TopProperty, anim);
+        }
+    }
+
+    private void Window_PreviewMouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+    {
+        // Выполняем возврат панели, если она скрыта
+        if (_isSlidOut)
+        {
+            SlideIn();
+        }
+
+        _autoHideTimer?.Stop();
+
+        if (!_viewModel.HoverZoom)
+        {
+            ResetIconScales();
+            return;
+        }
+
+        var mousePos = e.GetPosition(this);
+        var isVertical = _viewModel.PanelOrientation == System.Windows.Controls.Orientation.Vertical;
+        var containers = FindVisualChildren<Border>(this).Where(b => b.Name == "IconContainer").ToList();
+
+        foreach (var container in containers)
+        {
+            try
+            {
+                var transform = container.TransformToAncestor(this);
+                var center = transform.Transform(new System.Windows.Point(container.ActualWidth / 2, container.ActualHeight / 2));
+
+                double distance = isVertical ? Math.Abs(mousePos.Y - center.Y) : Math.Abs(mousePos.X - center.X);
+
+                double maxScale = 1.35;
+                double range = 80.0;
+                double scale = 1.0 + (maxScale - 1.0) * Math.Exp(-distance * distance / (2.0 * range * range));
+
+                var transformGroup = container.RenderTransform as TransformGroup;
+                var scaleTransform = transformGroup?.Children[0] as ScaleTransform;
+                if (scaleTransform != null)
+                {
+                    scaleTransform.BeginAnimation(ScaleTransform.ScaleXProperty, null);
+                    scaleTransform.BeginAnimation(ScaleTransform.ScaleYProperty, null);
+                    scaleTransform.ScaleX = scale;
+                    scaleTransform.ScaleY = scale;
+                }
+            }
+            catch
+            {
+                // Игнорируем ошибки при обновлении визуального дерева
+            }
+        }
+    }
+
+    private void Window_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
+    {
+        ResetIconScales();
+
+        if (_viewModel.AutoHide && !_isContextMenuOpen)
+        {
+            _autoHideTimer?.Start();
+        }
+    }
+
+    private void ResetIconScales()
+    {
+        var containers = FindVisualChildren<Border>(this).Where(b => b.Name == "IconContainer").ToList();
+        foreach (var container in containers)
+        {
+            var transformGroup = container.RenderTransform as TransformGroup;
+            var scaleTransform = transformGroup?.Children[0] as ScaleTransform;
+            if (scaleTransform != null && (scaleTransform.ScaleX != 1.0 || scaleTransform.ScaleY != 1.0))
+            {
+                var animX = new DoubleAnimation(1.0, TimeSpan.FromMilliseconds(150));
+                var animY = new DoubleAnimation(1.0, TimeSpan.FromMilliseconds(150));
+                scaleTransform.BeginAnimation(ScaleTransform.ScaleXProperty, animX);
+                scaleTransform.BeginAnimation(ScaleTransform.ScaleYProperty, animY);
+            }
+        }
+    }
+
+    private void ContextMenu_Opened(object sender, RoutedEventArgs e)
+    {
+        _isContextMenuOpen = true;
+        _autoHideTimer?.Stop();
+    }
+
+    private void ContextMenu_Closed(object sender, RoutedEventArgs e)
+    {
+        _isContextMenuOpen = false;
+        if (!this.IsMouseOver && _viewModel.AutoHide)
+        {
+            _autoHideTimer?.Start();
+        }
+    }
+
+    private static IEnumerable<T> FindVisualChildren<T>(DependencyObject? depObj) where T : DependencyObject
+    {
+        if (depObj != null)
+        {
+            for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
+            {
+                DependencyObject child = VisualTreeHelper.GetChild(depObj, i);
+                if (child != null && child is T t)
+                {
+                    yield return t;
+                }
+                foreach (T childOfChild in FindVisualChildren<T>(child))
+                {
+                    yield return childOfChild;
+                }
+            }
+        }
+    }
 }

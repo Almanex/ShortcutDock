@@ -27,4 +27,13 @@ public sealed class PanelSettings
 
     [JsonPropertyName("ShowRecycleBin")]
     public bool ShowRecycleBin { get; set; } = false;
+
+    [JsonPropertyName("AutoHide")]
+    public bool AutoHide { get; set; } = false;
+
+    [JsonPropertyName("HoverZoom")]
+    public bool HoverZoom { get; set; } = true;
+
+    [JsonPropertyName("ShowRunningIndicators")]
+    public bool ShowRunningIndicators { get; set; } = true;
 }
