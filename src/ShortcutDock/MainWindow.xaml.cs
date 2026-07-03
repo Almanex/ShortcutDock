@@ -166,6 +166,10 @@ public partial class MainWindow : Window
         var hwnd = helper.Handle;
         if (hwnd == IntPtr.Zero) return;
 
+        // Включаем Immersive Dark Mode для DWM, чтобы размытие Mica/Acrylic рендерилось в темных тонах
+        int darkMode = 1;
+        Native.Win32.DwmSetWindowAttribute(hwnd, Native.Win32.DWMWA_USE_IMMERSIVE_DARK_MODE, ref darkMode, sizeof(int));
+
         int backdropType = type switch
         {
             "Mica" => Native.Win32.DWMSBT_MAINWINDOW,
