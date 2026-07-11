@@ -26,10 +26,7 @@ Ausführliche Anweisungen zur Konfiguration aller Funktionen finden Sie im [Benu
 ## Screenshots
 
 <details open>
-  <summary style="cursor: pointer; padding: 5px;">
-    <img src="screenshots/screenshot1.png" height="50px" style="vertical-align: middle; border: 1px solid #1e2327; border-radius: 4px; margin-right: 10px;" alt="Miniaturansicht 1" />
-    <b>1. Horizontales Layout (Unten)</b>
-  </summary>
+  <summary style="cursor: pointer; padding: 6px; font-family: sans-serif;"><b>[ Anzeigen ] 1. Horizontales Layout (Unten)</b></summary>
   <br/>
   <p align="center">
     <img src="screenshots/screenshot1.png" width="95%" alt="ShortcutDock Horizontal Unten" />
@@ -37,10 +34,7 @@ Ausführliche Anweisungen zur Konfiguration aller Funktionen finden Sie im [Benu
 </details>
 
 <details>
-  <summary style="cursor: pointer; padding: 5px;">
-    <img src="screenshots/screenshot2.png" height="50px" style="vertical-align: middle; border: 1px solid #1e2327; border-radius: 4px; margin-right: 10px;" alt="Miniaturansicht 2" />
-    <b>2. Vertikales Layout (Links)</b>
-  </summary>
+  <summary style="cursor: pointer; padding: 6px; font-family: sans-serif;"><b>[ Anzeigen ] 2. Vertikales Layout (Links)</b></summary>
   <br/>
   <p align="center">
     <img src="screenshots/screenshot2.png" width="95%" alt="ShortcutDock Vertikal Links" />
@@ -48,10 +42,7 @@ Ausführliche Anweisungen zur Konfiguration aller Funktionen finden Sie im [Benu
 </details>
 
 <details>
-  <summary style="cursor: pointer; padding: 5px;">
-    <img src="screenshots/screenshot3.png" height="50px" style="vertical-align: middle; border: 1px solid #1e2327; border-radius: 4px; margin-right: 10px;" alt="Miniaturansicht 3" />
-    <b>3. Fluent Einstellungsfenster</b>
-  </summary>
+  <summary style="cursor: pointer; padding: 6px; font-family: sans-serif;"><b>[ Anzeigen ] 3. Fluent Einstellungsfenster</b></summary>
   <br/>
   <p align="center">
     <img src="screenshots/screenshot3.png" width="95%" alt="ShortcutDock Einstellungen" />
@@ -59,10 +50,7 @@ Ausführliche Anweisungen zur Konfiguration aller Funktionen finden Sie im [Benu
 </details>
 
 <details>
-  <summary style="cursor: pointer; padding: 5px;">
-    <img src="screenshots/screenshot4.png" height="50px" style="vertical-align: middle; border: 1px solid #1e2327; border-radius: 4px; margin-right: 10px;" alt="Miniaturansicht 4" />
-    <b>4. Kontextmenü und Anpassungen</b>
-  </summary>
+  <summary style="cursor: pointer; padding: 6px; font-family: sans-serif;"><b>[ Anzeigen ] 4. Kontextmenü und Anpassungen</b></summary>
   <br/>
   <p align="center">
     <img src="screenshots/screenshot4.png" width="95%" alt="ShortcutDock Kontextmenü" />
@@ -70,15 +58,13 @@ Ausführliche Anweisungen zur Konfiguration aller Funktionen finden Sie im [Benu
 </details>
 
 <details>
-  <summary style="cursor: pointer; padding: 5px;">
-    <img src="screenshots/screenshot5.png" height="50px" style="vertical-align: middle; border: 1px solid #1e2327; border-radius: 4px; margin-right: 10px;" alt="Miniaturansicht 5" />
-    <b>5. Horizontales Layout (Oben)</b>
-  </summary>
+  <summary style="cursor: pointer; padding: 6px; font-family: sans-serif;"><b>[ Anzeigen ] 5. Horizontales Layout (Oben)</b></summary>
   <br/>
   <p align="center">
     <img src="screenshots/screenshot5.png" width="95%" alt="ShortcutDock Position Oben" />
   </p>
 </details>
+
 
 
 

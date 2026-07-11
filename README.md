@@ -26,10 +26,7 @@ For detailed instructions on configuring all features, read the [User Guide (GUI
 ## Screenshots
 
 <details open>
-  <summary style="cursor: pointer; padding: 5px;">
-    <img src="screenshots/screenshot1.png" height="50px" style="vertical-align: middle; border: 1px solid #1e2327; border-radius: 4px; margin-right: 10px;" alt="Thumb 1" />
-    <b>1. Horizontal Layout (Bottom Position)</b>
-  </summary>
+  <summary style="cursor: pointer; padding: 6px; font-family: sans-serif;"><b>[ Show ] 1. Horizontal Layout (Bottom Position)</b></summary>
   <br/>
   <p align="center">
     <img src="screenshots/screenshot1.png" width="95%" alt="ShortcutDock Horizontal Bottom" />
@@ -37,10 +34,7 @@ For detailed instructions on configuring all features, read the [User Guide (GUI
 </details>
 
 <details>
-  <summary style="cursor: pointer; padding: 5px;">
-    <img src="screenshots/screenshot2.png" height="50px" style="vertical-align: middle; border: 1px solid #1e2327; border-radius: 4px; margin-right: 10px;" alt="Thumb 2" />
-    <b>2. Vertical Layout (Left Position)</b>
-  </summary>
+  <summary style="cursor: pointer; padding: 6px; font-family: sans-serif;"><b>[ Show ] 2. Vertical Layout (Left Position)</b></summary>
   <br/>
   <p align="center">
     <img src="screenshots/screenshot2.png" width="95%" alt="ShortcutDock Vertical Left" />
@@ -48,10 +42,7 @@ For detailed instructions on configuring all features, read the [User Guide (GUI
 </details>
 
 <details>
-  <summary style="cursor: pointer; padding: 5px;">
-    <img src="screenshots/screenshot3.png" height="50px" style="vertical-align: middle; border: 1px solid #1e2327; border-radius: 4px; margin-right: 10px;" alt="Thumb 3" />
-    <b>3. Fluent Settings Window</b>
-  </summary>
+  <summary style="cursor: pointer; padding: 6px; font-family: sans-serif;"><b>[ Show ] 3. Fluent Settings Window</b></summary>
   <br/>
   <p align="center">
     <img src="screenshots/screenshot3.png" width="95%" alt="ShortcutDock Settings" />
@@ -59,10 +50,7 @@ For detailed instructions on configuring all features, read the [User Guide (GUI
 </details>
 
 <details>
-  <summary style="cursor: pointer; padding: 5px;">
-    <img src="screenshots/screenshot4.png" height="50px" style="vertical-align: middle; border: 1px solid #1e2327; border-radius: 4px; margin-right: 10px;" alt="Thumb 4" />
-    <b>4. Context Menu & Customizations</b>
-  </summary>
+  <summary style="cursor: pointer; padding: 6px; font-family: sans-serif;"><b>[ Show ] 4. Context Menu & Customizations</b></summary>
   <br/>
   <p align="center">
     <img src="screenshots/screenshot4.png" width="95%" alt="ShortcutDock Context Menu" />
@@ -70,15 +58,13 @@ For detailed instructions on configuring all features, read the [User Guide (GUI
 </details>
 
 <details>
-  <summary style="cursor: pointer; padding: 5px;">
-    <img src="screenshots/screenshot5.png" height="50px" style="vertical-align: middle; border: 1px solid #1e2327; border-radius: 4px; margin-right: 10px;" alt="Thumb 5" />
-    <b>5. Horizontal Layout (Top Position)</b>
-  </summary>
+  <summary style="cursor: pointer; padding: 6px; font-family: sans-serif;"><b>[ Show ] 5. Horizontal Layout (Top Position)</b></summary>
   <br/>
   <p align="center">
     <img src="screenshots/screenshot5.png" width="95%" alt="ShortcutDock Top Position" />
   </p>
 </details>
+
 
 
 
