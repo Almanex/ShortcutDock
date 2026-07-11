@@ -26,7 +26,10 @@ ShortcutDock — это современная, легковесная пане�
 ## Скриншоты
 
 <details open>
-  <summary><b>1. Горизонтальное расположение (Снизу)</b></summary>
+  <summary style="cursor: pointer; padding: 5px;">
+    <img src="screenshots/screenshot1.png" height="50px" style="vertical-align: middle; border: 1px solid #1e2327; border-radius: 4px; margin-right: 10px;" alt="Миниатюра 1" />
+    <b>1. Горизонтальное расположение (Снизу)</b>
+  </summary>
   <br/>
   <p align="center">
     <img src="screenshots/screenshot1.png" width="95%" alt="ShortcutDock Горизонтальная внизу" />
@@ -34,7 +37,10 @@ ShortcutDock — это современная, легковесная пане�
 </details>
 
 <details>
-  <summary><b>2. Вертикальное расположение (Слева)</b></summary>
+  <summary style="cursor: pointer; padding: 5px;">
+    <img src="screenshots/screenshot2.png" height="50px" style="vertical-align: middle; border: 1px solid #1e2327; border-radius: 4px; margin-right: 10px;" alt="Миниатюра 2" />
+    <b>2. Вертикальное расположение (Слева)</b>
+  </summary>
   <br/>
   <p align="center">
     <img src="screenshots/screenshot2.png" width="95%" alt="ShortcutDock Вертикальная слева" />
@@ -42,7 +48,10 @@ ShortcutDock — это современная, легковесная пане�
 </details>
 
 <details>
-  <summary><b>3. Окно настроек Fluent Design</b></summary>
+  <summary style="cursor: pointer; padding: 5px;">
+    <img src="screenshots/screenshot3.png" height="50px" style="vertical-align: middle; border: 1px solid #1e2327; border-radius: 4px; margin-right: 10px;" alt="Миниатюра 3" />
+    <b>3. Окно настроек Fluent Design</b>
+  </summary>
   <br/>
   <p align="center">
     <img src="screenshots/screenshot3.png" width="95%" alt="ShortcutDock Настройки" />
@@ -50,7 +59,10 @@ ShortcutDock — это современная, легковесная пане�
 </details>
 
 <details>
-  <summary><b>4. Контекстное меню и настройки</b></summary>
+  <summary style="cursor: pointer; padding: 5px;">
+    <img src="screenshots/screenshot4.png" height="50px" style="vertical-align: middle; border: 1px solid #1e2327; border-radius: 4px; margin-right: 10px;" alt="Миниатюра 4" />
+    <b>4. Контекстное меню и настройки</b>
+  </summary>
   <br/>
   <p align="center">
     <img src="screenshots/screenshot4.png" width="95%" alt="ShortcutDock Контекстное меню" />
@@ -58,12 +70,16 @@ ShortcutDock — это современная, легковесная пане�
 </details>
 
 <details>
-  <summary><b>5. Горизонтальное расположение (Сверху)</b></summary>
+  <summary style="cursor: pointer; padding: 5px;">
+    <img src="screenshots/screenshot5.png" height="50px" style="vertical-align: middle; border: 1px solid #1e2327; border-radius: 4px; margin-right: 10px;" alt="Миниатюра 5" />
+    <b>5. Горизонтальное расположение (Сверху)</b>
+  </summary>
   <br/>
   <p align="center">
     <img src="screenshots/screenshot5.png" width="95%" alt="ShortcutDock Позиция сверху" />
   </p>
 </details>
+
 
 
 
