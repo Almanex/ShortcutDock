@@ -25,25 +25,46 @@ For detailed instructions on configuring all features, read the [User Guide (GUI
 
 ## Screenshots
 
-<p align="center">
-  <img src="screenshots/demo.gif" width="85%" alt="ShortcutDock Presentation Demo" style="border: 2px solid #1e2327; border-radius: 8px; box-shadow: 4px 4px 0px #1e2327;" />
-</p>
-
-<details>
-  <summary>Click to view all high-resolution static screenshots</summary>
+<details open>
+  <summary><b>1. Horizontal Layout (Bottom Position)</b></summary>
+  <br/>
   <p align="center">
-    <strong>1. Horizontal Layout (Bottom)</strong><br/>
-    <img src="screenshots/screenshot1.png" width="90%" alt="ShortcutDock Horizontal Bottom" /><br/><br/>
-    <strong>2. Vertical Layout (Left)</strong><br/>
-    <img src="screenshots/screenshot2.png" width="90%" alt="ShortcutDock Vertical Left" /><br/><br/>
-    <strong>3. Fluent Settings Window</strong><br/>
-    <img src="screenshots/screenshot3.png" width="90%" alt="ShortcutDock Settings" /><br/><br/>
-    <strong>4. Context Menu & Customizations</strong><br/>
-    <img src="screenshots/screenshot4.png" width="90%" alt="ShortcutDock Context Menu" /><br/><br/>
-    <strong>5. Horizontal Layout (Top)</strong><br/>
-    <img src="screenshots/screenshot5.png" width="90%" alt="ShortcutDock Top Position" />
+    <img src="screenshots/screenshot1.png" width="95%" alt="ShortcutDock Horizontal Bottom" />
   </p>
 </details>
+
+<details>
+  <summary><b>2. Vertical Layout (Left Position)</b></summary>
+  <br/>
+  <p align="center">
+    <img src="screenshots/screenshot2.png" width="95%" alt="ShortcutDock Vertical Left" />
+  </p>
+</details>
+
+<details>
+  <summary><b>3. Fluent Settings Window</b></summary>
+  <br/>
+  <p align="center">
+    <img src="screenshots/screenshot3.png" width="95%" alt="ShortcutDock Settings" />
+  </p>
+</details>
+
+<details>
+  <summary><b>4. Context Menu & Customizations</b></summary>
+  <br/>
+  <p align="center">
+    <img src="screenshots/screenshot4.png" width="95%" alt="ShortcutDock Context Menu" />
+  </p>
+</details>
+
+<details>
+  <summary><b>5. Horizontal Layout (Top Position)</b></summary>
+  <br/>
+  <p align="center">
+    <img src="screenshots/screenshot5.png" width="95%" alt="ShortcutDock Top Position" />
+  </p>
+</details>
+
 
 
 

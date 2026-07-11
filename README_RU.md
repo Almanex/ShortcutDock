@@ -25,25 +25,46 @@ ShortcutDock — это современная, легковесная пане�
 
 ## Скриншоты
 
-<p align="center">
-  <img src="screenshots/demo.gif" width="85%" alt="ShortcutDock Демонстрация" style="border: 2px solid #1e2327; border-radius: 8px; box-shadow: 4px 4px 0px #1e2327;" />
-</p>
-
-<details>
-  <summary>Нажмите, чтобы просмотреть все скриншоты в высоком разрешении</summary>
+<details open>
+  <summary><b>1. Горизонтальное расположение (Снизу)</b></summary>
+  <br/>
   <p align="center">
-    <strong>1. Горизонтальное расположение (Снизу)</strong><br/>
-    <img src="screenshots/screenshot1.png" width="90%" alt="ShortcutDock Горизонтальная внизу" /><br/><br/>
-    <strong>2. Вертикальное расположение (Слева)</strong><br/>
-    <img src="screenshots/screenshot2.png" width="90%" alt="ShortcutDock Вертикальная слева" /><br/><br/>
-    <strong>3. Окно настроек Fluent Design</strong><br/>
-    <img src="screenshots/screenshot3.png" width="90%" alt="ShortcutDock Настройки" /><br/><br/>
-    <strong>4. Контекстное меню и настройки</strong><br/>
-    <img src="screenshots/screenshot4.png" width="90%" alt="ShortcutDock Контекстное меню" /><br/><br/>
-    <strong>5. Горизонтальное расположение (Сверху)</strong><br/>
-    <img src="screenshots/screenshot5.png" width="90%" alt="ShortcutDock Позиция сверху" />
+    <img src="screenshots/screenshot1.png" width="95%" alt="ShortcutDock Горизонтальная внизу" />
   </p>
 </details>
+
+<details>
+  <summary><b>2. Вертикальное расположение (Слева)</b></summary>
+  <br/>
+  <p align="center">
+    <img src="screenshots/screenshot2.png" width="95%" alt="ShortcutDock Вертикальная слева" />
+  </p>
+</details>
+
+<details>
+  <summary><b>3. Окно настроек Fluent Design</b></summary>
+  <br/>
+  <p align="center">
+    <img src="screenshots/screenshot3.png" width="95%" alt="ShortcutDock Настройки" />
+  </p>
+</details>
+
+<details>
+  <summary><b>4. Контекстное меню и настройки</b></summary>
+  <br/>
+  <p align="center">
+    <img src="screenshots/screenshot4.png" width="95%" alt="ShortcutDock Контекстное меню" />
+  </p>
+</details>
+
+<details>
+  <summary><b>5. Горизонтальное расположение (Сверху)</b></summary>
+  <br/>
+  <p align="center">
+    <img src="screenshots/screenshot5.png" width="95%" alt="ShortcutDock Позиция сверху" />
+  </p>
+</details>
+
 
 
 

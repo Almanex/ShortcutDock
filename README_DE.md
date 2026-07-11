@@ -25,25 +25,46 @@ Ausführliche Anweisungen zur Konfiguration aller Funktionen finden Sie im [Benu
 
 ## Screenshots
 
-<p align="center">
-  <img src="screenshots/demo.gif" width="85%" alt="ShortcutDock Demonstration" style="border: 2px solid #1e2327; border-radius: 8px; box-shadow: 4px 4px 0px #1e2327;" />
-</p>
-
-<details>
-  <summary>Klicken Sie hier, um alle hochauflösenden statischen Screenshots anzuzeigen</summary>
+<details open>
+  <summary><b>1. Horizontales Layout (Unten)</b></summary>
+  <br/>
   <p align="center">
-    <strong>1. Horizontales Layout (Unten)</strong><br/>
-    <img src="screenshots/screenshot1.png" width="90%" alt="ShortcutDock Horizontal Unten" /><br/><br/>
-    <strong>2. Vertikales Layout (Links)</strong><br/>
-    <img src="screenshots/screenshot2.png" width="90%" alt="ShortcutDock Vertikal Links" /><br/><br/>
-    <strong>3. Fluent Einstellungsfenster</strong><br/>
-    <img src="screenshots/screenshot3.png" width="90%" alt="ShortcutDock Einstellungen" /><br/><br/>
-    <strong>4. Kontextmenü und Anpassungen</strong><br/>
-    <img src="screenshots/screenshot4.png" width="90%" alt="ShortcutDock Kontextmenü" /><br/><br/>
-    <strong>5. Horizontales Layout (Oben)</strong><br/>
-    <img src="screenshots/screenshot5.png" width="90%" alt="ShortcutDock Position Oben" />
+    <img src="screenshots/screenshot1.png" width="95%" alt="ShortcutDock Horizontal Unten" />
   </p>
 </details>
+
+<details>
+  <summary><b>2. Vertikales Layout (Links)</b></summary>
+  <br/>
+  <p align="center">
+    <img src="screenshots/screenshot2.png" width="95%" alt="ShortcutDock Vertikal Links" />
+  </p>
+</details>
+
+<details>
+  <summary><b>3. Fluent Einstellungsfenster</b></summary>
+  <br/>
+  <p align="center">
+    <img src="screenshots/screenshot3.png" width="95%" alt="ShortcutDock Einstellungen" />
+  </p>
+</details>
+
+<details>
+  <summary><b>4. Kontextmenü und Anpassungen</b></summary>
+  <br/>
+  <p align="center">
+    <img src="screenshots/screenshot4.png" width="95%" alt="ShortcutDock Kontextmenü" />
+  </p>
+</details>
+
+<details>
+  <summary><b>5. Horizontales Layout (Oben)</b></summary>
+  <br/>
+  <p align="center">
+    <img src="screenshots/screenshot5.png" width="95%" alt="ShortcutDock Position Oben" />
+  </p>
+</details>
+
 
 
 
