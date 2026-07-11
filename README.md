@@ -25,17 +25,29 @@ For detailed instructions on configuring all features, read the [User Guide (GUI
 
 ## Screenshots
 
-<p align="center">
-  <img src="screenshots/screenshot1.png" width="48%" alt="ShortcutDock Horizontal Bottom" />
-  <img src="screenshots/screenshot2.png" width="48%" alt="ShortcutDock Vertical Left" />
-</p>
-<p align="center">
-  <img src="screenshots/screenshot3.png" width="48%" alt="ShortcutDock Settings" />
-  <img src="screenshots/screenshot4.png" width="48%" alt="ShortcutDock Context Menu" />
-</p>
-<p align="center">
-  <img src="screenshots/screenshot5.png" width="98%" alt="ShortcutDock Top Position" />
-</p>
+<div style="display: flex; overflow-x: auto; scroll-snap-type: x mandatory; max-width: 100%; border: 2px solid #1e2327; border-radius: 8px; box-shadow: 4px 4px 0px #1e2327; margin-bottom: 20px;">
+  <div style="flex: 0 0 100%; scroll-snap-align: start; padding: 15px; box-sizing: border-box; text-align: center;">
+    <p style="font-weight: bold; margin-top: 0; font-family: sans-serif;">1. Horizontal Layout (Bottom)</p>
+    <img src="screenshots/screenshot1.png" style="max-height: 380px; max-width: 100%; object-fit: contain;" alt="ShortcutDock Horizontal Bottom" />
+  </div>
+  <div style="flex: 0 0 100%; scroll-snap-align: start; padding: 15px; box-sizing: border-box; text-align: center;">
+    <p style="font-weight: bold; margin-top: 0; font-family: sans-serif;">2. Vertical Layout (Left)</p>
+    <img src="screenshots/screenshot2.png" style="max-height: 380px; max-width: 100%; object-fit: contain;" alt="ShortcutDock Vertical Left" />
+  </div>
+  <div style="flex: 0 0 100%; scroll-snap-align: start; padding: 15px; box-sizing: border-box; text-align: center;">
+    <p style="font-weight: bold; margin-top: 0; font-family: sans-serif;">3. Fluent Settings Window</p>
+    <img src="screenshots/screenshot3.png" style="max-height: 380px; max-width: 100%; object-fit: contain;" alt="ShortcutDock Settings" />
+  </div>
+  <div style="flex: 0 0 100%; scroll-snap-align: start; padding: 15px; box-sizing: border-box; text-align: center;">
+    <p style="font-weight: bold; margin-top: 0; font-family: sans-serif;">4. Context Menu & Customizations</p>
+    <img src="screenshots/screenshot4.png" style="max-height: 380px; max-width: 100%; object-fit: contain;" alt="ShortcutDock Context Menu" />
+  </div>
+  <div style="flex: 0 0 100%; scroll-snap-align: start; padding: 15px; box-sizing: border-box; text-align: center;">
+    <p style="font-weight: bold; margin-top: 0; font-family: sans-serif;">5. Horizontal Layout (Top)</p>
+    <img src="screenshots/screenshot5.png" style="max-height: 380px; max-width: 100%; object-fit: contain;" alt="ShortcutDock Top Position" />
+  </div>
+</div>
+
 
 ---
 

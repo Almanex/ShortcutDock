@@ -25,17 +25,29 @@ ShortcutDock — это современная, легковесная пане�
 
 ## Скриншоты
 
-<p align="center">
-  <img src="screenshots/screenshot1.png" width="48%" alt="ShortcutDock Горизонтальная внизу" />
-  <img src="screenshots/screenshot2.png" width="48%" alt="ShortcutDock Вертикальная слева" />
-</p>
-<p align="center">
-  <img src="screenshots/screenshot3.png" width="48%" alt="ShortcutDock Настройки" />
-  <img src="screenshots/screenshot4.png" width="48%" alt="ShortcutDock Контекстное меню" />
-</p>
-<p align="center">
-  <img src="screenshots/screenshot5.png" width="98%" alt="ShortcutDock Позиция сверху" />
-</p>
+<div style="display: flex; overflow-x: auto; scroll-snap-type: x mandatory; max-width: 100%; border: 2px solid #1e2327; border-radius: 8px; box-shadow: 4px 4px 0px #1e2327; margin-bottom: 20px;">
+  <div style="flex: 0 0 100%; scroll-snap-align: start; padding: 15px; box-sizing: border-box; text-align: center;">
+    <p style="font-weight: bold; margin-top: 0; font-family: sans-serif;">1. Горизонтальное расположение (Снизу)</p>
+    <img src="screenshots/screenshot1.png" style="max-height: 380px; max-width: 100%; object-fit: contain;" alt="ShortcutDock Горизонтальная внизу" />
+  </div>
+  <div style="flex: 0 0 100%; scroll-snap-align: start; padding: 15px; box-sizing: border-box; text-align: center;">
+    <p style="font-weight: bold; margin-top: 0; font-family: sans-serif;">2. Вертикальное расположение (Слева)</p>
+    <img src="screenshots/screenshot2.png" style="max-height: 380px; max-width: 100%; object-fit: contain;" alt="ShortcutDock Вертикальная слева" />
+  </div>
+  <div style="flex: 0 0 100%; scroll-snap-align: start; padding: 15px; box-sizing: border-box; text-align: center;">
+    <p style="font-weight: bold; margin-top: 0; font-family: sans-serif;">3. Окно настроек Fluent Design</p>
+    <img src="screenshots/screenshot3.png" style="max-height: 380px; max-width: 100%; object-fit: contain;" alt="ShortcutDock Настройки" />
+  </div>
+  <div style="flex: 0 0 100%; scroll-snap-align: start; padding: 15px; box-sizing: border-box; text-align: center;">
+    <p style="font-weight: bold; margin-top: 0; font-family: sans-serif;">4. Контекстное меню и настройки</p>
+    <img src="screenshots/screenshot4.png" style="max-height: 380px; max-width: 100%; object-fit: contain;" alt="ShortcutDock Контекстное меню" />
+  </div>
+  <div style="flex: 0 0 100%; scroll-snap-align: start; padding: 15px; box-sizing: border-box; text-align: center;">
+    <p style="font-weight: bold; margin-top: 0; font-family: sans-serif;">5. Горизонтальное расположение (Сверху)</p>
+    <img src="screenshots/screenshot5.png" style="max-height: 380px; max-width: 100%; object-fit: contain;" alt="ShortcutDock Позиция сверху" />
+  </div>
+</div>
+
 
 ---
 
