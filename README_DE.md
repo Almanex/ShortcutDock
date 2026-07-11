@@ -1,41 +1,41 @@
 [ English ](README.md) • [ Русский ](README_RU.md) • [ Deutsch ](README_DE.md)
 
-# ShortcutDock Custom shortcut bar for Windows 11
+# ShortcutDock Benutzerdefinierte Shortcut-Leiste für Windows 11
 
 > [!IMPORTANT]
-> **First stable release available!** 
-> You can download the ready-made compiled file **`ShortcutDock.exe`** from the [Releases] page (https://github.com/Almanex/ShortcutDock/releases/tag/v1.0.0) and run it on your computer without installing additional libraries.
+> **Erste stabile Version verfügbar!** 
+> Sie können die fertige kompilierte Datei **`ShortcutDock.exe`** von der Seite [Releases] (https://github.com/Almanex/ShortcutDock/releases/tag/v1.0.0) herunterladen und auf Ihrem Computer ausführen, ohne zusätzliche Bibliotheken zu installieren.
 
-Quick launch desktop dock with support for Mica/Acrylic/full transparency effects, automatic vertical/horizontal orientation switching, Drag-and-Drop support, system integration (AppBar) and system tray integration.
+Schnellstart-Desktop-Dock mit Unterstützung für Glimmer-/Acryl-/Volltransparenzeffekte, automatischer vertikaler/horizontaler Ausrichtungsumschaltung, Drag-and-Drop-Unterstützung, Systemintegration (AppBar) und Taskleistenintegration.
 
-For detailed instructions on installing, launching and configuring all functions, read the [User Guide (GUIDE.md)](GUIDE.md).
+Ausführliche Anweisungen zum Installieren, Starten und Konfigurieren aller Funktionen finden Sie im [Benutzerhandbuch (GUIDE.md)](GUIDE.md).
 
-## Screenshots of the project
+## Screenshots des Projekts
 
 <p align="center">
  <img src="screenshots/screenshot1.png" width="48%" alt="ShortcutDock Horizontal Bottom" />
  <img src="screenshots/screenshot2.png" width="48%" alt="ShortcutDock Vertical Left" />
 </p>
 <p align="center">
- <img src="screenshots/screenshot3.png" width="48%" alt="ShortcutDock Settings" />
- <img src="screenshots/screenshot4.png" width="48%" alt="ShortcutDock Context Menu" />
+ <img src="screenshots/screenshot3.png" width="48%" alt="ShortcutDock-Einstellungen" />
+ <img src="screenshots/screenshot4.png" width="48%" alt="ShortcutDock-Kontextmenü" />
 </p>
 <p align="center">
  <img src="screenshots/screenshot5.png" width="98%" alt="ShortcutDock Top Position" />
 </p>
 
-## Technology stack
+## Technologie-Stack
 
-| Component | Technology | Version |
+| Komponente | Technologie | Version |
 |-----------|-----------|--------|
 | Язык | C# (.NET 8, LTS) | net8.0-windows |
 | UI-фреймворк | WPF + **WPF-UI 4.3.0** (`FluentWindow` для настроек, Mica) | 4.3.0 |
 | MVVM | **CommunityToolkit.Mvvm** (`[ObservableProperty]`, `[RelayCommand]`) | 8.4.2 |
-| Win32 P/Invoke | Manual `DllImport` (user32, dwmapi, shell32) | |
+| Win32 P/Invoke | Handbuch `DllImport` (user32, dwmapi, shell32) | |
 | JSON | `System.Text.Json` (inline) | |
-| Graphics | `System.Drawing.Common` (Bitmap PNG for icon cache, ICO upload) | 8.0.0 |
+| Grafiken | `System.Drawing.Common` (Bitmap PNG für Icon-Cache, ICO-Upload) | 8.0.0 |
 
-## Project structure
+## Projektstruktur
 
 ```
 D:\Develop\tsreen\
@@ -65,9 +65,9 @@ D:\Develop\tsreen\
         └── ShortcutViewModel.cs   # Launch, RunAsAdmin, Remove команды
 ```
 
-## Data
+## Daten
 
-Configuration: `%AppData%\ShortcutDock\settings.json`
+Konfiguration: „%AppData%\ShortcutDock\settings.json“.
 
 ```json
 {
@@ -92,40 +92,40 @@ Configuration: `%AppData%\ShortcutDock\settings.json`
 }
 ```
 
-Icon cache: `%AppData%\ShortcutDock\Cache\*.png`
+Symbol-Cache: „%AppData%\ShortcutDock\Cache\*.png“.
 
-## Controls and functions
+## Bedienelemente und Funktionen
 
-### Main panel
-| Action | How |
+### Hauptpanel
+| Aktion | Wie |
 |----------|-----|
 | **Добавить ярлык** | Drag-and-Drop файла `.exe` / `.lnk` на панель, или кнопка **«+»** (если включена), или ПКМ по панели → «Добавить приложение» |
-| **Launch/Activate application** | LMB click on the icon. If the program is already running (and the indicators are turned on), the click will focus and bring the existing window to the front instead of starting a new copy. |
-| **Run as administrator** | RMB on the “Run as administrator” icon |
-| **Remove from panel** | RMB on the “Remove from panel” icon |
-| **Open Settings** | RMB on the free space of the Panel Settings panel or the tray context menu |
+| **Anwendung starten/aktivieren** | Klicken Sie mit der linken Maustaste auf das Symbol. Wenn das Programm bereits ausgeführt wird (und die Anzeigen eingeschaltet sind), fokussiert der Klick und bringt das vorhandene Fenster in den Vordergrund, anstatt eine neue Kopie zu starten. |
+| **Als Administrator ausführen** | RMB auf dem Symbol „Als Administrator ausführen“ |
+| **Vom Bedienfeld entfernen** | RMB auf das Symbol „Aus Panel entfernen“ |
+| **Einstellungen öffnen** | RMB auf dem freien Speicherplatz des Panel-Einstellungen-Panels oder des Taskleisten-Kontextmenüs |
 | **Закрыть панель** | ПКМ по свободному месту панели → «Закрыть панель» или контекстное меню трея -> Выход |
 
-### System tray
-- A custom application icon is displayed in the Windows notification area (tray).
-- Double click on the icon collapses/expands the dock panel.
-- The context menu allows you to switch visibility, open the settings window or exit the application.
+### Taskleiste
+- Im Windows-Infobereich (Taskleiste) wird ein benutzerdefiniertes Anwendungssymbol angezeigt.
+- Doppelklicken Sie auf das Symbol, um das Dock-Panel zu verkleinern/erweitern.
+- Über das Kontextmenü können Sie die Sichtbarkeit wechseln, das Einstellungsfenster öffnen oder die Anwendung beenden.
 
-### Settings window
-- **Position on screen:** Bottom, Top, Left, Right. When you select the left or right side, the panel automatically switches to portrait orientation.
-- **Blur Effect:** None (100% transparency with icons only), Mica, Acrylic.
-- **Icon size:** 32 px, 40 px, 48 px, 64 px (dynamically resizes).
-- **On top of all windows:** Enables/disables docking on top of other windows and reserving space on the desktop (AppBar). When you disable a panel, other windows may overlap it.
-- **Show "+" button on panel:** Allows you to hide the add button on the dock for a more minimalistic look.
-- **Automatically hide the panel (Auto-Hide):** The panel smoothly hides off the screen when you lose mouse focus (leaving a 2px strip to call), temporarily removing the reservation of the AppBar workspace to fully maximize third-party windows.
-- **Hover Zoom effect:** Smoothly zooms icons on hover, macOS style, creating an interactive wave.
-- **Indicators of running programs:** Displays accent color dots under running programs and redirects the click to activate an existing window.
+### Einstellungsfenster
+- **Position auf dem Bildschirm:** Unten, Oben, Links, Rechts. Wenn Sie die linke oder rechte Seite auswählen, wechselt das Bedienfeld automatisch in die Hochformatausrichtung.
+- **Unschärfeeffekt:** Keine (100 % Transparenz nur mit Symbolen), Glimmer, Acryl.
+- **Symbolgröße:** 32 px, 40 px, 48 px, 64 px (dynamische Größenänderung).
+- **Über allen Fenstern:** Aktiviert/deaktiviert das Andocken über anderen Fenstern und das Reservieren von Platz auf dem Desktop (AppBar). Wenn Sie ein Bedienfeld deaktivieren, wird es möglicherweise von anderen Fenstern überlagert.
+- **Schaltfläche „+“ im Bedienfeld anzeigen:** Ermöglicht das Ausblenden der Schaltfläche „Hinzufügen“ im Dock für ein minimalistischeres Erscheinungsbild.
+- **Bedienfeld automatisch ausblenden (Auto-Hide):** Das Bedienfeld wird sanft vom Bildschirm ausgeblendet, wenn Sie den Mausfokus verlieren (es bleibt ein 2-Pixel-Streifen zum Aufrufen übrig), wodurch die Reservierung des AppBar-Arbeitsbereichs vorübergehend aufgehoben wird, um Fenster von Drittanbietern vollständig zu maximieren.
+- **Hover-Zoom-Effekt:** Zoomt Symbole beim Hover stufenlos im macOS-Stil und erzeugt so eine interaktive Welle.
+- **Indikatoren für laufende Programme:** Zeigt Akzentfarbpunkte unter laufenden Programmen an und leitet den Klick um, um ein vorhandenes Fenster zu aktivieren.
 
 ---
 
-## History of changes
+## Änderungsverlauf
 
-| Date | Change |
+| Datum | Ändern |
 |------|-----------|
 | 2026-06-19 | Первичная реализация: проект, модели, сервисы, UI, AppBar |
 | 2026-06-19 | Исправлены XAML-пространства имен WPF-UI и ссылки на `System.Drawing.Common` |
