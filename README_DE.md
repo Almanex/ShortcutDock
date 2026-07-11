@@ -1,73 +1,99 @@
 [ English ](README.md) • [ Русский ](README_RU.md) • [ Deutsch ](README_DE.md)
 
-# ShortcutDock Benutzerdefinierte Shortcut-Leiste für Windows 11
+# ShortcutDock
+
+**Anpassbare Fluent-Design-Schnellstartleiste für Windows 11-Desktops**
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Platform: Windows](https://img.shields.io/badge/Platform-Windows%2010%20%2F%2011-blue.svg)](#)
+[![Framework: .NET 8](https://img.shields.io/badge/Framework-.NET%208.0-blueviolet.svg)](https://dotnet.microsoft.com)
+[![Share on X](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2FAlmanex%2FShortcutDock)](https://twitter.com/intent/tweet?text=Schau%20dir%20ShortcutDock%20an%20--%20eine%20wundersch%C3%B6ne%2C%20anpassbare%20Schnellstartleiste%20f%C3%BCr%20Windows%2011%21&url=https%3A%2F%2Fgithub.com%2FAlmanex%2FShortcutDock&hashtags=windows11,wpf,dotnet,opensource)
+
+---
+
+## Übersicht
+
+ShortcutDock ist eine moderne, leichtgewichtige Windows-Desktop-Leiste zur Organisation Ihrer Verknüpfungen. Sie bietet Mica- und Acrylic-Weichzeichnungseffekte, die sich mit dem aktiven Windows-Systemdesign synchronisieren, Drag-and-Drop-Unterstützung, automatische Ausrichtung zwischen vertikaler und horizontaler Ausrichtung, Systemplatzreservierung (AppBar) und System-Tray-Integration.
 
 > [!IMPORTANT]
-> **Erste stabile Version verfügbar!** 
-> Sie können die fertige kompilierte Datei **`ShortcutDock.exe`** von der Seite [Releases] (https://github.com/Almanex/ShortcutDock/releases/tag/v1.0.0) herunterladen und auf Ihrem Computer ausführen, ohne zusätzliche Bibliotheken zu installieren.
+> **Erste stabile Version verfügbar!**  
+> Sie können die fertige, kompilierte Datei **`ShortcutDock.exe`** auf der [Releases](https://github.com/Almanex/ShortcutDock/releases/tag/v1.0.0)-Seite herunterladen und direkt auf Ihrem Computer ausführen, ohne zusätzliche Bibliotheken installieren zu müssen.
 
-Schnellstart-Desktop-Dock mit Unterstützung für Glimmer-/Acryl-/Volltransparenzeffekte, automatischer vertikaler/horizontaler Ausrichtungsumschaltung, Drag-and-Drop-Unterstützung, Systemintegration (AppBar) und Taskleistenintegration.
+Ausführliche Anweisungen zur Konfiguration aller Funktionen finden Sie im [Benutzerhandbuch (GUIDE.md)](GUIDE.md).
 
-Ausführliche Anweisungen zum Installieren, Starten und Konfigurieren aller Funktionen finden Sie im [Benutzerhandbuch (GUIDE.md)](GUIDE.md).
+---
 
-## Screenshots des Projekts
+## Screenshots
 
 <p align="center">
- <img src="screenshots/screenshot1.png" width="48%" alt="ShortcutDock Horizontal Bottom" />
- <img src="screenshots/screenshot2.png" width="48%" alt="ShortcutDock Vertical Left" />
+  <img src="screenshots/screenshot1.png" width="48%" alt="ShortcutDock Horizontal Unten" />
+  <img src="screenshots/screenshot2.png" width="48%" alt="ShortcutDock Vertikal Links" />
 </p>
 <p align="center">
- <img src="screenshots/screenshot3.png" width="48%" alt="ShortcutDock-Einstellungen" />
- <img src="screenshots/screenshot4.png" width="48%" alt="ShortcutDock-Kontextmenü" />
+  <img src="screenshots/screenshot3.png" width="48%" alt="ShortcutDock Einstellungen" />
+  <img src="screenshots/screenshot4.png" width="48%" alt="ShortcutDock Kontextmenü" />
 </p>
 <p align="center">
- <img src="screenshots/screenshot5.png" width="98%" alt="ShortcutDock Top Position" />
+  <img src="screenshots/screenshot5.png" width="98%" alt="ShortcutDock Position Oben" />
 </p>
 
-## Technologie-Stack
+---
 
-| Komponente | Technologie | Version |
-|-----------|-----------|--------|
-| Язык | C# (.NET 8, LTS) | net8.0-windows |
-| UI-фреймворк | WPF + **WPF-UI 4.3.0** (`FluentWindow` для настроек, Mica) | 4.3.0 |
-| MVVM | **CommunityToolkit.Mvvm** (`[ObservableProperty]`, `[RelayCommand]`) | 8.4.2 |
-| Win32 P/Invoke | Handbuch `DllImport` (user32, dwmapi, shell32) | |
-| JSON | `System.Text.Json` (inline) | |
-| Grafiken | `System.Drawing.Common` (Bitmap PNG für Icon-Cache, ICO-Upload) | 8.0.0 |
+## Hauptfunktionen
+
+- Desktop-Leiste: Ziehen Sie `.exe`- oder `.lnk`-Dateien einfach per Drag-and-Drop direkt auf die Leiste, um sie hinzuzufügen.
+- Dynamische Ausrichtung: Wechselt automatisch zwischen vertikalen (linke/rechte Bildschirmseite) und horizontalen (oben/unten) Layouts.
+- Modernes Design: Unterstützung für Mica- und Acrylic-Weichzeichnungseffekte, synchronisiert mit dem aktiven Windows-Systemdesign (hell/dunkel).
+- Automatisches Ausblenden: Die Leiste wird sanft ausgeblendet, wenn der Mausfokus verloren geht, um die Arbeitsfläche zu maximieren.
+- Hover-Zoom & Aktivitätsindikatoren: macOS-ähnliche Icon-Vergrößerungsanimation beim Überfahren mit der Maus und farbige Punkte unter geöffneten Anwendungen.
+
+---
+
+## Technologiestapel
+
+| Ebene / Komponente | Technologie | Version | Zweck |
+| --- | --- | --- | --- |
+| Sprache | C# (.NET 8.0) | net8.0-windows | Hauptprogrammiersprache |
+| UI-Framework | WPF + WPF-UI | 4.3.0 | Moderne Steuerelemente und Mica-Fensterrahmen |
+| Entwurfsmuster | MVVM Toolkit | 8.4.2 | Zustandsbindung über CommunityToolkit.Mvvm |
+| Win32-Integration | P/Invoke | - | APIs für DWM, Fensterstile und AppBar |
+| Grafikbibliothek | System.Drawing.Common | 8.0.0 | Icon-Extraktion und PNG-Rendering |
+
+---
 
 ## Projektstruktur
 
-```
-D:\Develop\tsreen\
-├── ShortcutDock.slnx              # Решение (новый XML-формат, SDK 10)
-├── README.md                       # Этот файл
+```text
+ShortcutDock/
+├── ShortcutDock.slnx              # Visual Studio-Projektmappe (SDK 10-Format)
 └── src\ShortcutDock\
-    ├── ShortcutDock.csproj         # net8.0-windows, UseWPF, UseWindowsForms, UseSystemDrawing, ApplicationIcon
-    ├── app.manifest                # PerMonitorV2 DPI, asInvoker, Win10/11 compat
-    ├── App.xaml / App.xaml.cs      # Точка входа, DI (manual), инициализация системного трея (NotifyIcon)
-    ├── MainWindow.xaml / .xaml.cs  # Главная панель, DWM-эффекты размытия, Alt+Tab hide, DnD, переключение ориентации
-    ├── SettingsWindow.xaml / .cs   # Окно настроек (Mica, CardControl, переключатели)
-    ├── app_icon.ico                # Встроенный значок приложения
+    ├── ShortcutDock.csproj         # net8.0-windows Konfiguration
+    ├── app.manifest                # DPI-Kompatibilität und Windows-Manifest
+    ├── App.xaml / App.xaml.cs      # Einstiegspunkt, DI-Container und Tray-Service
+    ├── MainWindow.xaml / .xaml.cs  # Hauptleiste, DWM-Blur, DnD- und AppBar-Integration
+    ├── SettingsWindow.xaml / .cs   # Fluent-Design Einstellungsfenster
+    ├── app_icon.ico                # Integriertes Programmsymbol
     ├── Native\
-    │   └── Win32.cs                # P/Invoke: GWL_EXSTYLE, DwmSetWindowAttribute, DwmExtendFrame,
-    │                               #         RegisterWindowMessage, MonitorFromWindow
+    │   └── Win32.cs                # P/Invoke-Schnittstellendefinitionen
     ├── Models\
     │   ├── Settings.cs            
-    │   ├── PanelSettings.cs        # Position, IconSize, KeepOnTop, BackdropType, ShowAddButton
-    │   └── ShortcutItem.cs         # Id (GUID), Name, TargetPath, IconPath
+    │   ├── PanelSettings.cs        # Leisteneinstellungen
+    │   └── ShortcutItem.cs         # Verknüpfungsmodell (GUID, Pfad, Cache-Symbol)
     ├── Services\
-    │   ├── SettingsService.cs      # Load/Save %AppData%\ShortcutDock\settings.json
-    │   ├── ProcessLauncher.cs     # Process.Start(UseShellExecute=true, Verb="runas")
-    │   ├── ShortcutResolver.cs     # .lnk → .exe через COM IShellLinkW + IPersistFile
-    │   └── IconExtractor.cs       # SHGetImageList (JUMBO 256→EXTRALARGE 48→32) → PNG cache
+    │   ├── SettingsService.cs      # settings.json in %AppData% laden/speichern
+    │   ├── ProcessLauncher.cs     # Anwendungsstart, auch mit Administratorrechten
+    │   ├── ShortcutResolver.cs     # Auflösen von .lnk-Verknüpfungen über COM
+    │   └── IconExtractor.cs       # Extraktion großer Symbole (256x256) in PNG-Cache
     └── ViewModels\
-        ├── MainViewModel.cs       # Коллекция ярлыков, AddViaDialog, AddFromFile, настройки, Persist
-        └── ShortcutViewModel.cs   # Launch, RunAsAdmin, Remove команды
+        ├── MainViewModel.cs       # Verwaltung der Verknüpfungssammlung und Einstellungen
+        └── ShortcutViewModel.cs   # Befehle zum Starten, Entfernen und für Admin-Rechte
 ```
 
-## Daten
+---
 
-Konfiguration: „%AppData%\ShortcutDock\settings.json“.
+## Daten und Konfiguration
+
+Die Einstellungen werden als JSON unter `%AppData%\ShortcutDock\settings.json` gespeichert:
 
 ```json
 {
@@ -92,50 +118,60 @@ Konfiguration: „%AppData%\ShortcutDock\settings.json“.
 }
 ```
 
-Symbol-Cache: „%AppData%\ShortcutDock\Cache\*.png“.
-
-## Bedienelemente und Funktionen
-
-### Hauptpanel
-| Aktion | Wie |
-|----------|-----|
-| **Добавить ярлык** | Drag-and-Drop файла `.exe` / `.lnk` на панель, или кнопка **«+»** (если включена), или ПКМ по панели → «Добавить приложение» |
-| **Anwendung starten/aktivieren** | Klicken Sie mit der linken Maustaste auf das Symbol. Wenn das Programm bereits ausgeführt wird (und die Anzeigen eingeschaltet sind), fokussiert der Klick und bringt das vorhandene Fenster in den Vordergrund, anstatt eine neue Kopie zu starten. |
-| **Als Administrator ausführen** | RMB auf dem Symbol „Als Administrator ausführen“ |
-| **Vom Bedienfeld entfernen** | RMB auf das Symbol „Aus Panel entfernen“ |
-| **Einstellungen öffnen** | RMB auf dem freien Speicherplatz des Panel-Einstellungen-Panels oder des Taskleisten-Kontextmenüs |
-| **Закрыть панель** | ПКМ по свободному месту панели → «Закрыть панель» или контекстное меню трея -> Выход |
-
-### Taskleiste
-- Im Windows-Infobereich (Taskleiste) wird ein benutzerdefiniertes Anwendungssymbol angezeigt.
-- Doppelklicken Sie auf das Symbol, um das Dock-Panel zu verkleinern/erweitern.
-- Über das Kontextmenü können Sie die Sichtbarkeit wechseln, das Einstellungsfenster öffnen oder die Anwendung beenden.
-
-### Einstellungsfenster
-- **Position auf dem Bildschirm:** Unten, Oben, Links, Rechts. Wenn Sie die linke oder rechte Seite auswählen, wechselt das Bedienfeld automatisch in die Hochformatausrichtung.
-- **Unschärfeeffekt:** Keine (100 % Transparenz nur mit Symbolen), Glimmer, Acryl.
-- **Symbolgröße:** 32 px, 40 px, 48 px, 64 px (dynamische Größenänderung).
-- **Über allen Fenstern:** Aktiviert/deaktiviert das Andocken über anderen Fenstern und das Reservieren von Platz auf dem Desktop (AppBar). Wenn Sie ein Bedienfeld deaktivieren, wird es möglicherweise von anderen Fenstern überlagert.
-- **Schaltfläche „+“ im Bedienfeld anzeigen:** Ermöglicht das Ausblenden der Schaltfläche „Hinzufügen“ im Dock für ein minimalistischeres Erscheinungsbild.
-- **Bedienfeld automatisch ausblenden (Auto-Hide):** Das Bedienfeld wird sanft vom Bildschirm ausgeblendet, wenn Sie den Mausfokus verlieren (es bleibt ein 2-Pixel-Streifen zum Aufrufen übrig), wodurch die Reservierung des AppBar-Arbeitsbereichs vorübergehend aufgehoben wird, um Fenster von Drittanbietern vollständig zu maximieren.
-- **Hover-Zoom-Effekt:** Zoomt Symbole beim Hover stufenlos im macOS-Stil und erzeugt so eine interaktive Welle.
-- **Indikatoren für laufende Programme:** Zeigt Akzentfarbpunkte unter laufenden Programmen an und leitet den Klick um, um ein vorhandenes Fenster zu aktivieren.
+Der Icon-Cache wird unter `%AppData%\ShortcutDock\Cache\*.png` abgelegt.
 
 ---
 
-## Änderungsverlauf
+## Erste Schritte
 
-| Datum | Ändern |
-|------|-----------|
-| 2026-06-19 | Первичная реализация: проект, модели, сервисы, UI, AppBar |
-| 2026-06-19 | Исправлены XAML-пространства имен WPF-UI и ссылки на `System.Drawing.Common` |
-| 2026-06-19 | Исправлена работа Mica/Acrylic за счет перехода к композиции `AllowsTransparency="False"` + `WindowChrome` + DWM P/Invoke |
-| 2026-06-19 | Исправлена логика AppBar (позиционирование, устранение бесконечного цикла изменения размеров в связке с `SizeToContent`) |
-| 2026-06-19 | Разработана форма настроек Fluent-дизайна (SettingsWindow) с полной привязкой настроек в реальном времени |
-| 2026-06-19 | Добавлена интеграция с системным треем (NotifyIcon, ContextMenuStrip) |
-| 2026-06-19 | Реализована поддержка вертикальных ориентаций и адаптивных триггеров XAML |
-| 2026-06-19 | Интегрирована собственная иконка `app_icon.ico` для сборки и трея. Очищены временные ресурсы. |
-| 2026-06-24 | Устранена утечка и зависание AppBar при системных событиях `WM_SETTINGCHANGE`. Настроен автономный релиз. |
-| 2026-06-28 | Исправлена работа Корзины: выравнивание структуры `SHQUERYRBINFO` на x64 системах, запуск папки кликом и сброс кэша значков на старте. |
-| 2026-07-03 | Интегрирована синхронизация с системной темой (`SystemThemeWatcher`): фон панели (Mica/Acrylic) и элементы интерфейса теперь нативно меняют тему на темную/светлую. |
-| 2026-07-03 | Добавлен премиум-функционал: автоскрытие (Auto-Hide), эффект увеличения значков (Hover Zoom), индикаторы запущенных приложений с восстановлением окон на передний план и анимации отскока (Bounce). Исправлен краш окна настроек. |
+### Voraussetzungen
+- .NET 8.0 SDK oder neuer
+
+### Bauen & Ausführen
+```powershell
+# Repository klonen
+git clone https://github.com/Almanex/ShortcutDock.git
+cd ShortcutDock
+
+# Abhängigkeiten wiederherstellen und bauen
+dotnet build
+
+# Projekt ausführen
+dotnet run --project src\ShortcutDock
+```
+
+### Standalone Veröffentlichung
+So kompilieren Sie eine einzelne, eigenständige ausführbare Datei:
+```powershell
+dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true
+```
+Die fertige ausführbare Datei wird unter `src\ShortcutDock\bin\Release\net8.0-windows\win-x64\publish\` gespeichert.
+
+---
+
+## Tests ausführen
+Dieses Projekt verwendet manuelle UI-Tests und automatisierte Build-Checks. So überprüfen Sie die Formatierung und den Build:
+```powershell
+dotnet build -c Release
+```
+
+---
+
+## Mitwirken
+Bitte senden Sie Fehlerberichte (Issues) und Pull Requests auf GitHub. Bei größeren Änderungen erstellen Sie bitte zuerst ein Issue zur Diskussion.
+
+---
+
+## Versionsverwaltung
+Wir verwenden SemVer für die Versionsverwaltung. Verfügbare Versionen und Tags finden Sie unter Releases.
+
+---
+
+## Autoren & Danksagungen
+- Almanex - Entwickler und Erstumsetzung.
+- WPF-UI Community für moderne Designelemente.
+
+---
+
+## Lizenz
+Dieses Projekt ist unter der MIT-Lizenz lizenziert - siehe die `LICENSE`-Datei für Details.

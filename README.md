@@ -1,73 +1,99 @@
 [ English ](README.md) • [ Русский ](README_RU.md) • [ Deutsch ](README_DE.md)
 
-# ShortcutDock Custom shortcut bar for Windows 11
+# ShortcutDock
+
+**Customizable Fluent design shortcut dock panel for Windows 11 desktops**
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Platform: Windows](https://img.shields.io/badge/Platform-Windows%2010%20%2F%2011-blue.svg)](#)
+[![Framework: .NET 8](https://img.shields.io/badge/Framework-.NET%208.0-blueviolet.svg)](https://dotnet.microsoft.com)
+[![Share on X](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2FAlmanex%2FShortcutDock)](https://twitter.com/intent/tweet?text=Check%20out%20ShortcutDock%20--%20a%20beautiful%20customizable%20shortcut%20dock%20for%20Windows%2011%21&url=https%3A%2F%2Fgithub.com%2FAlmanex%2FShortcutDock&hashtags=windows11,wpf,dotnet,opensource)
+
+---
+
+## Overview
+
+ShortcutDock is a modern, lightweight Windows desktop dock panel designed to organize your shortcuts. It features Mica and Acrylic blur effects that sync with the active Windows system theme, support for Drag-and-Drop, automatic vertical and horizontal layout orientation, system AppBar reservation, and tray integration.
 
 > [!IMPORTANT]
-> **First stable release available!** 
-> You can download the ready-made compiled file **`ShortcutDock.exe`** from the [Releases] page (https://github.com/Almanex/ShortcutDock/releases/tag/v1.0.0) and run it on your computer without installing additional libraries.
+> **First stable release available!**  
+> You can download the ready-made compiled file **`ShortcutDock.exe`** on the [Releases](https://github.com/Almanex/ShortcutDock/releases/tag/v1.0.0) page and run it on your computer without installing additional libraries.
 
-Quick launch desktop dock with support for Mica/Acrylic/full transparency effects, automatic vertical/horizontal orientation switching, Drag-and-Drop support, system integration (AppBar) and system tray integration.
+For detailed instructions on configuring all features, read the [User Guide (GUIDE.md)](GUIDE.md).
 
-For detailed instructions on installing, launching and configuring all functions, read the [User Guide (GUIDE.md)](GUIDE.md).
+---
 
-## Screenshots of the project
+## Screenshots
 
 <p align="center">
- <img src="screenshots/screenshot1.png" width="48%" alt="ShortcutDock Horizontal Bottom" />
- <img src="screenshots/screenshot2.png" width="48%" alt="ShortcutDock Vertical Left" />
+  <img src="screenshots/screenshot1.png" width="48%" alt="ShortcutDock Horizontal Bottom" />
+  <img src="screenshots/screenshot2.png" width="48%" alt="ShortcutDock Vertical Left" />
 </p>
 <p align="center">
- <img src="screenshots/screenshot3.png" width="48%" alt="ShortcutDock Settings" />
- <img src="screenshots/screenshot4.png" width="48%" alt="ShortcutDock Context Menu" />
+  <img src="screenshots/screenshot3.png" width="48%" alt="ShortcutDock Settings" />
+  <img src="screenshots/screenshot4.png" width="48%" alt="ShortcutDock Context Menu" />
 </p>
 <p align="center">
- <img src="screenshots/screenshot5.png" width="98%" alt="ShortcutDock Top Position" />
+  <img src="screenshots/screenshot5.png" width="98%" alt="ShortcutDock Top Position" />
 </p>
 
-## Technology stack
+---
 
-| Component | Technology | Version |
-|-----------|-----------|--------|
-| Язык | C# (.NET 8, LTS) | net8.0-windows |
-| UI-фреймворк | WPF + **WPF-UI 4.3.0** (`FluentWindow` для настроек, Mica) | 4.3.0 |
-| MVVM | **CommunityToolkit.Mvvm** (`[ObservableProperty]`, `[RelayCommand]`) | 8.4.2 |
-| Win32 P/Invoke | Manual `DllImport` (user32, dwmapi, shell32) | |
-| JSON | `System.Text.Json` (inline) | |
-| Graphics | `System.Drawing.Common` (Bitmap PNG for icon cache, ICO upload) | 8.0.0 |
+## Key Features
 
-## Project structure
+- Desktop Panel: Drag-and-drop `.exe` or `.lnk` files directly onto the panel to add.
+- Dynamic Orientation: Switches between vertical (left/right screen positions) and horizontal (top/bottom) layouts.
+- Modern Backdrop: Support for Mica and Acrylic blur effects in sync with the active Windows theme.
+- Auto-Hide: Panel smoothly hides off-screen when mouse focus is lost to maximize workspace.
+- Hover Zoom & Active Indicators: macOS-style icon zoom animation on hover and accent color dots under running applications.
 
-```
-D:\Develop\tsreen\
-├── ShortcutDock.slnx              # Решение (новый XML-формат, SDK 10)
-├── README.md                       # Этот файл
+---
+
+## Tech Stack
+
+| Layer / Component | Technology | Version | Purpose |
+| --- | --- | --- | --- |
+| Language | C# (.NET 8.0) | net8.0-windows | Main programming language |
+| UI Framework | WPF + WPF-UI | 4.3.0 | Modern controls and Mica window shell |
+| Pattern | MVVM Toolkit | 8.4.2 | CommunityToolkit.Mvvm for state binding |
+| Win32 Interop | P/Invoke | - | DWM, WindowStyle, and AppBar APIs |
+| Image Lib | System.Drawing.Common | 8.0.0 | Icon Extraction and PNG rendering |
+
+---
+
+## Project Structure
+
+```text
+ShortcutDock/
+├── ShortcutDock.slnx              # Visual Studio Solution (SDK 10 format)
 └── src\ShortcutDock\
-    ├── ShortcutDock.csproj         # net8.0-windows, UseWPF, UseWindowsForms, UseSystemDrawing, ApplicationIcon
-    ├── app.manifest                # PerMonitorV2 DPI, asInvoker, Win10/11 compat
-    ├── App.xaml / App.xaml.cs      # Точка входа, DI (manual), инициализация системного трея (NotifyIcon)
-    ├── MainWindow.xaml / .xaml.cs  # Главная панель, DWM-эффекты размытия, Alt+Tab hide, DnD, переключение ориентации
-    ├── SettingsWindow.xaml / .cs   # Окно настроек (Mica, CardControl, переключатели)
-    ├── app_icon.ico                # Встроенный значок приложения
+    ├── ShortcutDock.csproj         # net8.0-windows configuration
+    ├── app.manifest                # DPI awareness and compatibility manifest
+    ├── App.xaml / App.xaml.cs      # Entry point, DI container, and Tray service
+    ├── MainWindow.xaml / .xaml.cs  # Main panel, DWM blur, DnD, and orientation hooks
+    ├── SettingsWindow.xaml / .cs   # Fluent settings window
+    ├── app_icon.ico                # App icon asset
     ├── Native\
-    │   └── Win32.cs                # P/Invoke: GWL_EXSTYLE, DwmSetWindowAttribute, DwmExtendFrame,
-    │                               #         RegisterWindowMessage, MonitorFromWindow
+    │   └── Win32.cs                # P/Invoke helper definitions
     ├── Models\
     │   ├── Settings.cs            
-    │   ├── PanelSettings.cs        # Position, IconSize, KeepOnTop, BackdropType, ShowAddButton
-    │   └── ShortcutItem.cs         # Id (GUID), Name, TargetPath, IconPath
+    │   ├── PanelSettings.cs        # Panel preferences
+    │   └── ShortcutItem.cs         # Shortcut model (GUID, path, cached icon)
     ├── Services\
-    │   ├── SettingsService.cs      # Load/Save %AppData%\ShortcutDock\settings.json
-    │   ├── ProcessLauncher.cs     # Process.Start(UseShellExecute=true, Verb="runas")
-    │   ├── ShortcutResolver.cs     # .lnk → .exe через COM IShellLinkW + IPersistFile
-    │   └── IconExtractor.cs       # SHGetImageList (JUMBO 256→EXTRALARGE 48→32) → PNG cache
+    │   ├── SettingsService.cs      # Load/save settings.json in %AppData%
+    │   ├── ProcessLauncher.cs     # Executes apps, supports admin elevation
+    │   ├── ShortcutResolver.cs     # Resolves shell links (.lnk) via COM interfaces
+    │   └── IconExtractor.cs       # Jumbo icon extraction (256x256) to PNG cache
     └── ViewModels\
-        ├── MainViewModel.cs       # Коллекция ярлыков, AddViaDialog, AddFromFile, настройки, Persist
-        └── ShortcutViewModel.cs   # Launch, RunAsAdmin, Remove команды
+        ├── MainViewModel.cs       # Handles main collection and settings
+        └── ShortcutViewModel.cs   # Commands for launch, elevation, and deletion
 ```
 
-## Data
+---
 
-Configuration: `%AppData%\ShortcutDock\settings.json`
+## Data & Configuration
+
+Configuration is saved in JSON format under `%AppData%\ShortcutDock\settings.json`:
 
 ```json
 {
@@ -92,50 +118,60 @@ Configuration: `%AppData%\ShortcutDock\settings.json`
 }
 ```
 
-Icon cache: `%AppData%\ShortcutDock\Cache\*.png`
-
-## Controls and functions
-
-### Main panel
-| Action | How |
-|----------|-----|
-| **Добавить ярлык** | Drag-and-Drop файла `.exe` / `.lnk` на панель, или кнопка **«+»** (если включена), или ПКМ по панели → «Добавить приложение» |
-| **Launch/Activate application** | LMB click on the icon. If the program is already running (and the indicators are turned on), the click will focus and bring the existing window to the front instead of starting a new copy. |
-| **Run as administrator** | RMB on the “Run as administrator” icon |
-| **Remove from panel** | RMB on the “Remove from panel” icon |
-| **Open Settings** | RMB on the free space of the Panel Settings panel or the tray context menu |
-| **Закрыть панель** | ПКМ по свободному месту панели → «Закрыть панель» или контекстное меню трея -> Выход |
-
-### System tray
-- A custom application icon is displayed in the Windows notification area (tray).
-- Double click on the icon collapses/expands the dock panel.
-- The context menu allows you to switch visibility, open the settings window or exit the application.
-
-### Settings window
-- **Position on screen:** Bottom, Top, Left, Right. When you select the left or right side, the panel automatically switches to portrait orientation.
-- **Blur Effect:** None (100% transparency with icons only), Mica, Acrylic.
-- **Icon size:** 32 px, 40 px, 48 px, 64 px (dynamically resizes).
-- **On top of all windows:** Enables/disables docking on top of other windows and reserving space on the desktop (AppBar). When you disable a panel, other windows may overlap it.
-- **Show "+" button on panel:** Allows you to hide the add button on the dock for a more minimalistic look.
-- **Automatically hide the panel (Auto-Hide):** The panel smoothly hides off the screen when you lose mouse focus (leaving a 2px strip to call), temporarily removing the reservation of the AppBar workspace to fully maximize third-party windows.
-- **Hover Zoom effect:** Smoothly zooms icons on hover, macOS style, creating an interactive wave.
-- **Indicators of running programs:** Displays accent color dots under running programs and redirects the click to activate an existing window.
+Icon cache is stored under `%AppData%\ShortcutDock\Cache\*.png`.
 
 ---
 
-## History of changes
+## Getting Started
 
-| Date | Change |
-|------|-----------|
-| 2026-06-19 | Первичная реализация: проект, модели, сервисы, UI, AppBar |
-| 2026-06-19 | Исправлены XAML-пространства имен WPF-UI и ссылки на `System.Drawing.Common` |
-| 2026-06-19 | Исправлена работа Mica/Acrylic за счет перехода к композиции `AllowsTransparency="False"` + `WindowChrome` + DWM P/Invoke |
-| 2026-06-19 | Исправлена логика AppBar (позиционирование, устранение бесконечного цикла изменения размеров в связке с `SizeToContent`) |
-| 2026-06-19 | Разработана форма настроек Fluent-дизайна (SettingsWindow) с полной привязкой настроек в реальном времени |
-| 2026-06-19 | Добавлена интеграция с системным треем (NotifyIcon, ContextMenuStrip) |
-| 2026-06-19 | Реализована поддержка вертикальных ориентаций и адаптивных триггеров XAML |
-| 2026-06-19 | Интегрирована собственная иконка `app_icon.ico` для сборки и трея. Очищены временные ресурсы. |
-| 2026-06-24 | Устранена утечка и зависание AppBar при системных событиях `WM_SETTINGCHANGE`. Настроен автономный релиз. |
-| 2026-06-28 | Исправлена работа Корзины: выравнивание структуры `SHQUERYRBINFO` на x64 системах, запуск папки кликом и сброс кэша значков на старте. |
-| 2026-07-03 | Интегрирована синхронизация с системной темой (`SystemThemeWatcher`): фон панели (Mica/Acrylic) и элементы интерфейса теперь нативно меняют тему на темную/светлую. |
-| 2026-07-03 | Добавлен премиум-функционал: автоскрытие (Auto-Hide), эффект увеличения значков (Hover Zoom), индикаторы запущенных приложений с восстановлением окон на передний план и анимации отскока (Bounce). Исправлен краш окна настроек. |
+### Prerequisites
+- .NET 8.0 SDK or newer
+
+### Build & Run
+```powershell
+# Clone the repository
+git clone https://github.com/Almanex/ShortcutDock.git
+cd ShortcutDock
+
+# Restore dependencies and build
+dotnet build
+
+# Run project
+dotnet run --project src\ShortcutDock
+```
+
+### Standalone Publication
+To compile a single executable with all dependencies bundled inside:
+```powershell
+dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true
+```
+The output file will be saved in `src\ShortcutDock\bin\Release\net8.0-windows\win-x64\publish\`.
+
+---
+
+## Running the Tests
+This project uses manual UI verification and automated build checks. To verify code formatting:
+```powershell
+dotnet build -c Release
+```
+
+---
+
+## Contributing
+Please submit issues and pull requests on our GitHub repository. For major changes, open an issue first to discuss what you want to change.
+
+---
+
+## Versioning
+We use SemVer for versioning. For available versions, see the tags on this repository.
+
+---
+
+## Authors & Acknowledgments
+- Almanex - Developer and initial work.
+- WPF-UI community for Fluent styling elements.
+
+---
+
+## License
+This project is licensed under the MIT License - see the `LICENSE` file for details.
