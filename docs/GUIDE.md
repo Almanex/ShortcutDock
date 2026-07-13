@@ -24,16 +24,20 @@ This guide will help you quickly understand all the features of the application 
 ## 1. System Requirements
 * **Operating System:** Windows 10 (build 19041 and higher) or Windows 11.
 * **Architecture:** x64.
-* **Optional:** The Lightweight version requires the [.NET 8 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/8.0) (or higher) installed. The Self-Contained version runs without any additional runtimes.
+* **Optional:** The Lightweight version requires the [.NET 10 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/10.0) (or higher) installed. The Self-Contained version runs without any additional runtimes.
 
 ---
 
 ## 2. Installation and First Launch
 The application is delivered as a single `ShortcutDock.exe` file and does not require a full installation:
-1. Download the latest version from the [Releases](https://github.com/Almanex/ShortcutDock/releases) page.
-2. Place the `ShortcutDock.exe` file in any convenient folder on your computer (e.g., `C:\Program Files\ShortcutDock` or your personal user directory).
-3. Double-click the `ShortcutDock.exe` file to launch it.
-4. On the first launch, an empty semi-transparent panel with a `+` button will appear at the bottom of the screen.
+
+> [!TIP]
+> **Get the Application:**  
+> 📥 **[Download the latest version from the GitHub Releases page](https://github.com/Almanex/ShortcutDock/releases)**
+
+1. Place the `ShortcutDock.exe` file in any convenient folder on your computer (e.g., `C:\Program Files\ShortcutDock` or your personal user directory).
+2. Double-click the `ShortcutDock.exe` file to launch it.
+3. On the first launch, an empty semi-transparent panel with a `+` button will appear at the bottom of the screen.
 
 > [!IMPORTANT]
 > **Windows Defender SmartScreen Warning:**  

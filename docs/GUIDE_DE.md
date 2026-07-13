@@ -24,16 +24,20 @@ Dieses Handbuch hilft Ihnen, sich schnell mit allen Funktionen der Anwendung ver
 ## 1. Systemanforderungen
 * **Betriebssystem:** Windows 10 (Build 19041 und höher) oder Windows 11.
 * **Architektur:** x64.
-* **Optional:** Für die Leichtgewichts-Version (Lightweight) ist die Installation der [.NET 8 Desktop-Laufzeitumgebung](https://dotnet.microsoft.com/download/dotnet/8.0) (oder höher) erforderlich. Die eigenständige Version (Self-Contained) läuft ohne zusätzliche Bibliotheken.
+* **Optional:** Für die Leichtgewichts-Version (Lightweight) ist die Installation der [.NET 10 Desktop-Laufzeitumgebung](https://dotnet.microsoft.com/download/dotnet/10.0) (oder höher) erforderlich. Die eigenständige Version (Self-Contained) läuft ohne zusätzliche Bibliotheken.
 
 ---
 
 ## 2. Installation und erster Start
 Die Anwendung wird als einzelne Datei `ShortcutDock.exe` geliefert und erfordert keine vollständige Installation:
-1. Laden Sie die neueste Version von der [Releases](https://github.com/Almanex/ShortcutDock/releases)-Seite herunter.
-2. Legen Sie die Datei `ShortcutDock.exe` in einen beliebigen Ordner auf Ihrem Computer (z. B. `C:\Program Files\ShortcutDock` oder Ihren persönlichen Benutzerordner).
-3. Doppelklicken Sie auf die Datei `ShortcutDock.exe`, um sie zu starten.
-4. Beim ersten Start erscheint eine leere, halbtransparente Leiste mit einer `+`-Schaltfläche am unteren Bildschirmrand.
+
+> [!TIP]
+> **Holen Sie sich die Anwendung:**  
+> 📥 **[Laden Sie die neueste Version von der GitHub Releases-Seite herunter](https://github.com/Almanex/ShortcutDock/releases)**
+
+1. Legen Sie die Datei `ShortcutDock.exe` in einen beliebigen Ordner auf Ihrem Computer (z. B. `C:\Program Files\ShortcutDock` oder Ihren persönlichen Benutzerordner).
+2. Doppelklicken Sie auf die Datei `ShortcutDock.exe`, um sie zu starten.
+3. Beim ersten Start erscheint eine leere, halbtransparente Leiste mit einer `+`-Schaltfläche am unteren Bildschirmrand.
 
 > [!IMPORTANT]
 > **Windows Defender SmartScreen-Warnung:**  
