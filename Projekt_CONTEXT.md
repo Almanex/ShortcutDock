@@ -10,12 +10,12 @@
 
 ### Технологический стек
 * **Язык программирования:** C# 12
-* **Платформа:** .NET 8.0 (Windows Desktop)
+* **Платформа:** .NET 10.0 (Windows Desktop)
 * **GUI-Фреймворк:** WPF (Windows Presentation Foundation)
 * **Основные библиотеки (версии из `ShortcutDock.csproj`):**
   * `WPF-UI` (v4.3.0) — современные элементы управления в стиле Fluent Design, системный трей, синхронизация с темами Windows.
   * `CommunityToolkit.Mvvm` (v8.4.2) — архитектура MVVM, генерация шаблонного кода свойств и команд.
-  * `System.Drawing.Common` (v8.0.0) — работа с системной графикой и извлечение иконок.
+  * `System.Drawing.Common` (v10.0.9) — работа с системной графикой и извлечение иконок.
 * **Низкоуровневое взаимодействие:** Native Win32 API (`user32.dll`, `shell32.dll`, `dwmapi.dll`) через P/Invoke.
 
 ---
@@ -102,7 +102,7 @@ scaleTransform.BeginAnimation(ScaleTransform.ScaleYProperty, null);
 
 ### Требования
 * **ОС:** Windows 10/11 (x64)
-* **SDK:** .NET 8.0 SDK или выше
+* **SDK:** .NET 10.0 SDK или выше
 
 ### Команды сборки и запуска
 * **Локальный запуск в режиме отладки:**
@@ -117,7 +117,7 @@ scaleTransform.BeginAnimation(ScaleTransform.ScaleYProperty, null);
   ```powershell
   dotnet publish src/ShortcutDock/ShortcutDock.csproj -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true
   ```
-  Исполняемый файл будет скомпилирован по пути: `src/ShortcutDock/bin/Release/net8.0-windows/win-x64/publish/ShortcutDock.exe`
+  Исполняемый файл будет скомпилирован по пути: `src/ShortcutDock/bin/Release/net10.0-windows/win-x64/publish/ShortcutDock.exe`
 
 ---
 

@@ -6,7 +6,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Platform: Windows](https://img.shields.io/badge/Platform-Windows%2010%20%2F%2011-blue.svg)](#)
-[![Framework: .NET 8](https://img.shields.io/badge/Framework-.NET%208.0-blueviolet.svg)](https://dotnet.microsoft.com)
+[![Framework: .NET 10](https://img.shields.io/badge/Framework-.NET%2010.0-blueviolet.svg)](https://dotnet.microsoft.com)
 [![Share on X](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2FAlmanex%2FShortcutDock)](https://twitter.com/intent/tweet?text=Schau%20dir%20ShortcutDock%20an%20--%20eine%20wundersch%C3%B6ne%2C%20anpassbare%20Schnellstartleiste%20f%C3%BCr%20Windows%2011%21&url=https%3A%2F%2Fgithub.com%2FAlmanex%2FShortcutDock&hashtags=windows11,wpf,dotnet,opensource)
 
 ---
@@ -86,11 +86,11 @@ Ausführliche Anweisungen zur Konfiguration aller Funktionen finden Sie im [Benu
 
 | Ebene / Komponente | Technologie | Version | Zweck |
 | --- | --- | --- | --- |
-| Sprache | C# (.NET 8.0) | net8.0-windows | Hauptprogrammiersprache |
+| Sprache | C# (.NET 10.0) | net10.0-windows | Hauptprogrammiersprache |
 | UI-Framework | WPF + WPF-UI | 4.3.0 | Moderne Steuerelemente und Mica-Fensterrahmen |
 | Entwurfsmuster | MVVM Toolkit | 8.4.2 | Zustandsbindung über CommunityToolkit.Mvvm |
 | Win32-Integration | P/Invoke | - | APIs für DWM, Fensterstile und AppBar |
-| Grafikbibliothek | System.Drawing.Common | 8.0.0 | Icon-Extraktion und PNG-Rendering |
+| Grafikbibliothek | System.Drawing.Common | 10.0.9 | Icon-Extraktion und PNG-Rendering |
 
 ---
 
@@ -100,7 +100,7 @@ Ausführliche Anweisungen zur Konfiguration aller Funktionen finden Sie im [Benu
 ShortcutDock/
 ├── ShortcutDock.slnx              # Visual Studio-Projektmappe (SDK 10-Format)
 └── src\ShortcutDock\
-    ├── ShortcutDock.csproj         # net8.0-windows Konfiguration
+    ├── ShortcutDock.csproj         # net10.0-windows Konfiguration
     ├── app.manifest                # DPI-Kompatibilität und Windows-Manifest
     ├── App.xaml / App.xaml.cs      # Einstiegspunkt, DI-Container und Tray-Service
     ├── MainWindow.xaml / .xaml.cs  # Hauptleiste, DWM-Blur, DnD- und AppBar-Integration
@@ -158,7 +158,7 @@ Der Icon-Cache wird unter `%AppData%\ShortcutDock\Cache\*.png` abgelegt.
 ## Erste Schritte
 
 ### Voraussetzungen
-- .NET 8.0 SDK oder neuer
+- .NET 10.0 SDK oder neuer
 
 ### Bauen & Ausführen
 ```powershell
@@ -178,7 +178,7 @@ So kompilieren Sie eine einzelne, eigenständige ausführbare Datei:
 ```powershell
 dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true
 ```
-Die fertige ausführbare Datei wird unter `src\ShortcutDock\bin\Release\net8.0-windows\win-x64\publish\` gespeichert.
+Die fertige ausführbare Datei wird unter `src\ShortcutDock\bin\Release\net10.0-windows\win-x64\publish\` gespeichert.
 
 ---
 

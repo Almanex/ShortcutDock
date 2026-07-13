@@ -6,7 +6,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Platform: Windows](https://img.shields.io/badge/Platform-Windows%2010%20%2F%2011-blue.svg)](#)
-[![Framework: .NET 8](https://img.shields.io/badge/Framework-.NET%208.0-blueviolet.svg)](https://dotnet.microsoft.com)
+[![Framework: .NET 10](https://img.shields.io/badge/Framework-.NET%2010.0-blueviolet.svg)](https://dotnet.microsoft.com)
 [![Share on X](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2FAlmanex%2FShortcutDock)](https://twitter.com/intent/tweet?text=%D0%9F%D0%BE%D1%81%D0%BC%D0%BE%D1%82%D1%80%D0%B8%D1%82%D0%B5%20%D0%BD%D0%B0%20ShortcutDock%20--%20%D0%BA%D1%80%D0%B0%D1%81%D0%B8%D0%B2%D1%83%D1%8E%20%D0%BF%D0%B0%D0%BD%D0%B5%D0%BB%D1%8C%20%D0%B1%D1%8B%D1%81%D1%82%D1%80%D0%BE%D0%B3%D0%BE%20%D0%B7%D0%B0%D0%BF%D1%83%D1%81%D0%BA%D0%B0%20%D0%B4%D0%BB%D1%8F%20Windows%2011%21&url=https%3A%2F%2Fgithub.com%2FAlmanex%2FShortcutDock&hashtags=windows11,wpf,dotnet,opensource)
 
 ---
@@ -86,11 +86,11 @@ ShortcutDock — это современная, легковесная пане�
 
 | Слой / Компонент | Технология | Версия | Назначение |
 | --- | --- | --- | --- |
-| Язык | C# (.NET 8.0) | net8.0-windows | Основной язык разработки |
+| Язык | C# (.NET 10.0) | net10.0-windows | Основной язык разработки |
 | UI-фреймворк | WPF + WPF-UI | 4.3.0 | Современные элементы управления и окно Mica |
 | Паттерн | MVVM Toolkit | 8.4.2 | Связывание состояния через CommunityToolkit.Mvvm |
 | Интеграция с Win32 | P/Invoke | - | Работа с DWM, стилями окон и API AppBar |
-| Графика | System.Drawing.Common | 8.0.0 | Извлечение значков и рендеринг в PNG |
+| Графика | System.Drawing.Common | 10.0.9 | Извлечение значков и рендеринг в PNG |
 
 ---
 
@@ -100,7 +100,7 @@ ShortcutDock — это современная, легковесная пане�
 ShortcutDock/
 ├── ShortcutDock.slnx              # Файл решения Visual Studio (формат SDK 10)
 └── src\ShortcutDock\
-    ├── ShortcutDock.csproj         # Конфигурация проекта net8.0-windows
+    ├── ShortcutDock.csproj         # Конфигурация проекта net10.0-windows
     ├── app.manifest                # Манифест совместимости и поддержки DPI
     ├── App.xaml / App.xaml.cs      # Точка входа, DI-контейнер и служба трея
     ├── MainWindow.xaml / .xaml.cs  # Главная панель, обработка размытия DWM, DnD и AppBar
@@ -158,7 +158,7 @@ ShortcutDock/
 ## С чего начать
 
 ### Требования
-- .NET 8.0 SDK или новее
+- .NET 10.0 SDK или новее
 
 ### Сборка и запуск
 ```powershell
@@ -178,7 +178,7 @@ dotnet run --project src\ShortcutDock
 ```powershell
 dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true
 ```
-Готовый исполняемый файл будет сохранен в папке `src\ShortcutDock\bin\Release\net8.0-windows\win-x64\publish\`.
+Готовый исполняемый файл будет сохранен в папке `src\ShortcutDock\bin\Release\net10.0-windows\win-x64\publish\`.
 
 ---
 

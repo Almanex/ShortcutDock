@@ -6,7 +6,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Platform: Windows](https://img.shields.io/badge/Platform-Windows%2010%20%2F%2011-blue.svg)](#)
-[![Framework: .NET 8](https://img.shields.io/badge/Framework-.NET%208.0-blueviolet.svg)](https://dotnet.microsoft.com)
+[![Framework: .NET 10](https://img.shields.io/badge/Framework-.NET%2010.0-blueviolet.svg)](https://dotnet.microsoft.com)
 [![Share on X](https://img.shields.io/twitter/url?style=social&url=https%3A%2F%2Fgithub.com%2FAlmanex%2FShortcutDock)](https://twitter.com/intent/tweet?text=Check%20out%20ShortcutDock%20--%20a%20beautiful%20customizable%20shortcut%20dock%20for%20Windows%2011%21&url=https%3A%2F%2Fgithub.com%2FAlmanex%2FShortcutDock&hashtags=windows11,wpf,dotnet,opensource)
 
 ---
@@ -86,11 +86,11 @@ For detailed instructions on configuring all features, read the [User Guide (GUI
 
 | Layer / Component | Technology | Version | Purpose |
 | --- | --- | --- | --- |
-| Language | C# (.NET 8.0) | net8.0-windows | Main programming language |
+| Language | C# (.NET 10.0) | net10.0-windows | Main programming language |
 | UI Framework | WPF + WPF-UI | 4.3.0 | Modern controls and Mica window shell |
 | Pattern | MVVM Toolkit | 8.4.2 | CommunityToolkit.Mvvm for state binding |
 | Win32 Interop | P/Invoke | - | DWM, WindowStyle, and AppBar APIs |
-| Image Lib | System.Drawing.Common | 8.0.0 | Icon Extraction and PNG rendering |
+| Image Lib | System.Drawing.Common | 10.0.9 | Icon Extraction and PNG rendering |
 
 ---
 
@@ -100,7 +100,7 @@ For detailed instructions on configuring all features, read the [User Guide (GUI
 ShortcutDock/
 ├── ShortcutDock.slnx              # Visual Studio Solution (SDK 10 format)
 └── src\ShortcutDock\
-    ├── ShortcutDock.csproj         # net8.0-windows configuration
+    ├── ShortcutDock.csproj         # net10.0-windows configuration
     ├── app.manifest                # DPI awareness and compatibility manifest
     ├── App.xaml / App.xaml.cs      # Entry point, DI container, and Tray service
     ├── MainWindow.xaml / .xaml.cs  # Main panel, DWM blur, DnD, and orientation hooks
@@ -158,7 +158,7 @@ Icon cache is stored under `%AppData%\ShortcutDock\Cache\*.png`.
 ## Getting Started
 
 ### Prerequisites
-- .NET 8.0 SDK or newer
+- .NET 10.0 SDK or newer
 
 ### Build & Run
 ```powershell
@@ -178,7 +178,7 @@ To compile a single executable with all dependencies bundled inside:
 ```powershell
 dotnet publish -c Release -r win-x64 --self-contained true -p:PublishSingleFile=true
 ```
-The output file will be saved in `src\ShortcutDock\bin\Release\net8.0-windows\win-x64\publish\`.
+The output file will be saved in `src\ShortcutDock\bin\Release\net10.0-windows\win-x64\publish\`.
 
 ---
 
