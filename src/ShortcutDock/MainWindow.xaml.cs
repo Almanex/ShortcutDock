@@ -250,16 +250,14 @@ public partial class MainWindow : Window
         double width = ActualWidth;
         double height = ActualHeight;
 
-        var content = Content as FrameworkElement;
-        if (content != null)
+        if (width == 0 || double.IsNaN(width) || height == 0 || double.IsNaN(height))
         {
-            // Используем DesiredSize контента, так как ActualWidth/ActualHeight окна
-            // могут быть еще не обновлены ОС после изменения размеров.
-            width = isVertical ? (MinWidth > 0 ? MinWidth : content.DesiredSize.Width) : content.DesiredSize.Width;
-            height = isVertical ? content.DesiredSize.Height : (MinHeight > 0 ? MinHeight : content.DesiredSize.Height);
-
-            if (width == 0) width = ActualWidth;
-            if (height == 0) height = ActualHeight;
+            var content = Content as FrameworkElement;
+            if (content != null)
+            {
+                width = isVertical ? (MinWidth > 0 ? MinWidth : content.DesiredSize.Width) : content.DesiredSize.Width;
+                height = isVertical ? content.DesiredSize.Height : (MinHeight > 0 ? MinHeight : content.DesiredSize.Height);
+            }
         }
 
         if (width == 0) width = 400; // fallback

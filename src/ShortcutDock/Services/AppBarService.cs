@@ -272,7 +272,8 @@ public sealed class AppBarService
         if (_edge == 1 || _edge == 3) // Горизонтальная панель (Top / Bottom)
         {
             content.Measure(new System.Windows.Size(double.PositiveInfinity, _appBarSizeDip));
-            double dipWidth = content.DesiredSize.Width;
+            double dipWidth = window.ActualWidth;
+            if (dipWidth == 0 || double.IsNaN(dipWidth)) dipWidth = content.DesiredSize.Width;
             if (dipWidth == 0) dipWidth = 400; // fallback
             double dipHeight = _appBarSizeDip;
 
@@ -289,7 +290,8 @@ public sealed class AppBarService
         else // Вертикальная панель (Left / Right)
         {
             content.Measure(new System.Windows.Size(_appBarSizeDip, double.PositiveInfinity));
-            double dipHeight = content.DesiredSize.Height;
+            double dipHeight = window.ActualHeight;
+            if (dipHeight == 0 || double.IsNaN(dipHeight)) dipHeight = content.DesiredSize.Height;
             if (dipHeight == 0) dipHeight = 400; // fallback
             double dipWidth = _appBarSizeDip;
 
