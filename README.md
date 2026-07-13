@@ -1,4 +1,4 @@
-[ English ](README.md) • [ Русский ](README_RU.md) • [ Deutsch ](README_DE.md)
+[ English ](README.md) • [ Русский ](docs/README_RU.md) • [ Deutsch ](docs/README_DE.md)
 
 # ShortcutDock
 
@@ -19,7 +19,7 @@ ShortcutDock is a modern, lightweight Windows desktop dock panel designed to org
 > **First stable release available!**  
 > You can download the ready-made compiled file **`ShortcutDock.exe`** on the [Releases](https://github.com/Almanex/ShortcutDock/releases/tag/v2.0.0) page and run it on your computer without installing additional libraries.
 
-For detailed instructions on configuring all features, read the [User Guide (GUIDE.md)](GUIDE.md).
+For detailed instructions on configuring all features, read the [User Guide (GUIDE.md)](docs/GUIDE.md).
 
 ---
 

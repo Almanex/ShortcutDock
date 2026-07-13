@@ -1,4 +1,4 @@
-[ English ](README.md) • [ Русский ](README_RU.md) • [ Deutsch ](README_DE.md)
+[ English ](../README.md) • [ Русский ](README_RU.md) • [ Deutsch ](README_DE.md)
 
 # ShortcutDock
 
