@@ -17,7 +17,7 @@ ShortcutDock ist eine moderne, leichtgewichtige Windows-Desktop-Leiste zur Organ
 
 > [!IMPORTANT]
 > **Erste stabile Version verfügbar!**  
-> Sie können die fertige, kompilierte Datei **`ShortcutDock.exe`** auf der [Releases](https://github.com/Almanex/ShortcutDock/releases/tag/v1.0.0)-Seite herunterladen und direkt auf Ihrem Computer ausführen, ohne zusätzliche Bibliotheken installieren zu müssen.
+> Sie können die fertige, kompilierte Datei **`ShortcutDock.exe`** auf der [Releases](https://github.com/Almanex/ShortcutDock/releases/tag/v2.0.0)-Seite herunterladen und direkt auf Ihrem Computer ausführen, ohne zusätzliche Bibliotheken installieren zu müssen.
 
 Ausführliche Anweisungen zur Konfiguration aller Funktionen finden Sie im [Benutzerhandbuch (GUIDE.md)](GUIDE.md).
 

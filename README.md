@@ -17,7 +17,7 @@ ShortcutDock is a modern, lightweight Windows desktop dock panel designed to org
 
 > [!IMPORTANT]
 > **First stable release available!**  
-> You can download the ready-made compiled file **`ShortcutDock.exe`** on the [Releases](https://github.com/Almanex/ShortcutDock/releases/tag/v1.0.0) page and run it on your computer without installing additional libraries.
+> You can download the ready-made compiled file **`ShortcutDock.exe`** on the [Releases](https://github.com/Almanex/ShortcutDock/releases/tag/v2.0.0) page and run it on your computer without installing additional libraries.
 
 For detailed instructions on configuring all features, read the [User Guide (GUIDE.md)](GUIDE.md).
 
