@@ -135,10 +135,11 @@ ShortcutDock/
     "IconSize": 48,
     "KeepOnTop": true,
     "BackdropType": "Mica",
-    "ShowAddButton": false,
+    "ShowAddButton": true,
     "AutoHide": false,
     "HoverZoom": true,
-    "ShowRunningIndicators": true
+    "ShowRunningIndicators": true,
+    "Language": "ru"
   },
   "Shortcuts": [
     {

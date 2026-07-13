@@ -1,4 +1,4 @@
-# AI_CONTEXT.md — Архитектурный контекст ShortcutDock
+# Архитектурный контекст ShortcutDock
 
 Настоящий документ является полным техническим описанием архитектуры, технологического стека, ключевых паттернов и инженерных решений проекта **ShortcutDock**. Документ предназначен для передачи контекста разработчикам и искусственному интеллекту для безопасной поддержки и развития кодовой базы.
 
@@ -17,6 +17,7 @@
   * `CommunityToolkit.Mvvm` (v8.4.2) — архитектура MVVM, генерация шаблонного кода свойств и команд.
   * `System.Drawing.Common` (v10.0.9) — работа с системной графикой и извлечение иконок.
 * **Низкоуровневое взаимодействие:** Native Win32 API (`user32.dll`, `shell32.dll`, `dwmapi.dll`) через P/Invoke.
+* **Локализация:** Динамическая мультиязычность (English, Русский, Deutsch) на базе `ResourceDictionary` с автоопределением языка ОС.
 
 ---
 
@@ -93,6 +94,16 @@ scaleTransform.BeginAnimation(ScaleTransform.ScaleYProperty, null);
 * **Файл:** [ProcessLauncher.cs](file:///d:/Develop/tsreen/src/ShortcutDock/Services/ProcessLauncher.cs)
 * **Проблема:** Запуск Корзины происходит по GUID пути `shell:::{645FF040-5081-101B-9F08-00AA002F954E}`. Метод проверки существования файлов `File.Exists` возвращал `false`, прерывая запуск.
 * **Решение:** Проверки существования файлов отключаются, если путь начинается с `shell:`, `http:`, `https:` или содержит GUID-конструкции `:::{`.
+
+### 6. Устранение "бешеного" скроллинга в окне настроек
+* **Файл:** [SettingsWindow.xaml](file:///d:/Develop/ShortcutDock/src/ShortcutDock/SettingsWindow.xaml) / [SettingsWindow.xaml.cs](file:///d:/Develop/ShortcutDock/src/ShortcutDock/SettingsWindow.xaml.cs)
+* **Проблема:** По умолчанию WPF-компонент `ScrollViewer` прокручивает контент скачками по логическим элементам (особенно при использовании `ui:CardControl`), из-за чего прокрутка колесом мыши кажется слишком быстрой ("бешеной") и дерганой.
+* **Решение:** Перехвачено событие `PreviewMouseWheel`, где дельта прокрутки колесика уменьшается в 3 раза (`e.Delta / 3.0`) и программно передается в `ScrollToVerticalOffset`, обеспечивая плавную и комфортную прокрутку.
+
+### 7. Мгновенное переключение языка интерфейса без перезапуска приложения
+* **Файлы:** [App.xaml.cs](file:///d:/Develop/ShortcutDock/src/ShortcutDock/App.xaml.cs), [Resources.en.xaml](file:///d:/Develop/ShortcutDock/src/ShortcutDock/Resources/Languages/Resources.en.xaml) и др.
+* **Проблема:** Стандартная локализация WPF через `.resx`-файлы требует перекомпиляции/пересоздания окон или перезапуска приложения для смены языка интерфейса.
+* **Решение:** Локализация вынесена в динамические словари `ResourceDictionary` для EN, RU, DE. Метод `App.SetLanguage()` удаляет старый словарь ресурсов и добавляет новый, мгновенно обновляя все привязки `{DynamicResource ...}` в UI. При этом для трея вызывается метод `UpdateTrayMenu()`, обновляющий тексты пунктов контекстного меню Windows Forms.
 
 ---
 

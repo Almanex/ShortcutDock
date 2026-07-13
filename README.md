@@ -135,10 +135,11 @@ Configuration is saved in JSON format under `%AppData%\ShortcutDock\settings.jso
     "IconSize": 48,
     "KeepOnTop": true,
     "BackdropType": "Mica",
-    "ShowAddButton": false,
+    "ShowAddButton": true,
     "AutoHide": false,
     "HoverZoom": true,
-    "ShowRunningIndicators": true
+    "ShowRunningIndicators": true,
+    "Language": "en"
   },
   "Shortcuts": [
     {
