@@ -20,7 +20,7 @@ public sealed class PanelSettings
     public string BackdropType { get; set; } = "None";
 
     [JsonPropertyName("ShowAddButton")]
-    public bool ShowAddButton { get; set; } = false;
+    public bool ShowAddButton { get; set; } = true;
 
     [JsonPropertyName("StartWithWindows")]
     public bool StartWithWindows { get; set; } = false;

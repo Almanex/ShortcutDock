@@ -19,4 +19,13 @@ public partial class SettingsWindow : FluentWindow
     {
         Close();
     }
+
+    private void ScrollViewer_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
+    {
+        if (sender is System.Windows.Controls.ScrollViewer scroller)
+        {
+            scroller.ScrollToVerticalOffset(scroller.VerticalOffset - e.Delta / 3.0);
+            e.Handled = true;
+        }
+    }
 }

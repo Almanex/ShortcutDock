@@ -23,7 +23,7 @@
 
         <ui:TitleBar Grid.Row="0" Title="{DynamicResource SettingsHeader}" ShowMaximize="False" ShowMinimize="False" />
 
-        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="16,8,16,16">
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="16,8,16,16" PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
             <StackPanel>
                 <!-- Language Selection -->
                 <ui:CardControl Header="{DynamicResource SettingLanguage}" Margin="0,0,0,8">
