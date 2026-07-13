@@ -1,0 +1,54 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=System.Runtime">
+
+    <!-- Settings Window -->
+    <sys:String x:Key="SettingsTitle">ShortcutDock Settings</sys:String>
+    <sys:String x:Key="SettingsHeader">Panel Settings</sys:String>
+    
+    <sys:String x:Key="SettingPosition">Screen Position</sys:String>
+    <sys:String x:Key="PositionBottom">Bottom</sys:String>
+    <sys:String x:Key="PositionTop">Top</sys:String>
+    <sys:String x:Key="PositionLeft">Left</sys:String>
+    <sys:String x:Key="PositionRight">Right</sys:String>
+    
+    <sys:String x:Key="SettingBackdrop">Blur Effect</sys:String>
+    <sys:String x:Key="BackdropNone">None (transparent)</sys:String>
+    <sys:String x:Key="BackdropMica">Mica</sys:String>
+    <sys:String x:Key="BackdropAcrylic">Acrylic</sys:String>
+    
+    <sys:String x:Key="SettingIconSize">Icon Size</sys:String>
+    <sys:String x:Key="SettingKeepOnTop">Always on Top</sys:String>
+    <sys:String x:Key="SettingShowAddButton">Show "+" button on dock</sys:String>
+    <sys:String x:Key="SettingStartWithWindows">Start with Windows</sys:String>
+    <sys:String x:Key="SettingShowRecycleBin">Show Recycle Bin on dock</sys:String>
+    <sys:String x:Key="SettingAutoHide">Automatically hide panel (Auto-Hide)</sys:String>
+    <sys:String x:Key="SettingHoverZoom">Icon zoom on hover (Hover Zoom)</sys:String>
+    <sys:String x:Key="SettingShowRunningIndicators">Indicators for running applications</sys:String>
+    <sys:String x:Key="BtnClose">Close</sys:String>
+    
+    <sys:String x:Key="SettingLanguage">Interface Language</sys:String>
+
+    <!-- Context Menus & Tray -->
+    <sys:String x:Key="MenuRunAsAdmin">Run as administrator</sys:String>
+    <sys:String x:Key="MenuEmptyRecycleBin">Empty Recycle Bin</sys:String>
+    <sys:String x:Key="MenuChangeIcon">Change Icon...</sys:String>
+    <sys:String x:Key="MenuRemoveFromPanel">Remove from Dock</sys:String>
+    <sys:String x:Key="MenuAddApp">Add Application</sys:String>
+    <sys:String x:Key="MenuSettings">Panel Settings</sys:String>
+    <sys:String x:Key="MenuClosePanel">Close Panel</sys:String>
+    
+    <sys:String x:Key="TrayShowHide">Show/Hide Panel</sys:String>
+    <sys:String x:Key="TraySettings">Settings...</sys:String>
+    <sys:String x:Key="TrayExit">Exit</sys:String>
+    
+    <!-- Code Strings -->
+    <sys:String x:Key="RecycleBinName">Recycle Bin</sys:String>
+    <sys:String x:Key="DlgAddAppTitle">Select an application to add to the dock</sys:String>
+    <sys:String x:Key="DlgAddAppFilter">Applications and shortcuts (*.exe;*.lnk)|*.exe;*.lnk|All files (*.*)|*.*</sys:String>
+    <sys:String x:Key="DlgChangeIconTitle">Select a new icon for the application</sys:String>
+    <sys:String x:Key="DlgChangeIconFilter">Images and icons (*.png;*.ico;*.jpg;*.jpeg)|*.png;*.ico;*.jpg;*.jpeg|All files (*.*)|*.*</sys:String>
+    <sys:String x:Key="ErrTargetNotFound">Target file or folder not found</sys:String>
+    <sys:String x:Key="ErrFileNotFound">File or folder not found</sys:String>
+
+</ResourceDictionary>

@@ -53,7 +53,8 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty]
     private bool _showRunningIndicators = true;
 
-
+    [ObservableProperty]
+    private string _language = "en";
 
     [ObservableProperty]
     private System.Windows.Controls.Orientation _panelOrientation = System.Windows.Controls.Orientation.Horizontal;
@@ -94,6 +95,7 @@ public partial class MainViewModel : ObservableObject
         AutoHide = Panel.AutoHide;
         HoverZoom = Panel.HoverZoom;
         ShowRunningIndicators = Panel.ShowRunningIndicators;
+        Language = Panel.Language;
         UpdatePanelOrientation();
 
         // Clean up old cached Recycle Bin icons to query fresh ones from current system theme
@@ -184,6 +186,14 @@ public partial class MainViewModel : ObservableObject
         Persist();
     }
 
+    partial void OnLanguageChanged(string value)
+    {
+        Panel.Language = value;
+        App.SetLanguage(value);
+        UpdateRecycleBinItem();
+        Persist();
+    }
+
 
     private void UpdatePanelOrientation()
     {
@@ -214,10 +224,12 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     private void AddViaDialog()
     {
+        var filter = System.Windows.Application.Current.TryFindResource("DlgAddAppFilter") as string ?? "Applications and shortcuts (*.exe;*.lnk)|*.exe;*.lnk|All files (*.*)|*.*";
+        var title = System.Windows.Application.Current.TryFindResource("DlgAddAppTitle") as string ?? "Select an application to add to the dock";
         var dlg = new Microsoft.Win32.OpenFileDialog
         {
-            Filter = "Программы и ярлыки (*.exe;*.lnk)|*.exe;*.lnk|Все файлы (*.*)|*.*",
-            Title = "Выберите приложение для добавления на панель"
+            Filter = filter,
+            Title = title
         };
         if (dlg.ShowDialog() == true)
             AddFromFile(dlg.FileName);
@@ -280,15 +292,20 @@ public partial class MainViewModel : ObservableObject
         var existing = Shortcuts.FirstOrDefault(s => s.IsRecycleBin);
         if (ShowRecycleBin)
         {
+            var binName = System.Windows.Application.Current.TryFindResource("RecycleBinName") as string ?? "Recycle Bin";
             if (existing == null)
             {
                 var item = new ShortcutItem
                 {
-                    Name = "Корзина",
+                    Name = binName,
                     TargetPath = "shell:::{645FF040-5081-101B-9F08-00AA002F954E}",
                     IconPath = _iconExtractor.ExtractRecycleBinIcon()
                 };
                 Shortcuts.Add(new ShortcutViewModel(item, _launcher, Remove, Persist));
+            }
+            else
+            {
+                existing.Name = binName;
             }
         }
         else

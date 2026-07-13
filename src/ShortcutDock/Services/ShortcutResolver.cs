@@ -20,7 +20,10 @@ public sealed class ShortcutResolver
     public ShortcutItem Resolve(string sourcePath)
     {
         if (string.IsNullOrWhiteSpace(sourcePath) || (!File.Exists(sourcePath) && !Directory.Exists(sourcePath)))
-            throw new FileNotFoundException("Файл или папка не найдены", sourcePath);
+        {
+            var errMsg = System.Windows.Application.Current?.TryFindResource("ErrFileNotFound") as string ?? "File or folder not found";
+            throw new FileNotFoundException(errMsg, sourcePath);
+        }
 
         string targetPath = sourcePath;
         var cleanPath = sourcePath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);

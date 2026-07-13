@@ -1,0 +1,54 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=System.Runtime">
+
+    <!-- Settings Window -->
+    <sys:String x:Key="SettingsTitle">Настройки ShortcutDock</sys:String>
+    <sys:String x:Key="SettingsHeader">Настройки панели</sys:String>
+    
+    <sys:String x:Key="SettingPosition">Положение на экране</sys:String>
+    <sys:String x:Key="PositionBottom">Снизу</sys:String>
+    <sys:String x:Key="PositionTop">Сверху</sys:String>
+    <sys:String x:Key="PositionLeft">Слева</sys:String>
+    <sys:String x:Key="PositionRight">Справа</sys:String>
+    
+    <sys:String x:Key="SettingBackdrop">Эффект размытия</sys:String>
+    <sys:String x:Key="BackdropNone">Нет (прозрачный)</sys:String>
+    <sys:String x:Key="BackdropMica">Mica</sys:String>
+    <sys:String x:Key="BackdropAcrylic">Acrylic</sys:String>
+    
+    <sys:String x:Key="SettingIconSize">Размер значков</sys:String>
+    <sys:String x:Key="SettingKeepOnTop">Поверх всех окон</sys:String>
+    <sys:String x:Key="SettingShowAddButton">Показывать кнопку «+» на панели</sys:String>
+    <sys:String x:Key="SettingStartWithWindows">Запускать вместе с Windows</sys:String>
+    <sys:String x:Key="SettingShowRecycleBin">Отображать Корзину на панели</sys:String>
+    <sys:String x:Key="SettingAutoHide">Автоматически скрывать панель (Auto-Hide)</sys:String>
+    <sys:String x:Key="SettingHoverZoom">Эффект увеличения при наведении (Hover Zoom)</sys:String>
+    <sys:String x:Key="SettingShowRunningIndicators">Индикаторы запущенных программ</sys:String>
+    <sys:String x:Key="BtnClose">Закрыть</sys:String>
+    
+    <sys:String x:Key="SettingLanguage">Язык интерфейса</sys:String>
+
+    <!-- Context Menus & Tray -->
+    <sys:String x:Key="MenuRunAsAdmin">Запустить от имени администратора</sys:String>
+    <sys:String x:Key="MenuEmptyRecycleBin">Очистить корзину</sys:String>
+    <sys:String x:Key="MenuChangeIcon">Изменить значок...</sys:String>
+    <sys:String x:Key="MenuRemoveFromPanel">Удалить с панели</sys:String>
+    <sys:String x:Key="MenuAddApp">Добавить приложение</sys:String>
+    <sys:String x:Key="MenuSettings">Настройки панели</sys:String>
+    <sys:String x:Key="MenuClosePanel">Закрыть панель</sys:String>
+    
+    <sys:String x:Key="TrayShowHide">Показать/Скрыть панель</sys:String>
+    <sys:String x:Key="TraySettings">Настройки...</sys:String>
+    <sys:String x:Key="TrayExit">Выход</sys:String>
+    
+    <!-- Code Strings -->
+    <sys:String x:Key="RecycleBinName">Корзина</sys:String>
+    <sys:String x:Key="DlgAddAppTitle">Выберите приложение для добавления на панель</sys:String>
+    <sys:String x:Key="DlgAddAppFilter">Программы и ярлыки (*.exe;*.lnk)|*.exe;*.lnk|Все файлы (*.*)|*.*</sys:String>
+    <sys:String x:Key="DlgChangeIconTitle">Выберите новый значок для приложения</sys:String>
+    <sys:String x:Key="DlgChangeIconFilter">Изображения и значки (*.png;*.ico;*.jpg;*.jpeg)|*.png;*.ico;*.jpg;*.jpeg|Все файлы (*.*)|*.*</sys:String>
+    <sys:String x:Key="ErrTargetNotFound">Целевой файл или папка не найдены</sys:String>
+    <sys:String x:Key="ErrFileNotFound">Файл или папка не найдены</sys:String>
+
+</ResourceDictionary>

@@ -3,8 +3,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
         xmlns:vm="clr-namespace:ShortcutDock.ViewModels"
-        Title="Настройки ShortcutDock"
-        Height="510" Width="380"
+        Title="{DynamicResource SettingsTitle}"
+        Height="540" Width="380"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
         ShowInTaskbar="False"
@@ -21,37 +21,49 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <ui:TitleBar Grid.Row="0" Title="Настройки панели" ShowMaximize="False" ShowMinimize="False" />
+        <ui:TitleBar Grid.Row="0" Title="{DynamicResource SettingsHeader}" ShowMaximize="False" ShowMinimize="False" />
 
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" Margin="16,8,16,16">
             <StackPanel>
+                <!-- Language Selection -->
+                <ui:CardControl Header="{DynamicResource SettingLanguage}" Margin="0,0,0,8">
+                    <ui:CardControl.Icon>
+                        <ui:SymbolIcon Symbol="LocalLanguage24" />
+                    </ui:CardControl.Icon>
+                    <ComboBox SelectedValuePath="Tag" SelectedValue="{Binding Language, Mode=TwoWay}" Width="140">
+                        <ComboBoxItem Content="English" Tag="en" />
+                        <ComboBoxItem Content="Русский" Tag="ru" />
+                        <ComboBoxItem Content="Deutsch" Tag="de" />
+                    </ComboBox>
+                </ui:CardControl>
+
                 <!-- Position -->
-                <ui:CardControl Header="Положение на экране" Margin="0,0,0,8">
+                <ui:CardControl Header="{DynamicResource SettingPosition}" Margin="0,0,0,8">
                     <ui:CardControl.Icon>
                         <ui:SymbolIcon Symbol="PositionToFront24" />
                     </ui:CardControl.Icon>
                     <ComboBox SelectedValuePath="Tag" SelectedValue="{Binding Position, Mode=TwoWay}" Width="140">
-                        <ComboBoxItem Content="Снизу" Tag="Bottom" />
-                        <ComboBoxItem Content="Сверху" Tag="Top" />
-                        <ComboBoxItem Content="Слева" Tag="Left" />
-                        <ComboBoxItem Content="Справа" Tag="Right" />
+                        <ComboBoxItem Content="{DynamicResource PositionBottom}" Tag="Bottom" />
+                        <ComboBoxItem Content="{DynamicResource PositionTop}" Tag="Top" />
+                        <ComboBoxItem Content="{DynamicResource PositionLeft}" Tag="Left" />
+                        <ComboBoxItem Content="{DynamicResource PositionRight}" Tag="Right" />
                     </ComboBox>
                 </ui:CardControl>
 
                 <!-- Backdrop Effect -->
-                <ui:CardControl Header="Эффект размытия" Margin="0,0,0,8">
+                <ui:CardControl Header="{DynamicResource SettingBackdrop}" Margin="0,0,0,8">
                     <ui:CardControl.Icon>
                         <ui:SymbolIcon Symbol="SurfaceHub24" />
                     </ui:CardControl.Icon>
                     <ComboBox SelectedValuePath="Tag" SelectedValue="{Binding BackdropType, Mode=TwoWay}" Width="140">
-                        <ComboBoxItem Content="Нет (прозрачный)" Tag="None" />
-                        <ComboBoxItem Content="Mica" Tag="Mica" />
-                        <ComboBoxItem Content="Acrylic" Tag="Acrylic" />
+                        <ComboBoxItem Content="{DynamicResource BackdropNone}" Tag="None" />
+                        <ComboBoxItem Content="{DynamicResource BackdropMica}" Tag="Mica" />
+                        <ComboBoxItem Content="{DynamicResource BackdropAcrylic}" Tag="Acrylic" />
                     </ComboBox>
                 </ui:CardControl>
 
                 <!-- Icon Size -->
-                <ui:CardControl Header="Размер значков" Margin="0,0,0,8">
+                <ui:CardControl Header="{DynamicResource SettingIconSize}" Margin="0,0,0,8">
                     <ui:CardControl.Icon>
                         <ui:SymbolIcon Symbol="Image24" />
                     </ui:CardControl.Icon>
@@ -64,7 +76,7 @@
                 </ui:CardControl>
 
                 <!-- Keep on Top -->
-                <ui:CardControl Header="Поверх всех окон" Margin="0,0,0,8">
+                <ui:CardControl Header="{DynamicResource SettingKeepOnTop}" Margin="0,0,0,8">
                     <ui:CardControl.Icon>
                         <ui:SymbolIcon Symbol="Pin24" />
                     </ui:CardControl.Icon>
@@ -72,7 +84,7 @@
                 </ui:CardControl>
 
                 <!-- Show Add Button -->
-                <ui:CardControl Header="Показывать кнопку «+» на панели" Margin="0,0,0,8">
+                <ui:CardControl Header="{DynamicResource SettingShowAddButton}" Margin="0,0,0,8">
                     <ui:CardControl.Icon>
                         <ui:SymbolIcon Symbol="AddCircle24" />
                     </ui:CardControl.Icon>
@@ -80,7 +92,7 @@
                 </ui:CardControl>
 
                 <!-- Start with Windows -->
-                <ui:CardControl Header="Запускать вместе с Windows" Margin="0,0,0,8">
+                <ui:CardControl Header="{DynamicResource SettingStartWithWindows}" Margin="0,0,0,8">
                     <ui:CardControl.Icon>
                         <ui:SymbolIcon Symbol="WindowApps24" />
                     </ui:CardControl.Icon>
@@ -88,7 +100,7 @@
                 </ui:CardControl>
 
                 <!-- Show Recycle Bin -->
-                <ui:CardControl Header="Отображать Корзину на панели" Margin="0,0,0,8">
+                <ui:CardControl Header="{DynamicResource SettingShowRecycleBin}" Margin="0,0,0,8">
                     <ui:CardControl.Icon>
                         <ui:SymbolIcon Symbol="Delete24" />
                     </ui:CardControl.Icon>
@@ -96,7 +108,7 @@
                 </ui:CardControl>
 
                 <!-- Auto Hide -->
-                <ui:CardControl Header="Автоматически скрывать панель (Auto-Hide)" Margin="0,0,0,8">
+                <ui:CardControl Header="{DynamicResource SettingAutoHide}" Margin="0,0,0,8">
                     <ui:CardControl.Icon>
                         <ui:SymbolIcon Symbol="EyeOff24" />
                     </ui:CardControl.Icon>
@@ -104,7 +116,7 @@
                 </ui:CardControl>
 
                 <!-- Hover Zoom -->
-                <ui:CardControl Header="Эффект увеличения при наведении (Hover Zoom)" Margin="0,0,0,8">
+                <ui:CardControl Header="{DynamicResource SettingHoverZoom}" Margin="0,0,0,8">
                     <ui:CardControl.Icon>
                         <ui:SymbolIcon Symbol="ZoomIn24" />
                     </ui:CardControl.Icon>
@@ -112,14 +124,14 @@
                 </ui:CardControl>
 
                 <!-- Show Running Indicators -->
-                <ui:CardControl Header="Индикаторы запущенных программ" Margin="0,0,0,16">
+                <ui:CardControl Header="{DynamicResource SettingShowRunningIndicators}" Margin="0,0,0,16">
                     <ui:CardControl.Icon>
                         <ui:SymbolIcon Symbol="Status24" />
                     </ui:CardControl.Icon>
                     <ui:ToggleSwitch IsChecked="{Binding ShowRunningIndicators, Mode=TwoWay}" />
                 </ui:CardControl>
 
-                <Button Content="Закрыть" 
+                <Button Content="{DynamicResource BtnClose}" 
                         Click="OnCloseClick"
                         HorizontalAlignment="Right" 
                         Style="{DynamicResource AccentButtonStyle}"

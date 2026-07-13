@@ -1,0 +1,54 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:sys="clr-namespace:System;assembly=System.Runtime">
+
+    <!-- Settings Window -->
+    <sys:String x:Key="SettingsTitle">ShortcutDock Einstellungen</sys:String>
+    <sys:String x:Key="SettingsHeader">Panel-Einstellungen</sys:String>
+    
+    <sys:String x:Key="SettingPosition">Bildschirmposition</sys:String>
+    <sys:String x:Key="PositionBottom">Unten</sys:String>
+    <sys:String x:Key="PositionTop">Oben</sys:String>
+    <sys:String x:Key="PositionLeft">Links</sys:String>
+    <sys:String x:Key="PositionRight">Rechts</sys:String>
+    
+    <sys:String x:Key="SettingBackdrop">Weichzeichnungseffekt</sys:String>
+    <sys:String x:Key="BackdropNone">Kein (transparent)</sys:String>
+    <sys:String x:Key="BackdropMica">Mica</sys:String>
+    <sys:String x:Key="BackdropAcrylic">Acrylic</sys:String>
+    
+    <sys:String x:Key="SettingIconSize">Symbolgröße</sys:String>
+    <sys:String x:Key="SettingKeepOnTop">Immer im Vordergrund</sys:String>
+    <sys:String x:Key="SettingShowAddButton">Schaltfläche „+“ im Dock anzeigen</sys:String>
+    <sys:String x:Key="SettingStartWithWindows">Mit Windows starten</sys:String>
+    <sys:String x:Key="SettingShowRecycleBin">Papierkorb im Dock anzeigen</sys:String>
+    <sys:String x:Key="SettingAutoHide">Panel automatisch ausblenden (Auto-Hide)</sys:String>
+    <sys:String x:Key="SettingHoverZoom">Vergrößerungseffekt beim Zeigen (Hover Zoom)</sys:String>
+    <sys:String x:Key="SettingShowRunningIndicators">Indikatoren für laufende Programme</sys:String>
+    <sys:String x:Key="BtnClose">Schließen</sys:String>
+    
+    <sys:String x:Key="SettingLanguage">Oberflächensprache</sys:String>
+
+    <!-- Context Menus & Tray -->
+    <sys:String x:Key="MenuRunAsAdmin">Als Administrator ausführen</sys:String>
+    <sys:String x:Key="MenuEmptyRecycleBin">Papierkorb leeren</sys:String>
+    <sys:String x:Key="MenuChangeIcon">Symbol ändern...</sys:String>
+    <sys:String x:Key="MenuRemoveFromPanel">Vom Panel entfernen</sys:String>
+    <sys:String x:Key="MenuAddApp">Anwendung hinzufügen</sys:String>
+    <sys:String x:Key="MenuSettings">Panel-Einstellungen</sys:String>
+    <sys:String x:Key="MenuClosePanel">Panel schließen</sys:String>
+    
+    <sys:String x:Key="TrayShowHide">Panel ein-/ausblenden</sys:String>
+    <sys:String x:Key="TraySettings">Einstellungen...</sys:String>
+    <sys:String x:Key="TrayExit">Beenden</sys:String>
+    
+    <!-- Code Strings -->
+    <sys:String x:Key="RecycleBinName">Papierkorb</sys:String>
+    <sys:String x:Key="DlgAddAppTitle">Wählen Sie eine Anwendung aus, die zum Panel hinzugefügt werden soll</sys:String>
+    <sys:String x:Key="DlgAddAppFilter">Programme und Verknüpfungen (*.exe;*.lnk)|*.exe;*.lnk|Alle Dateien (*.*)|*.*</sys:String>
+    <sys:String x:Key="DlgChangeIconTitle">Wählen Sie ein neues Symbol für die Anwendung</sys:String>
+    <sys:String x:Key="DlgChangeIconFilter">Bilder und Symbole (*.png;*.ico;*.jpg;*.jpeg)|*.png;*.ico;*.jpg;*.jpeg|Alle Dateien (*.*)|*.*</sys:String>
+    <sys:String x:Key="ErrTargetNotFound">Zieldatei oder -ordner nicht gefunden</sys:String>
+    <sys:String x:Key="ErrFileNotFound">Datei oder Ordner nicht gefunden</sys:String>
+
+</ResourceDictionary>

@@ -36,4 +36,17 @@ public sealed class PanelSettings
 
     [JsonPropertyName("ShowRunningIndicators")]
     public bool ShowRunningIndicators { get; set; } = true;
+
+    [JsonPropertyName("Language")]
+    public string Language { get; set; } = GetDefaultLanguage();
+
+    private static string GetDefaultLanguage()
+    {
+        var cultureName = System.Globalization.CultureInfo.CurrentUICulture.TwoLetterISOLanguageName;
+        if (cultureName == "ru" || cultureName == "de")
+        {
+            return cultureName;
+        }
+        return "en";
+    }
 }

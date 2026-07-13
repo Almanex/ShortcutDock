@@ -15,7 +15,18 @@ public partial class ShortcutViewModel : ObservableObject
 
     public ShortcutItem Model { get; }
 
-    public string Name => Model.Name;
+    public string Name
+    {
+        get => Model.Name;
+        set
+        {
+            if (Model.Name != value)
+            {
+                Model.Name = value;
+                OnPropertyChanged(nameof(Name));
+            }
+        }
+    }
 
     /// <summary>Абсолютный путь к PNG/ICO иконки в кэше (раскрытый из %AppData%).</summary>
     [ObservableProperty]
@@ -107,10 +118,12 @@ public partial class ShortcutViewModel : ObservableObject
     [RelayCommand]
     private void ChangeIcon()
     {
+        var filter = App.Current.TryFindResource("DlgChangeIconFilter") as string ?? "Images and icons (*.png;*.ico;*.jpg;*.jpeg)|*.png;*.ico;*.jpg;*.jpeg|All files (*.*)|*.*";
+        var title = App.Current.TryFindResource("DlgChangeIconTitle") as string ?? "Select a new icon for the application";
         var dlg = new Microsoft.Win32.OpenFileDialog
         {
-            Filter = "Изображения и значки (*.png;*.ico;*.jpg;*.jpeg)|*.png;*.ico;*.jpg;*.jpeg|Все файлы (*.*)|*.*",
-            Title = "Выберите новый значок для приложения"
+            Filter = filter,
+            Title = title
         };
         if (dlg.ShowDialog() == true)
         {

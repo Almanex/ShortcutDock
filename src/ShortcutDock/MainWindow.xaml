@@ -127,7 +127,7 @@
                                 </Border.Style>
                                 <Border.ContextMenu>
                                     <ContextMenu Opened="ContextMenu_Opened" Closed="ContextMenu_Closed" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
-                                        <MenuItem Header="Запустить от имени администратора"
+                                        <MenuItem Header="{DynamicResource MenuRunAsAdmin}"
                                                   Command="{Binding RunAsAdminCommand}">
                                             <MenuItem.Style>
                                                 <Style TargetType="MenuItem">
@@ -139,7 +139,7 @@
                                                 </Style>
                                             </MenuItem.Style>
                                         </MenuItem>
-                                        <MenuItem Header="Очистить корзину"
+                                        <MenuItem Header="{DynamicResource MenuEmptyRecycleBin}"
                                                   Command="{Binding EmptyRecycleBinCommand}">
                                             <MenuItem.Style>
                                                 <Style TargetType="MenuItem">
@@ -152,7 +152,7 @@
                                                 </Style>
                                             </MenuItem.Style>
                                         </MenuItem>
-                                        <MenuItem Header="Изменить значок..."
+                                        <MenuItem Header="{DynamicResource MenuChangeIcon}"
                                                   Command="{Binding ChangeIconCommand}">
                                             <MenuItem.Style>
                                                 <Style TargetType="MenuItem">
@@ -175,7 +175,7 @@
                                                 </Style>
                                             </Separator.Style>
                                         </Separator>
-                                        <MenuItem Header="Удалить с панели"
+                                        <MenuItem Header="{DynamicResource MenuRemoveFromPanel}"
                                                   Command="{Binding RemoveCommand}">
                                             <MenuItem.Style>
                                                 <Style TargetType="MenuItem">
@@ -263,7 +263,7 @@
 
                     <Button Command="{Binding AddViaDialogCommand}"
                             Width="32" Height="32"
-                            ToolTip="Добавить приложение"
+                            ToolTip="{DynamicResource MenuAddApp}"
                             Style="{DynamicResource AccentButtonStyle}">
                         <ui:SymbolIcon Symbol="Add24" FontSize="16" />
                     </Button>
@@ -273,12 +273,12 @@
 
         <Grid.ContextMenu>
             <ContextMenu Opened="ContextMenu_Opened" Closed="ContextMenu_Closed" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
-                <MenuItem Header="Добавить приложение"
+                <MenuItem Header="{DynamicResource MenuAddApp}"
                           Command="{Binding AddViaDialogCommand}" />
-                <MenuItem Header="Настройки панели"
+                <MenuItem Header="{DynamicResource MenuSettings}"
                           Command="{Binding ShowSettingsCommand}" />
                 <Separator />
-                <MenuItem Header="Закрыть панель"
+                <MenuItem Header="{DynamicResource MenuClosePanel}"
                           Click="OnCloseClick" />
             </ContextMenu>
         </Grid.ContextMenu>

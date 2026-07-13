@@ -69,7 +69,10 @@ public sealed class IconExtractor
     public string ExtractToPng(string targetPath)
     {
         if (!File.Exists(targetPath) && !Directory.Exists(targetPath))
-            throw new FileNotFoundException("Целевой файл или папка не найдены", targetPath);
+        {
+            var errMsg = System.Windows.Application.Current?.TryFindResource("ErrTargetNotFound") as string ?? "Target file or folder not found";
+            throw new FileNotFoundException(errMsg, targetPath);
+        }
 
         Directory.CreateDirectory(SettingsService.CacheFolder);
 

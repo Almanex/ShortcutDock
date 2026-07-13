@@ -1,4 +1,5 @@
 using System.Windows;
+using System.Linq;
 using ShortcutDock.Services;
 using ShortcutDock.ViewModels;
 
@@ -14,6 +15,45 @@ public partial class App : System.Windows.Application
     private MainWindow? _mainWindow;
     private MainViewModel? _viewModel;
 
+    private System.Windows.Forms.ToolStripMenuItem? _trayShowHideItem;
+    private System.Windows.Forms.ToolStripMenuItem? _traySettingsItem;
+    private System.Windows.Forms.ToolStripMenuItem? _trayExitItem;
+
+    private static ResourceDictionary? _languageDictionary;
+
+    public static void SetLanguage(string lang)
+    {
+        var app = (App)System.Windows.Application.Current;
+        var dict = new ResourceDictionary();
+        try
+        {
+            var uri = new Uri($"Resources/Languages/Resources.{lang}.xaml", UriKind.Relative);
+            dict.Source = uri;
+        }
+        catch
+        {
+            dict.Source = new Uri("Resources/Languages/Resources.ru.xaml", UriKind.Relative);
+        }
+
+        if (_languageDictionary != null)
+        {
+            app.Resources.MergedDictionaries.Remove(_languageDictionary);
+        }
+        else
+        {
+            var defaultDict = app.Resources.MergedDictionaries.FirstOrDefault(d => d.Source != null && d.Source.OriginalString.Contains("Resources/Languages/Resources."));
+            if (defaultDict != null)
+            {
+                app.Resources.MergedDictionaries.Remove(defaultDict);
+            }
+        }
+
+        _languageDictionary = dict;
+        app.Resources.MergedDictionaries.Add(dict);
+
+        app.UpdateTrayMenu();
+    }
+
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
@@ -23,6 +63,10 @@ public partial class App : System.Windows.Application
         var iconExtractor = new IconExtractor();
         var launcher = new ProcessLauncher();
         var appBar = new AppBarService();
+
+        var config = settings.Load();
+        var lang = config.PanelSettings.Language;
+        SetLanguage(lang);
 
         _viewModel = new MainViewModel(settings, resolver, iconExtractor, launcher);
         _mainWindow = new MainWindow(_viewModel, appBar);
@@ -60,21 +104,33 @@ public partial class App : System.Windows.Application
 
         var contextMenu = new System.Windows.Forms.ContextMenuStrip();
 
-        var showHideItem = new System.Windows.Forms.ToolStripMenuItem("Показать/Скрыть панель");
-        showHideItem.Click += (s, ev) => ToggleVisibility();
-        contextMenu.Items.Add(showHideItem);
+        _trayShowHideItem = new System.Windows.Forms.ToolStripMenuItem();
+        _trayShowHideItem.Click += (s, ev) => ToggleVisibility();
+        contextMenu.Items.Add(_trayShowHideItem);
 
-        var settingsItem = new System.Windows.Forms.ToolStripMenuItem("Настройки...");
-        settingsItem.Click += (s, ev) => ShowSettings();
-        contextMenu.Items.Add(settingsItem);
+        _traySettingsItem = new System.Windows.Forms.ToolStripMenuItem();
+        _traySettingsItem.Click += (s, ev) => ShowSettings();
+        contextMenu.Items.Add(_traySettingsItem);
 
         contextMenu.Items.Add(new System.Windows.Forms.ToolStripSeparator());
 
-        var exitItem = new System.Windows.Forms.ToolStripMenuItem("Выход");
-        exitItem.Click += (s, ev) => ExitApp();
-        contextMenu.Items.Add(exitItem);
+        _trayExitItem = new System.Windows.Forms.ToolStripMenuItem();
+        _trayExitItem.Click += (s, ev) => ExitApp();
+        contextMenu.Items.Add(_trayExitItem);
 
         _notifyIcon.ContextMenuStrip = contextMenu;
+
+        UpdateTrayMenu();
+    }
+
+    private void UpdateTrayMenu()
+    {
+        if (_trayShowHideItem != null)
+            _trayShowHideItem.Text = TryFindResource("TrayShowHide") as string ?? "Show/Hide Panel";
+        if (_traySettingsItem != null)
+            _traySettingsItem.Text = TryFindResource("TraySettings") as string ?? "Settings...";
+        if (_trayExitItem != null)
+            _trayExitItem.Text = TryFindResource("TrayExit") as string ?? "Exit";
     }
 
     private void ToggleVisibility()
@@ -96,7 +152,6 @@ public partial class App : System.Windows.Application
     {
         if (_viewModel == null || _mainWindow == null) return;
 
-        // Если панель скрыта, показываем её перед открытием настроек
         if (_mainWindow.Visibility != Visibility.Visible)
         {
             _mainWindow.Show();
