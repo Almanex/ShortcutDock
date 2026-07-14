@@ -1,6 +1,4 @@
-[ English ](GUIDE.md) • [ Русский ](GUIDE_RU.md) • [ Deutsch ](GUIDE_DE.md)
-
-# ShortcutDock Benutzerhandbuch
+﻿# ShortcutDock Benutzerhandbuch
 
 Willkommen bei **ShortcutDock** — einer modernen und funktionalen Schnellstartleiste zur Organisation Ihrer Anwendungen, Ordner und zur Verwaltung von Systemelementen unter Windows 10 und 11.
 

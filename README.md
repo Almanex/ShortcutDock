@@ -1,5 +1,3 @@
-[ English ](README.md) • [ Русский ](docs/README_RU.md) • [ Deutsch ](docs/README_DE.md)
-
 # ShortcutDock
 
 **Customizable Fluent design shortcut dock panel for Windows 11 desktops**
@@ -23,55 +21,6 @@ For detailed instructions on configuring all features, read the [User Guide (GUI
 
 ---
 
-## Screenshots
-
-<details open>
-  <summary style="cursor: pointer; padding: 6px; font-family: sans-serif;"><b>[ Show ] 1. Horizontal Layout (Bottom Position)</b></summary>
-  <br/>
-  <p align="center">
-    <img src="screenshots/screenshot1.png" width="95%" alt="ShortcutDock Horizontal Bottom" />
-  </p>
-</details>
-
-<details>
-  <summary style="cursor: pointer; padding: 6px; font-family: sans-serif;"><b>[ Show ] 2. Vertical Layout (Left Position)</b></summary>
-  <br/>
-  <p align="center">
-    <img src="screenshots/screenshot2.png" width="95%" alt="ShortcutDock Vertical Left" />
-  </p>
-</details>
-
-<details>
-  <summary style="cursor: pointer; padding: 6px; font-family: sans-serif;"><b>[ Show ] 3. Fluent Settings Window</b></summary>
-  <br/>
-  <p align="center">
-    <img src="screenshots/screenshot3.png" width="95%" alt="ShortcutDock Settings" />
-  </p>
-</details>
-
-<details>
-  <summary style="cursor: pointer; padding: 6px; font-family: sans-serif;"><b>[ Show ] 4. Context Menu & Customizations</b></summary>
-  <br/>
-  <p align="center">
-    <img src="screenshots/screenshot4.png" width="95%" alt="ShortcutDock Context Menu" />
-  </p>
-</details>
-
-<details>
-  <summary style="cursor: pointer; padding: 6px; font-family: sans-serif;"><b>[ Show ] 5. Horizontal Layout (Top Position)</b></summary>
-  <br/>
-  <p align="center">
-    <img src="screenshots/screenshot5.png" width="95%" alt="ShortcutDock Top Position" />
-  </p>
-</details>
-
-
-
-
-
-
----
-
 ## Key Features
 
 - Desktop Panel: Drag-and-drop `.exe` or `.lnk` files directly onto the panel to add.
@@ -91,68 +40,6 @@ For detailed instructions on configuring all features, read the [User Guide (GUI
 | Pattern | MVVM Toolkit | 8.4.2 | CommunityToolkit.Mvvm for state binding |
 | Win32 Interop | P/Invoke | - | DWM, WindowStyle, and AppBar APIs |
 | Image Lib | System.Drawing.Common | 10.0.9 | Icon Extraction and PNG rendering |
-
----
-
-## Project Structure
-
-```text
-ShortcutDock/
-├── ShortcutDock.slnx              # Visual Studio Solution (SDK 10 format)
-└── src\ShortcutDock\
-    ├── ShortcutDock.csproj         # net10.0-windows configuration
-    ├── app.manifest                # DPI awareness and compatibility manifest
-    ├── App.xaml / App.xaml.cs      # Entry point, DI container, and Tray service
-    ├── MainWindow.xaml / .xaml.cs  # Main panel, DWM blur, DnD, and orientation hooks
-    ├── SettingsWindow.xaml / .cs   # Fluent settings window
-    ├── app_icon.ico                # App icon asset
-    ├── Native\
-    │   └── Win32.cs                # P/Invoke helper definitions
-    ├── Models\
-    │   ├── Settings.cs            
-    │   ├── PanelSettings.cs        # Panel preferences
-    │   └── ShortcutItem.cs         # Shortcut model (GUID, path, cached icon)
-    ├── Services\
-    │   ├── SettingsService.cs      # Load/save settings.json in %AppData%
-    │   ├── ProcessLauncher.cs     # Executes apps, supports admin elevation
-    │   ├── ShortcutResolver.cs     # Resolves shell links (.lnk) via COM interfaces
-    │   └── IconExtractor.cs       # Jumbo icon extraction (256x256) to PNG cache
-    └── ViewModels\
-        ├── MainViewModel.cs       # Handles main collection and settings
-        └── ShortcutViewModel.cs   # Commands for launch, elevation, and deletion
-```
-
----
-
-## Data & Configuration
-
-Configuration is saved in JSON format under `%AppData%\ShortcutDock\settings.json`:
-
-```json
-{
-  "PanelSettings": {
-    "Position": "Bottom",
-    "IconSize": 48,
-    "KeepOnTop": true,
-    "BackdropType": "Mica",
-    "ShowAddButton": true,
-    "AutoHide": false,
-    "HoverZoom": true,
-    "ShowRunningIndicators": true,
-    "Language": "en"
-  },
-  "Shortcuts": [
-    {
-      "Id": "a1b2c3d4-...",
-      "Name": "Google Chrome",
-      "TargetPath": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
-      "IconPath": "%AppData%\\ShortcutDock\\Cache\\chrome_ABCD1234.png"
-    }
-  ]
-}
-```
-
-Icon cache is stored under `%AppData%\ShortcutDock\Cache\*.png`.
 
 ---
 
@@ -193,17 +80,6 @@ dotnet build -c Release
 
 ## Contributing
 Please submit issues and pull requests on our GitHub repository. For major changes, open an issue first to discuss what you want to change.
-
----
-
-## Versioning
-We use SemVer for versioning. For available versions, see the tags on this repository.
-
----
-
-## Authors & Acknowledgments
-- Almanex - Developer and initial work.
-- WPF-UI community for Fluent styling elements.
 
 ---
 

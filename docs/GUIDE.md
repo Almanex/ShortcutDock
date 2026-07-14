@@ -1,6 +1,4 @@
-[ English ](GUIDE.md) • [ Русский ](GUIDE_RU.md) • [ Deutsch ](GUIDE_DE.md)
-
-# ShortcutDock User Guide
+﻿# ShortcutDock User Guide
 
 Welcome to **ShortcutDock** — a modern and functional dock panel for quick launching applications, folders, and managing system elements on Windows 11 and 10.
 

@@ -1,5 +1,3 @@
-[ English ](../README.md) • [ Русский ](README_RU.md) • [ Deutsch ](README_DE.md)
-
 # ShortcutDock
 
 **Настраиваемая панель быстрого запуска в стиле Fluent Design для рабочего стола Windows 11**
@@ -23,55 +21,6 @@ ShortcutDock — это современная, легковесная пане�
 
 ---
 
-## Скриншоты
-
-<details open>
-  <summary style="cursor: pointer; padding: 6px; font-family: sans-serif;"><b>[ Показать ] 1. Горизонтальное расположение (Снизу)</b></summary>
-  <br/>
-  <p align="center">
-    <img src="screenshots/screenshot1.png" width="95%" alt="ShortcutDock Горизонтальная внизу" />
-  </p>
-</details>
-
-<details>
-  <summary style="cursor: pointer; padding: 6px; font-family: sans-serif;"><b>[ Показать ] 2. Вертикальное расположение (Слева)</b></summary>
-  <br/>
-  <p align="center">
-    <img src="screenshots/screenshot2.png" width="95%" alt="ShortcutDock Вертикальная слева" />
-  </p>
-</details>
-
-<details>
-  <summary style="cursor: pointer; padding: 6px; font-family: sans-serif;"><b>[ Показать ] 3. Окно настроек Fluent Design</b></summary>
-  <br/>
-  <p align="center">
-    <img src="screenshots/screenshot3.png" width="95%" alt="ShortcutDock Настройки" />
-  </p>
-</details>
-
-<details>
-  <summary style="cursor: pointer; padding: 6px; font-family: sans-serif;"><b>[ Показать ] 4. Контекстное меню и настройки</b></summary>
-  <br/>
-  <p align="center">
-    <img src="screenshots/screenshot4.png" width="95%" alt="ShortcutDock Контекстное меню" />
-  </p>
-</details>
-
-<details>
-  <summary style="cursor: pointer; padding: 6px; font-family: sans-serif;"><b>[ Показать ] 5. Горизонтальное расположение (Сверху)</b></summary>
-  <br/>
-  <p align="center">
-    <img src="screenshots/screenshot5.png" width="95%" alt="ShortcutDock Позиция сверху" />
-  </p>
-</details>
-
-
-
-
-
-
----
-
 ## Основные возможности
 
 - Панель на рабочем столе: Перетаскивайте файлы `.exe` или `.lnk` с помощью Drag-and-Drop прямо на панель для их быстрого добавления.
@@ -91,68 +40,6 @@ ShortcutDock — это современная, легковесная пане�
 | Паттерн | MVVM Toolkit | 8.4.2 | Связывание состояния через CommunityToolkit.Mvvm |
 | Интеграция с Win32 | P/Invoke | - | Работа с DWM, стилями окон и API AppBar |
 | Графика | System.Drawing.Common | 10.0.9 | Извлечение значков и рендеринг в PNG |
-
----
-
-## Структура проекта
-
-```text
-ShortcutDock/
-├── ShortcutDock.slnx              # Файл решения Visual Studio (формат SDK 10)
-└── src\ShortcutDock\
-    ├── ShortcutDock.csproj         # Конфигурация проекта net10.0-windows
-    ├── app.manifest                # Манифест совместимости и поддержки DPI
-    ├── App.xaml / App.xaml.cs      # Точка входа, DI-контейнер и служба трея
-    ├── MainWindow.xaml / .xaml.cs  # Главная панель, обработка размытия DWM, DnD и AppBar
-    ├── SettingsWindow.xaml / .cs   # Окно настроек Fluent-дизайна
-    ├── app_icon.ico                # Встроенный значок приложения
-    ├── Native\
-    │   └── Win32.cs                # Системные вызовы P/Invoke
-    ├── Models\
-    │   ├── Settings.cs            
-    │   ├── PanelSettings.cs        # Настройки панели
-    │   └── ShortcutItem.cs         # Модель ярлыка (GUID, пути, кэшированная иконка)
-    ├── Services\
-    │   ├── SettingsService.cs      # Загрузка/сохранение settings.json в %AppData%
-    │   ├── ProcessLauncher.cs     # Запуск приложений (включая права администратора)
-    │   ├── ShortcutResolver.cs     # Разрешение путей .lnk-файлов через COM-интерфейсы
-    │   └── IconExtractor.cs       # Извлечение больших значков (256x256) в кэш PNG
-    └── ViewModels\
-        ├── MainViewModel.cs       # Управление коллекцией ярлыков и настройками
-        └── ShortcutViewModel.cs   # Команды запуска, удаления и администрирования
-```
-
----
-
-## Данные и конфигурация
-
-Конфигурационный файл сохраняется в формате JSON по пути `%AppData%\ShortcutDock\settings.json`:
-
-```json
-{
-  "PanelSettings": {
-    "Position": "Bottom",
-    "IconSize": 48,
-    "KeepOnTop": true,
-    "BackdropType": "Mica",
-    "ShowAddButton": true,
-    "AutoHide": false,
-    "HoverZoom": true,
-    "ShowRunningIndicators": true,
-    "Language": "ru"
-  },
-  "Shortcuts": [
-    {
-      "Id": "a1b2c3d4-...",
-      "Name": "Google Chrome",
-      "TargetPath": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
-      "IconPath": "%AppData%\\ShortcutDock\\Cache\\chrome_ABCD1234.png"
-    }
-  ]
-}
-```
-
-Кэш иконок находится в папке `%AppData%\ShortcutDock\Cache\*.png`.
 
 ---
 
@@ -193,17 +80,6 @@ dotnet build -c Release
 
 ## Участие в разработке
 Вы можете отправлять сообщения об ошибках и пулл-реквесты на GitHub. При внесении значительных изменений рекомендуется сначала создать issue для предварительного обсуждения.
-
----
-
-## Версионирование
-Проект использует систему SemVer. Доступные версии и теги можно посмотреть на странице релизов репозитория.
-
----
-
-## Авторы и благодарности
-- Almanex - Разработчик и первоначальная реализация.
-- Сообщество WPF-UI за современные элементы Fluent Design.
 
 ---
 

@@ -1,5 +1,3 @@
-[ English ](../README.md) • [ Русский ](README_RU.md) • [ Deutsch ](README_DE.md)
-
 # ShortcutDock
 
 **Anpassbare Fluent-Design-Schnellstartleiste für Windows 11-Desktops**
@@ -23,55 +21,6 @@ Ausführliche Anweisungen zur Konfiguration aller Funktionen finden Sie im [Benu
 
 ---
 
-## Screenshots
-
-<details open>
-  <summary style="cursor: pointer; padding: 6px; font-family: sans-serif;"><b>[ Anzeigen ] 1. Horizontales Layout (Unten)</b></summary>
-  <br/>
-  <p align="center">
-    <img src="screenshots/screenshot1.png" width="95%" alt="ShortcutDock Horizontal Unten" />
-  </p>
-</details>
-
-<details>
-  <summary style="cursor: pointer; padding: 6px; font-family: sans-serif;"><b>[ Anzeigen ] 2. Vertikales Layout (Links)</b></summary>
-  <br/>
-  <p align="center">
-    <img src="screenshots/screenshot2.png" width="95%" alt="ShortcutDock Vertikal Links" />
-  </p>
-</details>
-
-<details>
-  <summary style="cursor: pointer; padding: 6px; font-family: sans-serif;"><b>[ Anzeigen ] 3. Fluent Einstellungsfenster</b></summary>
-  <br/>
-  <p align="center">
-    <img src="screenshots/screenshot3.png" width="95%" alt="ShortcutDock Einstellungen" />
-  </p>
-</details>
-
-<details>
-  <summary style="cursor: pointer; padding: 6px; font-family: sans-serif;"><b>[ Anzeigen ] 4. Kontextmenü und Anpassungen</b></summary>
-  <br/>
-  <p align="center">
-    <img src="screenshots/screenshot4.png" width="95%" alt="ShortcutDock Kontextmenü" />
-  </p>
-</details>
-
-<details>
-  <summary style="cursor: pointer; padding: 6px; font-family: sans-serif;"><b>[ Anzeigen ] 5. Horizontales Layout (Oben)</b></summary>
-  <br/>
-  <p align="center">
-    <img src="screenshots/screenshot5.png" width="95%" alt="ShortcutDock Position Oben" />
-  </p>
-</details>
-
-
-
-
-
-
----
-
 ## Hauptfunktionen
 
 - Desktop-Leiste: Ziehen Sie `.exe`- oder `.lnk`-Dateien einfach per Drag-and-Drop direkt auf die Leiste, um sie hinzuzufügen.
@@ -91,68 +40,6 @@ Ausführliche Anweisungen zur Konfiguration aller Funktionen finden Sie im [Benu
 | Entwurfsmuster | MVVM Toolkit | 8.4.2 | Zustandsbindung über CommunityToolkit.Mvvm |
 | Win32-Integration | P/Invoke | - | APIs für DWM, Fensterstile und AppBar |
 | Grafikbibliothek | System.Drawing.Common | 10.0.9 | Icon-Extraktion und PNG-Rendering |
-
----
-
-## Projektstruktur
-
-```text
-ShortcutDock/
-├── ShortcutDock.slnx              # Visual Studio-Projektmappe (SDK 10-Format)
-└── src\ShortcutDock\
-    ├── ShortcutDock.csproj         # net10.0-windows Konfiguration
-    ├── app.manifest                # DPI-Kompatibilität und Windows-Manifest
-    ├── App.xaml / App.xaml.cs      # Einstiegspunkt, DI-Container und Tray-Service
-    ├── MainWindow.xaml / .xaml.cs  # Hauptleiste, DWM-Blur, DnD- und AppBar-Integration
-    ├── SettingsWindow.xaml / .cs   # Fluent-Design Einstellungsfenster
-    ├── app_icon.ico                # Integriertes Programmsymbol
-    ├── Native\
-    │   └── Win32.cs                # P/Invoke-Schnittstellendefinitionen
-    ├── Models\
-    │   ├── Settings.cs            
-    │   ├── PanelSettings.cs        # Leisteneinstellungen
-    │   └── ShortcutItem.cs         # Verknüpfungsmodell (GUID, Pfad, Cache-Symbol)
-    ├── Services\
-    │   ├── SettingsService.cs      # settings.json in %AppData% laden/speichern
-    │   ├── ProcessLauncher.cs     # Anwendungsstart, auch mit Administratorrechten
-    │   ├── ShortcutResolver.cs     # Auflösen von .lnk-Verknüpfungen über COM
-    │   └── IconExtractor.cs       # Extraktion großer Symbole (256x256) in PNG-Cache
-    └── ViewModels\
-        ├── MainViewModel.cs       # Verwaltung der Verknüpfungssammlung und Einstellungen
-        └── ShortcutViewModel.cs   # Befehle zum Starten, Entfernen und für Admin-Rechte
-```
-
----
-
-## Daten und Konfiguration
-
-Die Einstellungen werden als JSON unter `%AppData%\ShortcutDock\settings.json` gespeichert:
-
-```json
-{
-  "PanelSettings": {
-    "Position": "Bottom",
-    "IconSize": 48,
-    "KeepOnTop": true,
-    "BackdropType": "Mica",
-    "ShowAddButton": true,
-    "AutoHide": false,
-    "HoverZoom": true,
-    "ShowRunningIndicators": true,
-    "Language": "de"
-  },
-  "Shortcuts": [
-    {
-      "Id": "a1b2c3d4-...",
-      "Name": "Google Chrome",
-      "TargetPath": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
-      "IconPath": "%AppData%\\ShortcutDock\\Cache\\chrome_ABCD1234.png"
-    }
-  ]
-}
-```
-
-Der Icon-Cache wird unter `%AppData%\ShortcutDock\Cache\*.png` abgelegt.
 
 ---
 
@@ -193,17 +80,6 @@ dotnet build -c Release
 
 ## Mitwirken
 Bitte senden Sie Fehlerberichte (Issues) und Pull Requests auf GitHub. Bei größeren Änderungen erstellen Sie bitte zuerst ein Issue zur Diskussion.
-
----
-
-## Versionsverwaltung
-Wir verwenden SemVer für die Versionsverwaltung. Verfügbare Versionen und Tags finden Sie unter Releases.
-
----
-
-## Autoren & Danksagungen
-- Almanex - Entwickler und Erstumsetzung.
-- WPF-UI Community für moderne Designelemente.
 
 ---
 
