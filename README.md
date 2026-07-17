@@ -1,3 +1,4 @@
+[README_RU](docs/README_RU.md) | [README_DE](docs/README_DE.md) | [README_EN](README.md) | [GUIDE_RU](docs/GUIDE_RU.md) | [GUIDE_DE](docs/GUIDE_DE.md) | [GUIDE_EN](docs/GUIDE_EN.md)
 # ShortcutDock
 
 **Customizable Fluent design shortcut dock panel for Windows 11 desktops**
