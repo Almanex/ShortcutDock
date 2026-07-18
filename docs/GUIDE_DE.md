@@ -1,6 +1,7 @@
-﻿# ShortcutDock Benutzerhandbuch
+# ShortcutDock Benutzerhandbuch — Anpassbare Schnellstartleiste für Windows 10 & 11
 
-Willkommen bei **ShortcutDock** — einer modernen und funktionalen Schnellstartleiste zur Organisation Ihrer Anwendungen, Ordner und zur Verwaltung von Systemelementen unter Windows 10 und 11.
+> [!NOTE]
+> **ShortcutDock** ist eine moderne und funktionale Schnellstartleiste zur Organisation Ihrer Anwendungen, Ordner und zur Verwaltung von Systemelementen unter Windows 10 und 11 mit flüssigen Vergrößerungseffekten und Mica-/Acrylic-Stilen. Dieses Handbuch hilft Ihnen, sich mit allen Funktionen der Leiste vertraut zu machen.
 
 Dieses Handbuch hilft Ihnen, sich schnell mit allen Funktionen der Anwendung vertraut zu machen und sie an Ihre Bedürfnisse anzupassen.
 
@@ -8,7 +9,7 @@ Dieses Handbuch hilft Ihnen, sich schnell mit allen Funktionen der Anwendung ver
 
 ## Inhaltsverzeichnis
 1. [Systemanforderungen](#1-systemanforderungen)
-2. [Installation und erster Start](#2-installation-und-erster-start)
+2. [Schnellstartanleitung](#schnellstartanleitung)
 3. [Hinzufügen von Verknüpfungen zur Leiste](#3-hinzugügen-von-verknüpfungen-zur-leiste)
 4. [Verknüpfungen verwalten und sortieren](#4-verknüpfungen-verwalten-und-sortieren)
 5. [Einstellung von Aussehen und Effekten](#5-einstellung-von-aussehen-und-effekten)
@@ -26,21 +27,16 @@ Dieses Handbuch hilft Ihnen, sich schnell mit allen Funktionen der Anwendung ver
 
 ---
 
-## 2. Installation und erster Start
-Die Anwendung wird als einzelne Datei `ShortcutDock.exe` geliefert und erfordert keine vollständige Installation:
+## Schnellstartanleitung
 
-> [!TIP]
-> **Holen Sie sich die Anwendung:**  
-> 📥 **[Laden Sie die neueste Version von der GitHub Releases-Seite herunter](https://github.com/Almanex/ShortcutDock/releases)**
-
-1. Legen Sie die Datei `ShortcutDock.exe` in einen beliebigen Ordner auf Ihrem Computer (z. B. `C:\Program Files\ShortcutDock` oder Ihren persönlichen Benutzerordner).
-2. Doppelklicken Sie auf die Datei `ShortcutDock.exe`, um sie zu starten.
-3. Beim ersten Start erscheint eine leere, halbtransparente Leiste mit einer `+`-Schaltfläche am unteren Bildschirmrand.
-
-> [!IMPORTANT]
-> **Windows Defender SmartScreen-Warnung:**  
-> Da die ausführbare Datei der Anwendung nicht mit einem kostenpflichtigen digitalen Zertifikat des Entwicklers signiert ist (was bei kostenlosen Open-Source-Projekten üblich ist), blockiert Windows Defender SmartScreen möglicherweise den Start beim ersten Ausführen und zeigt ein Popup *"Der Computer wurde durch Windows geschützt"* an.  
-> **So starten Sie die Anwendung:** Klicken Sie auf den Link **„Weitere Informationen“** (oben links im Warnungs-Popup) und dann auf die Schaltfläche **„Trotzdem ausführen“**. Windows merkt sich Ihre Entscheidung und die Warnung wird bei zukünftigen Starts nicht mehr angezeigt.
+1. **Schritt 1: Anwendung herunterladen** — Gehen Sie zum Release-Bereich auf GitHub und laden Sie die ausführbare Datei `PhotoViewer.exe` der neuesten Version herunter:
+   * [ShortcutDock Releases auf GitHub](https://github.com/Almanex/ShortcutDock/releases)
+2. **Schritt 2: Ausführbare Datei platzieren** — Legen Sie die Datei `ShortcutDock.exe` in einen beliebigen Ordner auf Ihrem Computer (z. B. `C:\Program Files\ShortcutDock` oder Ihren persönlichen Benutzerordner).
+3. **Schritt 3: Schnellstartleiste starten** — Doppelklicken Sie auf die Datei `ShortcutDock.exe`, um sie zu starten. Beim ersten Start erscheint eine leere, halbtransparente Leiste mit einer `+`-Schaltfläche am unteren Bildschirmrand.
+   > [!IMPORTANT]
+   > **Windows Defender SmartScreen-Warnung:**  
+   > Da die ausführbare Datei der Anwendung nicht mit einem kostenpflichtigen digitalen Zertifikat des Entwicklers signiert ist (was bei kostenlosen Open-Source-Projekten üblich ist), blockiert Windows Defender SmartScreen möglicherweise den Start beim ersten Ausführen und zeigt ein Popup *"Der Computer wurde durch Windows geschützt"* an.  
+   > **So starten Sie die Anwendung:** Klicken Sie auf den Link **„Weitere Informationen“** (oben links im Warnungs-Popup) und dann auf die Schaltfläche **„Trotzdem ausführen“**. Windows merkt sich Ihre Entscheidung und die Warnung wird bei zukünftigen Starts nicht mehr angezeigt.
 
 ---
 
@@ -90,7 +86,7 @@ Um das Einstellungsfenster zu öffnen, klicken Sie mit der rechten Maustaste auf
 * **Symbolgröße:**
   * Sie können die Symbolgröße wählen: **32px**, **40px**, **48px** oder **64px**. Die Leiste ändert ihre Größe sofort.
 * **Im Vordergrund (Keep on Top):**
-  * Wenn aktiviert, ist die Leiste immer sichtbar und reserviert Platz auf dem Desktop. Wenn deaktiviert, verhält sich die Leiste wie ein normales Fenster und kann von anderen Programmen überdeckt werden.
+  * Wenn aktiviert, is die Leiste immer sichtbar und reserviert Platz auf dem Desktop. Wenn deaktiviert, verhält sich die Leiste wie ein normales Fenster und kann von anderen Programmen überdeckt werden.
 * **Oberflächensprache:**
   * Ermöglicht das Umschalten der Anwendungssprache (*English*, *Русский*, *Deutsch*). Die Änderungen werden sofort auf alle Elemente angewendet, einschließlich Kontextmenüs und System-Tray. Beim ersten Start wird die Sprache automatisch basierend auf den Windows-Einstellungen ausgewählt.
 * **„+“-Schaltfläche auf der Leiste anzeigen:**
@@ -145,3 +141,11 @@ Alle Benutzereinstellungen, hinzugefügten Verknüpfungen und Symbol-Caches werd
 
 ### Autostart funktioniert nicht
 * Stellen Sie sicher, dass Sie die Datei `ShortcutDock.exe` nach dem Aktivieren des Autostarts nicht verschoben haben. Wenn Sie dies getan haben, deaktivieren und aktivieren Sie den Autostart einfach erneut in den Einstellungen, um den Pfad in der Windows-Registrierung zu aktualisieren.
+
+---
+
+## Community & Unterstützung
+
+- **Projekt unterstützen**: Wenn Ihnen das Tool gefällt, geben Sie uns bitte einen Stern auf [GitHub](https://github.com/Almanex/ShortcutDock)!
+- **Fehler melden**: Haben Sie einen Fehler gefunden oder eine Idee? Erstellen Sie ein Issue auf unserer GitHub-Projektseite.
+- **Mitwirken**: Pull Requests sind jederzeit herzlich willkommen. Helfen Sie uns, das Projekt für alle noch besser zu machen!

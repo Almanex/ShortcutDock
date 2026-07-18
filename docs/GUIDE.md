@@ -1,6 +1,7 @@
-﻿# ShortcutDock User Guide
+# ShortcutDock User Guide — Custom Dock Panel for Windows 10 & 11
 
-Welcome to **ShortcutDock** — a modern and functional dock panel for quick launching applications, folders, and managing system elements on Windows 11 and 10.
+> [!NOTE]
+> **ShortcutDock** is a modern and functional dock panel for Windows 11 and 10 that allows you to easily launch applications, open folders, and manage system components with smooth effects and Mica/Acrylic styles. This guide explains how to install, configure, and customize the dock.
 
 This guide will help you quickly understand all the features of the application and configure it to suit your needs.
 
@@ -8,7 +9,7 @@ This guide will help you quickly understand all the features of the application 
 
 ## Table of Contents
 1. [System Requirements](#1-system-requirements)
-2. [Installation and First Launch](#2-installation-and-first-launch)
+2. [Quick-Start Instructions](#quick-start-instructions)
 3. [Adding Shortcuts to the Panel](#3-adding-shortcuts-to-the-panel)
 4. [Managing and Sorting Shortcuts](#4-managing-and-sorting-shortcuts)
 5. [Configuring Appearance and Effects](#5-configuring-appearance-and-effects)
@@ -26,21 +27,16 @@ This guide will help you quickly understand all the features of the application 
 
 ---
 
-## 2. Installation and First Launch
-The application is delivered as a single `ShortcutDock.exe` file and does not require a full installation:
+## Quick-Start Instructions
 
-> [!TIP]
-> **Get the Application:**  
-> 📥 **[Download the latest version from the GitHub Releases page](https://github.com/Almanex/ShortcutDock/releases)**
-
-1. Place the `ShortcutDock.exe` file in any convenient folder on your computer (e.g., `C:\Program Files\ShortcutDock` or your personal user directory).
-2. Double-click the `ShortcutDock.exe` file to launch it.
-3. On the first launch, an empty semi-transparent panel with a `+` button will appear at the bottom of the screen.
-
-> [!IMPORTANT]
-> **Windows Defender SmartScreen Warning:**  
-> Since the application executable is not signed with a paid commercial developer digital certificate (which is normal for free open-source projects), Windows Defender SmartScreen might block the launch on the first run, showing a *"Windows protected your PC"* popup.  
-> **How to run the application:** Click the **"More info"** link (in the top-left area of the warning popup), and then click the appeared **"Run anyway"** button. Windows will remember your choice, and the warning won't appear on subsequent launches.
+1. **Step 1: Download the Application** — Go to the releases page on GitHub and download the latest `ShortcutDock.exe` file:
+   * [ShortcutDock Releases on GitHub](https://github.com/Almanex/ShortcutDock/releases)
+2. **Step 2: Place the Executable** — Move the downloaded `ShortcutDock.exe` file to any convenient folder on your computer (e.g., `C:\Program Files\ShortcutDock` or your personal user directory).
+3. **Step 3: Launch the Dock** — Double-click the `ShortcutDock.exe` file to run it. On the first launch, an empty semi-transparent panel with a `+` button will appear at the bottom of the screen.
+   > [!IMPORTANT]
+   > **Windows Defender SmartScreen Warning:**  
+   > Since the application executable is not signed with a paid commercial developer digital certificate (which is normal for free open-source projects), Windows Defender SmartScreen might block the launch on the first run, showing a *"Windows protected your PC"* popup.  
+   > **How to run the application:** Click the **"More info"** link (in the top-left area of the warning popup), and then click the appeared **"Run anyway"** button. Windows will remember your choice, and the warning won't appear on subsequent launches.
 
 ---
 
@@ -145,3 +141,11 @@ All user settings, added shortcuts, and cache icons are stored in your user prof
 
 ### Autostart does not work
 * Make sure you haven't moved the `ShortcutDock.exe` file after enabling autostart. If you did, simply disable and re-enable autostart in the settings to update the path in the Windows registry.
+
+---
+
+## Join the Community & Support
+
+- **Star the Repository**: If you find this project helpful, please give us a star on [GitHub](https://github.com/Almanex/ShortcutDock)!
+- **Report Bugs & Ideas**: Open an issue if you encounter any problems or have feature requests.
+- **Contribute**: Feel free to submit pull requests to help improve the project.
