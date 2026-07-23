@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -427,17 +428,148 @@ public partial class MainWindow : Window
 
     private void OnDrop(object sender, System.Windows.DragEventArgs e)
     {
-        if (!IsFileDrop(e.Data)) return;
-        if (e.Data.GetData(System.Windows.DataFormats.FileDrop) is string[] files)
+        var files = GetDroppedFilePaths(e.Data);
+        foreach (var file in files)
         {
-            foreach (var file in files)
-                _viewModel.AddFromFile(file);
+            _viewModel.AddFromFile(file);
         }
         e.Handled = true;
     }
 
     private static bool IsFileDrop(System.Windows.IDataObject data) =>
-        data.GetDataPresent(System.Windows.DataFormats.FileDrop);
+        data.GetDataPresent(System.Windows.DataFormats.FileDrop) ||
+        data.GetDataPresent("FileNameW") ||
+        data.GetDataPresent("FileName") ||
+        data.GetDataPresent("Shell IDList Array");
+
+    public static List<string> GetDroppedFilePaths(System.Windows.IDataObject data)
+    {
+        var result = new List<string>();
+
+        // 1. Стандартный FileDrop (Рабочий стол, Проводник)
+        if (data.GetDataPresent(System.Windows.DataFormats.FileDrop))
+        {
+            if (data.GetData(System.Windows.DataFormats.FileDrop) is string[] files)
+            {
+                result.AddRange(files.Where(f => !string.IsNullOrWhiteSpace(f)));
+                if (result.Count > 0) return result;
+            }
+        }
+
+        // 2. FileNameW / FileName (Ярлыки из меню Пуск)
+        if (data.GetDataPresent("FileNameW"))
+        {
+            if (data.GetData("FileNameW") is string[] filesW)
+            {
+                result.AddRange(filesW.Where(f => !string.IsNullOrWhiteSpace(f)));
+                if (result.Count > 0) return result;
+            }
+            else if (data.GetData("FileNameW") is string singleW && !string.IsNullOrWhiteSpace(singleW))
+            {
+                result.Add(singleW);
+                return result;
+            }
+        }
+
+        if (data.GetDataPresent("FileName"))
+        {
+            if (data.GetData("FileName") is string[] filesA)
+            {
+                result.AddRange(filesA.Where(f => !string.IsNullOrWhiteSpace(f)));
+                if (result.Count > 0) return result;
+            }
+            else if (data.GetData("FileName") is string singleA && !string.IsNullOrWhiteSpace(singleA))
+            {
+                result.Add(singleA);
+                return result;
+            }
+        }
+
+        // 3. Shell IDList Array (Прямое перетаскивание из меню Пуск и shell:AppsFolder для Microsoft Store)
+        if (data.GetDataPresent("Shell IDList Array"))
+        {
+            try
+            {
+                if (data.GetData("Shell IDList Array") is System.IO.MemoryStream ms)
+                {
+                    var pidlPaths = GetPathsFromShellIdListStream(ms);
+                    if (pidlPaths.Count > 0)
+                    {
+                        result.AddRange(pidlPaths);
+                        return result;
+                    }
+                }
+            }
+            catch
+            {
+                // Fallback
+            }
+        }
+
+        return result;
+    }
+
+    [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
+    private static extern int SHGetNameFromIDList(IntPtr pidl, uint sigdnName, [MarshalAs(UnmanagedType.LPWStr)] out string ppszName);
+
+    private const uint SIGDN_FILESYSPATH = 0x80058000;
+    private const uint SIGDN_DESKTOPABSOLUTEPARSING = 0x80028000;
+
+    [DllImport("shell32.dll")]
+    private static extern IntPtr ILCombine(IntPtr pidl1, IntPtr pidl2);
+
+    [DllImport("shell32.dll")]
+    private static extern void ILFree(IntPtr pidl);
+
+    private static List<string> GetPathsFromShellIdListStream(System.IO.MemoryStream ms)
+    {
+        var paths = new List<string>();
+        byte[] bytes = ms.ToArray();
+        GCHandle handle = GCHandle.Alloc(bytes, GCHandleType.Pinned);
+        try
+        {
+            IntPtr basePtr = handle.AddrOfPinnedObject();
+            int cidl = Marshal.ReadInt32(basePtr);
+            if (cidl <= 0) return paths;
+
+            int[] offsets = new int[cidl + 1];
+            for (int i = 0; i <= cidl; i++)
+            {
+                offsets[i] = Marshal.ReadInt32(basePtr, (i + 1) * 4);
+            }
+
+            IntPtr parentPidl = IntPtr.Add(basePtr, offsets[0]);
+
+            for (int i = 1; i <= cidl; i++)
+            {
+                IntPtr childPidl = IntPtr.Add(basePtr, offsets[i]);
+                IntPtr fullPidl = ILCombine(parentPidl, childPidl);
+                if (fullPidl != IntPtr.Zero)
+                {
+                    try
+                    {
+                        if (SHGetNameFromIDList(fullPidl, SIGDN_FILESYSPATH, out string path) == 0 && !string.IsNullOrWhiteSpace(path))
+                        {
+                            paths.Add(path);
+                        }
+                        else if (SHGetNameFromIDList(fullPidl, SIGDN_DESKTOPABSOLUTEPARSING, out string parsingName) == 0 && !string.IsNullOrWhiteSpace(parsingName))
+                        {
+                            paths.Add(parsingName);
+                        }
+                    }
+                    finally
+                    {
+                        ILFree(fullPidl);
+                    }
+                }
+            }
+        }
+        finally
+        {
+            handle.Free();
+        }
+        return paths;
+    }
 
     // =========================================================================
     // НОВЫЙ ФУНКЦИОНАЛ: АВТО-СКРЫТИЕ (AUTO-HIDE) И УВЕЛИЧЕНИЕ (HOVER ZOOM)

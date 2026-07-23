@@ -79,11 +79,82 @@ public sealed class IconExtractor
         // Если иконка уже в кэше — не извлекаем повторно.
         if (File.Exists(cachePath)) return cachePath;
 
+        // Пробуем получить чистую 256x256 иконку без стрелочек ярлыков через IShellItemImageFactory
+        using var shellBmp = GetShellItemBitmap(targetPath);
+        if (shellBmp != null)
+        {
+            shellBmp.Save(cachePath, ImageFormat.Png);
+            return cachePath;
+        }
+
         using var icon = GetHighResolutionIcon(targetPath)
             ?? SystemIcons.Application;
         using var bmp = icon.ToBitmap();
         bmp.Save(cachePath, ImageFormat.Png);
         return cachePath;
+    }
+
+    [DllImport("shell32.dll", CharSet = CharSet.Unicode, PreserveSig = false)]
+    private static extern void SHCreateItemFromParsingName(
+        [MarshalAs(UnmanagedType.LPWStr)] string pszPath,
+        IntPtr pbc,
+        ref Guid riid,
+        [MarshalAs(UnmanagedType.Interface)] out IShellItemImageFactory ppv);
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct SIZE
+    {
+        public int cx;
+        public int cy;
+        public SIZE(int cx, int cy) { this.cx = cx; this.cy = cy; }
+    }
+
+    private static readonly Guid IID_IShellItemImageFactory = new("bcc82b79-4808-4754-8969-2cd854809861");
+
+    [ComImport]
+    [Guid("bcc82b79-4808-4754-8969-2cd854809861")]
+    [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+    private interface IShellItemImageFactory
+    {
+        [PreserveSig]
+        int GetImage(
+            [In] SIZE size,
+            [In] int flags, // SIIGBF_ICONONLY = 0x0
+            [Out] out IntPtr phbm);
+    }
+
+    [DllImport("gdi32.dll")]
+    private static extern bool DeleteObject(IntPtr hObject);
+
+    private static Bitmap? GetShellItemBitmap(string targetPath)
+    {
+        try
+        {
+            var iid = IID_IShellItemImageFactory;
+            SHCreateItemFromParsingName(targetPath, IntPtr.Zero, ref iid, out var factory);
+            if (factory != null)
+            {
+                // SIIGBF_ICONONLY = 0x0 (чистая иконка без оверлея / стрелочки ярлыка)
+                int hr = factory.GetImage(new SIZE(256, 256), 0x0, out var hBitmap);
+                if (hr == 0 && hBitmap != IntPtr.Zero)
+                {
+                    try
+                    {
+                        var bmp = Image.FromHbitmap(hBitmap);
+                        return bmp;
+                    }
+                    finally
+                    {
+                        DeleteObject(hBitmap);
+                    }
+                }
+            }
+        }
+        catch
+        {
+            // Fallback на классический метод
+        }
+        return null;
     }
 
     private static Icon? GetHighResolutionIcon(string targetPath)
