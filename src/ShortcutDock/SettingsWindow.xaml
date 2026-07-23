@@ -124,11 +124,22 @@
                 </ui:CardControl>
 
                 <!-- Show Running Indicators -->
-                <ui:CardControl Header="{DynamicResource SettingShowRunningIndicators}" Margin="0,0,0,16">
+                <ui:CardControl Header="{DynamicResource SettingShowRunningIndicators}" Margin="0,0,0,8">
                     <ui:CardControl.Icon>
                         <ui:SymbolIcon Symbol="Status24" />
                     </ui:CardControl.Icon>
                     <ui:ToggleSwitch IsChecked="{Binding ShowRunningIndicators, Mode=TwoWay}" />
+                </ui:CardControl>
+
+                <!-- Folder Fan Opacity -->
+                <ui:CardControl Header="{DynamicResource SettingFolderFanOpacity}" Margin="0,0,0,16">
+                    <ui:CardControl.Icon>
+                        <ui:SymbolIcon Symbol="Folder24" />
+                    </ui:CardControl.Icon>
+                    <StackPanel Orientation="Horizontal">
+                        <Slider Width="100" Minimum="0.3" Maximum="1.0" SmallChange="0.05" LargeChange="0.1" Value="{Binding FolderFanOpacity, Mode=TwoWay}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                        <TextBlock Text="{Binding FolderFanOpacityPercentString}" Width="40" VerticalAlignment="Center" TextAlignment="Right" />
+                    </StackPanel>
                 </ui:CardControl>
 
                 <Button Content="{DynamicResource BtnClose}" 

@@ -304,14 +304,15 @@
                StaysOpen="False"
                PopupAnimation="Fade"
                VerticalOffset="-6" HorizontalOffset="-6">
-            <Border Background="#F21E1E1E"
-                    BorderBrush="#33FFFFFF"
+            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+                    BorderBrush="{DynamicResource SurfaceStrokeColorDefaultBrush}"
                     BorderThickness="1"
                     CornerRadius="16"
                     Padding="12"
-                    Width="320" MaxHeight="400">
+                    Width="320" MaxHeight="400"
+                    Opacity="{Binding FolderFanOpacity}">
                 <Border.Effect>
-                    <DropShadowEffect BlurRadius="20" ShadowDepth="4" Opacity="0.5" Color="Black" />
+                    <DropShadowEffect BlurRadius="20" ShadowDepth="4" Opacity="0.4" Color="Black" />
                 </Border.Effect>
                 <Grid>
                     <Grid.RowDefinitions>
@@ -327,21 +328,26 @@
                         </Grid.ColumnDefinitions>
 
                         <StackPanel Orientation="Horizontal" Grid.Column="0" VerticalAlignment="Center">
-                            <TextBlock Text="📁" FontSize="16" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                            <ui:SymbolIcon Symbol="Folder24" FontSize="18" Margin="0,0,6,0" VerticalAlignment="Center" Foreground="{DynamicResource TextFillColorPrimaryBrush}"/>
                             <TextBlock Text="{Binding FolderFanTitle}"
-                                       Foreground="White"
+                                       Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                        FontWeight="SemiBold"
                                        FontSize="14"
                                        TextTrimming="CharacterEllipsis"
                                        VerticalAlignment="Center"
-                                       MaxWidth="180" />
+                                       MaxWidth="150" />
                         </StackPanel>
 
-                        <Button Grid.Column="1"
-                                Content="{DynamicResource OpenInExplorerText}"
-                                Command="{Binding OpenFolderFanInExplorerCommand}"
-                                Style="{DynamicResource AccentButtonStyle}"
-                                Padding="8,4" FontSize="11" />
+                        <ui:Button Grid.Column="1"
+                                   Command="{Binding OpenFolderFanInExplorerCommand}"
+                                   Appearance="Secondary"
+                                   Padding="8,4"
+                                   FontSize="11">
+                            <StackPanel Orientation="Horizontal">
+                                <ui:SymbolIcon Symbol="OpenFolder24" Margin="0,0,5,0" FontSize="13" />
+                                <TextBlock Text="{DynamicResource OpenInExplorerText}" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </ui:Button>
                     </Grid>
 
                     <!-- Список / Сетка файлов в веере -->
@@ -369,7 +375,7 @@
                                                         <Image Source="{Binding IconPath}" Width="36" Height="36" Margin="0,0,0,4"
                                                                RenderOptions.BitmapScalingMode="HighQuality" />
                                                         <TextBlock Text="{Binding Name}"
-                                                                   Foreground="White"
+                                                                   Foreground="{DynamicResource TextFillColorPrimaryBrush}"
                                                                    FontSize="11"
                                                                    TextAlignment="Center"
                                                                    TextTrimming="CharacterEllipsis"
@@ -378,7 +384,7 @@
                                                 </Border>
                                                 <ControlTemplate.Triggers>
                                                     <Trigger Property="IsMouseOver" Value="True">
-                                                        <Setter TargetName="bd" Property="Background" Value="#2AFFFFFF" />
+                                                        <Setter TargetName="bd" Property="Background" Value="{DynamicResource SubtleFillColorSecondaryBrush}" />
                                                     </Trigger>
                                                 </ControlTemplate.Triggers>
                                             </ControlTemplate>

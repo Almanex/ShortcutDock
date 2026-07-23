@@ -108,9 +108,11 @@ To open the settings window, right-click on any empty space on the panel or on t
   * When enabled, the panel smoothly slides out of the screen when it loses mouse focus, leaving a thin 2px trigger strip. Hovering the mouse over this strip instantly brings the panel back. The AppBar space reservation is temporarily disabled while the panel is hidden, allowing other windows to occupy the full screen. The panel will not hide if a context menu is open.
 * **Hover Zoom Effect:**
   * Enables a smooth wave-like icon scaling effect on mouse hover, similar to macOS dock. This makes the selected shortcut stand out and easier to click.
-* **Show Indicators for Running Programs:**
-  * Displays small dots of the accent color under the icons of currently active programs.
-  * Clicking an active program icon will focus and bring its existing window to the foreground instead of launching a new duplicate process.
+* **Show Indicators for running applications:**
+  * Displays small accent-colored dots under icons of currently active programs.
+  * Clicking an active application brings its existing window to focus instead of launching a new instance.
+* **Folder fan background transparency:**
+  * Convenient slider for smooth adjustment of folder fan popup transparency (30% to 100%).
 
 ---
 

@@ -109,8 +109,10 @@ Um das Einstellungsfenster zu öffnen, klicken Sie mit der rechten Maustaste auf
 * **Hover-Zoom-Effekt:**
   * Aktiviert einen wellenartigen Skalierungseffekt der Symbole beim Bewegen der Maus darüber, ähnlich wie beim macOS-Dock. Dies hebt die ausgewählte Verknüpfung hervor und erleichtert das Anklicken.
 * **Indikatoren für laufende Programme:**
-  * Zeigt kleine Punkte in der Akzentfarbe unter den Symbolen der derzeit aktiven Programme an.
-  * Durch Klicken auf ein aktives Programmsymbol wird das vorhandene Fenster fokussiert und in den Vordergrund gebracht, anstatt einen neuen doppelten Prozess zu starten.
+  * Zeigt kleine Punkte in der Akzentfarbe unter den Symbolen aktuell aktiver Programme an.
+  * Beim erneuten Klicken auf ein aktives Symbol wird das vorhandene Fenster fokussiert.
+* **Ordner-Fächer Transparenz:**
+  * Praktischer Schieberegler zur stufenlosen Einstellung der Transparenz des Ordner-Fächers (30% bis 100%).
 
 ---
 

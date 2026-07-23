@@ -54,6 +54,11 @@ public partial class MainViewModel : ObservableObject
     private bool _showRunningIndicators = true;
 
     [ObservableProperty]
+    private double _folderFanOpacity = 0.85;
+
+    public string FolderFanOpacityPercentString => $"{(int)Math.Round(FolderFanOpacity * 100)}%";
+
+    [ObservableProperty]
     private string _language = "en";
 
     [ObservableProperty]
@@ -95,7 +100,8 @@ public partial class MainViewModel : ObservableObject
         AutoHide = Panel.AutoHide;
         HoverZoom = Panel.HoverZoom;
         ShowRunningIndicators = Panel.ShowRunningIndicators;
-        Language = Panel.Language;
+        FolderFanOpacity = Panel.FolderFanOpacity > 0 ? Panel.FolderFanOpacity : 0.85;
+        Language = Panel.Language ?? "en";
         UpdatePanelOrientation();
 
         Shortcuts.Clear();
@@ -258,7 +264,13 @@ public partial class MainViewModel : ObservableObject
     partial void OnShowRunningIndicatorsChanged(bool value)
     {
         Panel.ShowRunningIndicators = value;
-        UpdateRunningAppsStatus();
+        Persist();
+    }
+
+    partial void OnFolderFanOpacityChanged(double value)
+    {
+        Panel.FolderFanOpacity = value;
+        OnPropertyChanged(nameof(FolderFanOpacityPercentString));
         Persist();
     }
 
