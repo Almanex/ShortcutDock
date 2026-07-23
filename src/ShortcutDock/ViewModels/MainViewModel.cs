@@ -55,7 +55,7 @@ public partial class MainViewModel : ObservableObject
     private bool _showRunningIndicators = true;
 
     [ObservableProperty]
-    private double _folderFanOpacity = 0.85;
+    private double _folderFanOpacity = 0.15;
 
     public string FolderFanOpacityPercentString => $"{(int)Math.Round(FolderFanOpacity * 100)}%";
 
@@ -101,7 +101,7 @@ public partial class MainViewModel : ObservableObject
         AutoHide = Panel.AutoHide;
         HoverZoom = Panel.HoverZoom;
         ShowRunningIndicators = Panel.ShowRunningIndicators;
-        FolderFanOpacity = Panel.FolderFanOpacity > 0 ? Panel.FolderFanOpacity : 0.85;
+        FolderFanOpacity = Panel.FolderFanOpacity >= 0 ? Panel.FolderFanOpacity : 0.15;
         Language = Panel.Language ?? "en";
         UpdatePanelOrientation();
 
@@ -626,7 +626,7 @@ public partial class MainViewModel : ObservableObject
         get
         {
             bool isDark = Wpf.Ui.Appearance.ApplicationThemeManager.GetAppTheme() == Wpf.Ui.Appearance.ApplicationTheme.Dark;
-            byte alpha = (byte)Math.Clamp((int)(FolderFanOpacity * 255), 0, 255);
+            byte alpha = (byte)Math.Clamp((int)((1.0 - FolderFanOpacity) * 255), 0, 255);
 
             System.Windows.Media.Color baseColor;
             if (isDark)

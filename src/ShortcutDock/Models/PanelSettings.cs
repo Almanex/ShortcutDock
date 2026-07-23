@@ -38,7 +38,7 @@ public sealed class PanelSettings
     public bool ShowRunningIndicators { get; set; } = true;
 
     [JsonPropertyName("FolderFanOpacity")]
-    public double FolderFanOpacity { get; set; } = 0.85;
+    public double FolderFanOpacity { get; set; } = 0.15;
 
     [JsonPropertyName("Language")]
     public string Language { get; set; } = GetDefaultLanguage();
