@@ -512,4 +512,97 @@ public partial class MainViewModel : ObservableObject
             }
         });
     }
+
+    // --- Веер Папок (Folder Stack / Fan) ---
+    [ObservableProperty] private bool _isFolderFanOpen;
+    [ObservableProperty] private string _folderFanTitle = string.Empty;
+    [ObservableProperty] private string _folderFanPath = string.Empty;
+    [ObservableProperty] private ObservableCollection<FolderItemViewModel> _folderFanItems = new();
+    [ObservableProperty] private System.Windows.UIElement? _folderFanPlacementTarget;
+    [ObservableProperty] private System.Windows.Controls.Primitives.PlacementMode _folderFanPlacement = System.Windows.Controls.Primitives.PlacementMode.Top;
+
+    public void OpenFolderFan(ShortcutViewModel shortcutVM, System.Windows.UIElement placementTarget)
+    {
+        var expandedPath = SettingsService.GetExpandedPath(shortcutVM.Model.TargetPath);
+        if (!Directory.Exists(expandedPath)) return;
+
+        FolderFanTitle = shortcutVM.Name;
+        FolderFanPath = expandedPath;
+        FolderFanPlacementTarget = placementTarget;
+
+        FolderFanPlacement = Position switch
+        {
+            "Bottom" => System.Windows.Controls.Primitives.PlacementMode.Top,
+            "Top" => System.Windows.Controls.Primitives.PlacementMode.Bottom,
+            "Left" => System.Windows.Controls.Primitives.PlacementMode.Right,
+            "Right" => System.Windows.Controls.Primitives.PlacementMode.Left,
+            _ => System.Windows.Controls.Primitives.PlacementMode.Top
+        };
+
+        FolderFanItems.Clear();
+
+        Task.Run(() =>
+        {
+            var list = new List<FolderItemViewModel>();
+            try
+            {
+                var dirInfo = new DirectoryInfo(expandedPath);
+                var entries = dirInfo.GetFileSystemInfos()
+                    .Where(f => (f.Attributes & FileAttributes.Hidden) == 0 && (f.Attributes & FileAttributes.System) == 0)
+                    .OrderByDescending(f => f.LastWriteTime)
+                    .Take(36);
+
+                foreach (var entry in entries)
+                {
+                    string iconPath = string.Empty;
+                    try
+                    {
+                        iconPath = _iconExtractor.ExtractToPng(entry.FullName);
+                    }
+                    catch { }
+
+                    list.Add(new FolderItemViewModel
+                    {
+                        Name = entry.Name,
+                        FullPath = entry.FullName,
+                        IconPath = iconPath,
+                        IsDirectory = (entry.Attributes & FileAttributes.Directory) != 0
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"[ShortcutDock] Error reading folder {expandedPath}: {ex.Message}");
+            }
+
+            System.Windows.Application.Current?.Dispatcher.Invoke(() =>
+            {
+                foreach (var item in list)
+                {
+                    FolderFanItems.Add(item);
+                }
+                IsFolderFanOpen = true;
+            });
+        });
+    }
+
+    [RelayCommand]
+    private void OpenFolderFanInExplorer()
+    {
+        IsFolderFanOpen = false;
+        if (!string.IsNullOrEmpty(FolderFanPath))
+        {
+            _launcher.Start(FolderFanPath);
+        }
+    }
+
+    [RelayCommand]
+    private void OpenFolderFanItem(FolderItemViewModel? item)
+    {
+        IsFolderFanOpen = false;
+        if (item != null && !string.IsNullOrEmpty(item.FullPath))
+        {
+            _launcher.Start(item.FullPath);
+        }
+    }
 }

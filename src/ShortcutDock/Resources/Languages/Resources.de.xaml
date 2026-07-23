@@ -26,6 +26,7 @@
     <sys:String x:Key="SettingHoverZoom">Vergrößerungseffekt beim Zeigen (Hover Zoom)</sys:String>
     <sys:String x:Key="SettingShowRunningIndicators">Indikatoren für laufende Programme</sys:String>
     <sys:String x:Key="BtnClose">Schließen</sys:String>
+    <sys:String x:Key="OpenInExplorerText">Im Explorer öffnen</sys:String>
     
     <sys:String x:Key="SettingLanguage">Oberflächensprache</sys:String>
 

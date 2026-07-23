@@ -337,19 +337,29 @@ public partial class MainWindow : Window
             if (border != null && border.IsMouseOver)
             {
                 var shortcutVM = border.DataContext as ShortcutViewModel;
-                if (shortcutVM != null && shortcutVM.LaunchCommand.CanExecute(null))
+                if (shortcutVM != null)
                 {
-                    shortcutVM.LaunchCommand.Execute(null);
-
-                    // Запуск анимации отскока (Bounce)
-                    var sb = Resources["BounceStoryboard"] as Storyboard;
-                    if (sb != null)
+                    var expandedPath = SettingsService.GetExpandedPath(shortcutVM.Model.TargetPath);
+                    if (!shortcutVM.IsRecycleBin && System.IO.Directory.Exists(expandedPath))
                     {
-                        var container = border.FindName("IconImage") as FrameworkElement;
-                        if (container != null)
+                        _viewModel.OpenFolderFan(shortcutVM, border);
+                        return;
+                    }
+
+                    if (shortcutVM.LaunchCommand.CanExecute(null))
+                    {
+                        shortcutVM.LaunchCommand.Execute(null);
+
+                        // Запуск анимации отскока (Bounce)
+                        var sb = Resources["BounceStoryboard"] as Storyboard;
+                        if (sb != null)
                         {
-                            var clone = sb.Clone();
-                            clone.Begin(container);
+                            var container = border.FindName("IconImage") as FrameworkElement;
+                            if (container != null)
+                            {
+                                var clone = sb.Clone();
+                                clone.Begin(container);
+                            }
                         }
                     }
                 }

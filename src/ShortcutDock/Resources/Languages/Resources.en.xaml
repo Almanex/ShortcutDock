@@ -26,6 +26,7 @@
     <sys:String x:Key="SettingHoverZoom">Icon zoom on hover (Hover Zoom)</sys:String>
     <sys:String x:Key="SettingShowRunningIndicators">Indicators for running applications</sys:String>
     <sys:String x:Key="BtnClose">Close</sys:String>
+    <sys:String x:Key="OpenInExplorerText">Open in Explorer</sys:String>
     
     <sys:String x:Key="SettingLanguage">Interface Language</sys:String>
 

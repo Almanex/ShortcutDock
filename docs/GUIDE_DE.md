@@ -73,6 +73,9 @@ Sie können neue Programme, Ordner oder Laufwerke auf drei Arten zur Leiste hinz
 ### Von der Leiste entfernen
 * Klicken Sie mit der rechten Maustaste auf die Verknüpfung auf der Leiste und wählen Sie **„Von der Leiste entfernen“** (die Programmdatei auf der Festplatte wird dabei nicht gelöscht).
 
+### Ordner-Fächer (Folder Stacks)
+* Beim Hinzufügen eines Ordners zur Leiste (z.B. *Downloads* oder *Dokumente*) öffnet ein Klick darauf eine elegante Popup-Fächeransicht der enthaltenen Dateien. Dateien können direkt aus dem Fächer gestartet oder mit **„Im Explorer öffnen“** aufgerufen werden.
+
 ---
 
 ## 5. Einstellung von Aussehen und Effekten

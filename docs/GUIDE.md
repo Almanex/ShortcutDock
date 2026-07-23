@@ -73,6 +73,9 @@ You can add new programs, folders, or drives to the panel in three ways:
 ### Removing from the Panel
 * Right-click the shortcut on the panel and select **"Remove from Panel"** (the program file on the disk will not be affected).
 
+### Folder Stacks / Fan View
+* Adding a folder to the dock (e.g. *Downloads* or *Documents*) opens a stylish popup fan view showing files inside when clicked. You can launch any file directly from the fan or click **"Open in Explorer"**.
+
 ---
 
 ## 5. Configuring Appearance and Effects
