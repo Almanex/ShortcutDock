@@ -9,6 +9,14 @@
 
 ---
 
+<p align="center">
+  <img src="screenshots/screenshot3.png" width="48%" alt="ShortcutDock Settings" />
+  <img src="screenshots/screenshot4.png" width="48%" alt="ShortcutDock Context Menu" />
+</p>
+<p align="center">
+  <img src="screenshots/screenshot5.png" width="98%" alt="ShortcutDock Top Position" />
+</p>
+
 ## Overview
 
 ShortcutDock is a modern, lightweight Windows desktop dock panel designed to organize your shortcuts. It features Mica and Acrylic blur effects that sync with the active Windows system theme, support for Drag-and-Drop, automatic vertical and horizontal layout orientation, system AppBar reservation, and tray integration.
