@@ -214,7 +214,7 @@ public partial class MainWindow : Window
         }
     }
 
-    private Rect GetCurrentMonitorWorkArea()
+    public Rect GetCurrentMonitorWorkArea()
     {
         var helper = new WindowInteropHelper(this);
         var hwnd = helper.Handle;

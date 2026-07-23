@@ -115,21 +115,61 @@ public partial class MainViewModel : ObservableObject
 
     partial void OnPositionChanged(string value)
     {
+        var newOrientation = (value == "Left" || value == "Right")
+            ? System.Windows.Controls.Orientation.Vertical
+            : System.Windows.Controls.Orientation.Horizontal;
+
+        int maxAllowed = CalculateMaxShortcutsForCurrentMonitor(IconSize, newOrientation);
+        if (Shortcuts.Count > maxAllowed)
+        {
+            var msgTemplate = System.Windows.Application.Current?.TryFindResource("ErrMaxShortcutsIconSize") as string
+                ?? "Cannot set position to {0}. You currently have {1} items, but screen capacity for {0} is max {2} items. Please remove excess items first.";
+            var title = System.Windows.Application.Current?.TryFindResource("SettingsHeader") as string ?? "ShortcutDock";
+            System.Windows.MessageBox.Show(
+                string.Format(msgTemplate, value, Shortcuts.Count, maxAllowed),
+                title,
+                System.Windows.MessageBoxButton.OK,
+                System.Windows.MessageBoxImage.Warning
+            );
+
+            Position = Panel.Position;
+            return;
+        }
+
         Panel.Position = value;
         UpdatePanelOrientation();
         Persist();
     }
 
-    public int MaxShortcutsAllowed => GetMaxShortcutsAllowedForSize(IconSize);
+    public int MaxShortcutsAllowed => CalculateMaxShortcutsForCurrentMonitor(IconSize, PanelOrientation);
 
-    public static int GetMaxShortcutsAllowedForSize(int iconSize) => iconSize switch
+    public int GetMaxShortcutsAllowedForSize(int iconSize) => CalculateMaxShortcutsForCurrentMonitor(iconSize, PanelOrientation);
+
+    public int CalculateMaxShortcutsForCurrentMonitor(int iconSize, System.Windows.Controls.Orientation orientation)
     {
-        32 => 21,
-        40 => 17,
-        48 => 15,
-        64 => 12,
-        _ => 15
-    };
+        try
+        {
+            var workArea = System.Windows.Application.Current?.MainWindow is MainWindow mainWin
+                ? mainWin.GetCurrentMonitorWorkArea()
+                : System.Windows.SystemParameters.WorkArea;
+
+            double availableLength = (orientation == System.Windows.Controls.Orientation.Vertical)
+                ? workArea.Height
+                : workArea.Width;
+
+            double usableLength = availableLength - 24.0;
+            double itemSlotSize = iconSize + 8.0;
+
+            int maxSlots = (int)Math.Floor(usableLength / itemSlotSize);
+            int reservedForAddButton = ShowAddButton ? 1 : 0;
+
+            return Math.Max(1, maxSlots - reservedForAddButton);
+        }
+        catch
+        {
+            return 15;
+        }
+    }
 
     partial void OnIconSizeChanged(int value)
     {
@@ -244,10 +284,10 @@ public partial class MainViewModel : ObservableObject
         if (Shortcuts.Count >= MaxShortcutsAllowed)
         {
             var msgTemplate = System.Windows.Application.Current?.TryFindResource("ErrMaxShortcutsLimit") as string
-                ?? "Maximum limit of items reached for current icon size ({0} px): max {1} items.";
+                ?? "Maximum dock capacity reached for current screen ({0} items at icon size {1} px).";
             var title = System.Windows.Application.Current?.TryFindResource("SettingsHeader") as string ?? "ShortcutDock";
             System.Windows.MessageBox.Show(
-                string.Format(msgTemplate, IconSize, MaxShortcutsAllowed),
+                string.Format(msgTemplate, MaxShortcutsAllowed, IconSize),
                 title,
                 System.Windows.MessageBoxButton.OK,
                 System.Windows.MessageBoxImage.Warning

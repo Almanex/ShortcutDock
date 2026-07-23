@@ -50,7 +50,7 @@
     <sys:String x:Key="DlgChangeIconFilter">Изображения и значки (*.png;*.ico;*.jpg;*.jpeg)|*.png;*.ico;*.jpg;*.jpeg|Все файлы (*.*)|*.*</sys:String>
     <sys:String x:Key="ErrTargetNotFound">Целевой файл или папка не найдены</sys:String>
     <sys:String x:Key="ErrFileNotFound">Файл или папка не найдены</sys:String>
-    <sys:String x:Key="ErrMaxShortcutsLimit">Достигнуто максимальное количество элементов для текущего размера значков ({0} px): не более {1} шт.</sys:String>
-    <sys:String x:Key="ErrMaxShortcutsIconSize">Нельзя установить размер значков {0} px. Сейчас на панели {1} элементов, а лимит для {0} px — не более {2} шт. Сначала удалите лишние элементы.</sys:String>
+    <sys:String x:Key="ErrMaxShortcutsLimit">Достигнута максимальная вместимость панели для текущего экрана ({0} шт. при размере значков {1} px).</sys:String>
+    <sys:String x:Key="ErrMaxShortcutsIconSize">Нельзя установить размер значков {0} px. Сейчас на панели {1} элементов, а максимальная вместимость экрана при {0} px — не более {2} шт. Сначала удалите лишние элементы.</sys:String>
 
 </ResourceDictionary>
