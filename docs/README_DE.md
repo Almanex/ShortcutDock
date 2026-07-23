@@ -14,16 +14,19 @@
 ShortcutDock ist eine moderne, leichtgewichtige Windows-Desktop-Leiste zur Organisation Ihrer Verknüpfungen. Sie bietet Mica- und Acrylic-Weichzeichnungseffekte, die sich mit dem aktiven Windows-Systemdesign synchronisieren, Drag-and-Drop-Unterstützung, automatische Ausrichtung zwischen vertikaler und horizontaler Ausrichtung, Systemplatzreservierung (AppBar) und System-Tray-Integration.
 
 > [!IMPORTANT]
-> **Erste stabile Version verfügbar!**  
-> Sie können die fertige, kompilierte Datei **`ShortcutDock.exe`** auf der [Releases](https://github.com/Almanex/ShortcutDock/releases/tag/v2.0.0)-Seite herunterladen und direkt auf Ihrem Computer ausführen, ohne zusätzliche Bibliotheken installieren zu müssen.
+> **Aktuelstes Release v2.1.0 verfügbar!**  
+> Sie können die fertige, kompilierte Datei **`ShortcutDock.exe`** auf der [Releases](https://github.com/Almanex/ShortcutDock/releases/tag/v2.1.0)-Seite herunterladen und direkt auf Ihrem Computer ausführen, ohne zusätzliche Bibliotheken installieren zu müssen.
 
-Ausführliche Anweisungen zur Konfiguration aller Funktionen finden Sie im [Benutzerhandbuch (GUIDE.md)](GUIDE.md).
+Ausführliche Anweisungen zur Konfiguration aller Funktionen finden Sie im [Benutzerhandbuch (GUIDE.md)](GUIDE_DE.md).
 
 ---
 
 ## Hauptfunktionen
 
-- Desktop-Leiste: Ziehen Sie `.exe`- oder `.lnk`-Dateien einfach per Drag-and-Drop direkt auf die Leiste, um sie hinzuzufügen.
+- Desktop-Leiste: Ziehen Sie `.exe`-, `.lnk`-Dateien oder Ordner einfach per Drag-and-Drop direkt auf die Leiste, um sie hinzuzufügen.
+- Ordner-Fächer (Folder Stacks): Popup-Fächeransicht für Ordnerverknüpfungen mit 1-Klick-Dateistart, Systemdesign-Synchronisation und anpassbarer Transparenz.
+- Dateipfad öffnen: Schnelle Kontextmenüoption zum Anzeigen von Ziel-Dateien im Windows-Explorer.
+- Dynamische Kapazitätsberechnung: Automatische Berechnung der maximalen Anzahl von Verknüpfungen basierend auf Bildschirmauflösung und DPI-Skalierung.
 - Dynamische Ausrichtung: Wechselt automatisch zwischen vertikalen (linke/rechte Bildschirmseite) und horizontalen (oben/unten) Layouts.
 - Modernes Design: Unterstützung für Mica- und Acrylic-Weichzeichnungseffekte, synchronisiert mit dem aktiven Windows-Systemdesign (hell/dunkel).
 - Automatisches Ausblenden: Die Leiste wird sanft ausgeblendet, wenn der Mausfokus verloren geht, um die Arbeitsfläche zu maximieren.

@@ -1,4 +1,3 @@
-[README_RU](docs/README_RU.md) | [README_DE](docs/README_DE.md) | [README_EN](README.md) | [GUIDE_RU](docs/GUIDE_RU.md) | [GUIDE_DE](docs/GUIDE_DE.md) | [GUIDE_EN](docs/GUIDE_EN.md)
 # ShortcutDock
 
 **Customizable Fluent design shortcut dock panel for Windows 11 desktops**
@@ -15,8 +14,8 @@
 ShortcutDock is a modern, lightweight Windows desktop dock panel designed to organize your shortcuts. It features Mica and Acrylic blur effects that sync with the active Windows system theme, support for Drag-and-Drop, automatic vertical and horizontal layout orientation, system AppBar reservation, and tray integration.
 
 > [!IMPORTANT]
-> **First stable release available!**  
-> You can download the ready-made compiled file **`ShortcutDock.exe`** on the [Releases](https://github.com/Almanex/ShortcutDock/releases/tag/v2.0.0) page and run it on your computer without installing additional libraries.
+> **Latest release v2.1.0 available!**  
+> You can download the ready-made compiled file **`ShortcutDock.exe`** on the [Releases](https://github.com/Almanex/ShortcutDock/releases/tag/v2.1.0) page and run it on your computer without installing additional libraries.
 
 For detailed instructions on configuring all features, read the [User Guide (GUIDE.md)](docs/GUIDE.md).
 
@@ -24,7 +23,10 @@ For detailed instructions on configuring all features, read the [User Guide (GUI
 
 ## Key Features
 
-- Desktop Panel: Drag-and-drop `.exe` or `.lnk` files directly onto the panel to add.
+- Desktop Panel: Drag-and-drop `.exe`, `.lnk`, or folders directly onto the panel to add shortcuts.
+- Folder Stacks (Fan View): Popup grid preview for folder shortcuts with 1-click file launching, theme synchronization, and adjustable background transparency.
+- Open File Location: Quick context menu option to reveal target executable files in Windows Explorer.
+- Dynamic Monitor-Aware Capacity: Automatically calculates maximum allowed dock items based on active screen resolution and DPI scaling.
 - Dynamic Orientation: Switches between vertical (left/right screen positions) and horizontal (top/bottom) layouts.
 - Modern Backdrop: Support for Mica and Acrylic blur effects in sync with the active Windows theme.
 - Auto-Hide: Panel smoothly hides off-screen when mouse focus is lost to maximize workspace.
