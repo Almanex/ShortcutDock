@@ -41,17 +41,20 @@ Dieses Handbuch hilft Ihnen, sich schnell mit allen Funktionen der Anwendung ver
 ---
 
 ## 3. Hinzufügen von Verknüpfungen zur Leiste
-Sie können neue Programme, Ordner oder Laufwerke auf drei Arten zur Leiste hinzufügen:
+Sie können neue Programme, Ordner oder Laufwerke auf drei Hauptwege zur Leiste hinzufügen:
 
 ### Methode A: Drag-and-Drop
-* Ziehen Sie einfach eine ausführbare Datei (`.exe`), eine Verknüpfung (`.lnk`), einen Ordner oder ein ganzes Laufwerk aus dem Windows-Explorer an eine beliebige freie Stelle auf der Leiste. ShortcutDock extrahiert automatisch das hochauflösende Symbol und fügt das Element hinzu.
+* **Dateien, Ordner & Laufwerke:** Ziehen Sie einfach eine ausführbare Datei (`.exe`), eine Verknüpfung (`.lnk`), einen Ordner oder ein Laufwerk aus dem Windows-Explorer an eine beliebige freie Stelle auf der Leiste.
+* **Ziehen aus dem Startmenü:** Sie können Anwendungs-Verknüpfungen direkt aus dem Windows-Startmenü (einschließlich UWP- und Microsoft Store-Apps und Spielen) ziehen. ShortcutDock erkennt automatisch deren App User Model ID (AUMID) und erstellt eine funktionierende Verknüpfung.
 
 ### Methode B: Über die „+“-Schaltfläche
-1. Wenn die Option zum Anzeigen der `+`-Schaltfläche in den Einstellungen aktiviert ist, klicken Sie darauf.
+1. Klicken Sie auf das `+`-Symbol auf der Leiste (sofern in den Einstellungen aktiviert).
 2. Wählen Sie im geöffneten Dialogfenster die gewünschte Programmdatei oder Verknüpfung aus und klicken Sie auf „Öffnen“.
 
-### Methode C: Über das Kontextmenü
-* Klicken Sie mit der rechten Maustaste auf eine freie Stelle der Leiste und wählen Sie **„Anwendung hinzufügen“**.
+### Methode C: Über das Kontextmenü der Leiste
+* Klicken Sie mit der rechten Maustaste auf eine freie Stelle der Leiste. Sie haben zwei Optionen:
+  * **„Datei oder Programm hinzufügen...“** — öffnet einen standardmäßigen Dateiauswahldialog.
+  * **„Alle installierten Apps öffnen (Store & Win32)...“** — öffnet den virtuellen Systemordner `shell:AppsFolder` mit allen installierten Anwendungen (sowohl Desktop- als auch Microsoft Store-Apps). Sie können Symbole direkt aus diesem Ordner auf ShortcutDock ziehen.
 
 ---
 

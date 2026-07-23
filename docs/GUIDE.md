@@ -41,17 +41,20 @@ This guide will help you quickly understand all the features of the application 
 ---
 
 ## 3. Adding Shortcuts to the Panel
-You can add new programs, folders, or drives to the panel in three ways:
+You can add new programs, folders, or drives to the panel in three main ways:
 
 ### Method A: Drag-and-Drop
-* Simply drag any executable file (`.exe`), shortcut (`.lnk`), folder, or a whole drive from Windows File Explorer and drop it onto any empty space on the panel. ShortcutDock will automatically extract the high-resolution icon and add the item.
+* **Files, Folders & Drives:** Simply drag any executable file (`.exe`), shortcut (`.lnk`), folder, or a drive from Windows File Explorer and drop it onto any empty space on the panel.
+* **Start Menu Dragging:** You can drag application shortcuts directly from the Windows Start Menu (including UWP and Microsoft Store apps and games). ShortcutDock will automatically resolve their App User Model ID (AUMID) and create a functioning shortcut.
 
 ### Method B: Via the "+" Button
-1. If the option to show the `+` button is enabled in the settings, click it.
-2. In the opened dialog window, select the desired program file or shortcut and click "Open".
+1. Click the `+` icon on the panel (if enabled in settings).
+2. In the file dialog, select a program file or shortcut and click "Open".
 
-### Method C: Via the Context Menu
-* Right-click on any empty space of the panel and select **"Add Application"**.
+### Method C: Via the Panel Context Menu
+* Right-click on any empty space of the panel. You have two options:
+  * **"Add File or Program..."** — opens a standard file selection dialog.
+  * **"Open All Installed Apps Folder (Microsoft Store & Win32)..."** — opens the system virtual folder `shell:AppsFolder` containing all installed applications (both desktop apps and Microsoft Store apps). You can drag icons directly from this folder onto ShortcutDock.
 
 ---
 
