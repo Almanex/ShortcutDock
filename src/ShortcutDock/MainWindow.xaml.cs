@@ -291,6 +291,7 @@ public partial class MainWindow : Window
     {
         // Переприменяем размытие с новыми параметрами темной/светлой темы
         ApplyBackdrop(_viewModel.BackdropType);
+        _viewModel.RefreshFolderFanBackground();
     }
 
     private void OnCloseClick(object sender, RoutedEventArgs e) => Close();

@@ -304,13 +304,12 @@
                StaysOpen="False"
                PopupAnimation="Fade"
                VerticalOffset="-6" HorizontalOffset="-6">
-            <Border Background="{DynamicResource CardBackgroundFillColorDefaultBrush}"
+            <Border Background="{Binding FolderFanBackgroundBrush}"
                     BorderBrush="{DynamicResource SurfaceStrokeColorDefaultBrush}"
                     BorderThickness="1"
                     CornerRadius="16"
                     Padding="12"
-                    Width="320" MaxHeight="400"
-                    Opacity="{Binding FolderFanOpacity}">
+                    Width="320" MaxHeight="400">
                 <Border.Effect>
                     <DropShadowEffect BlurRadius="20" ShadowDepth="4" Opacity="0.4" Color="Black" />
                 </Border.Effect>

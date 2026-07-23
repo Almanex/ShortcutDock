@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Windows.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Microsoft.Win32;
@@ -210,6 +211,7 @@ public partial class MainViewModel : ObservableObject
     partial void OnBackdropTypeChanged(string value)
     {
         Panel.BackdropType = value;
+        OnPropertyChanged(nameof(FolderFanBackgroundBrush));
         Persist();
     }
 
@@ -271,6 +273,7 @@ public partial class MainViewModel : ObservableObject
     {
         Panel.FolderFanOpacity = value;
         OnPropertyChanged(nameof(FolderFanOpacityPercentString));
+        OnPropertyChanged(nameof(FolderFanBackgroundBrush));
         Persist();
     }
 
@@ -616,5 +619,36 @@ public partial class MainViewModel : ObservableObject
         {
             _launcher.Start(item.FullPath);
         }
+    }
+
+    public System.Windows.Media.Brush FolderFanBackgroundBrush
+    {
+        get
+        {
+            bool isDark = Wpf.Ui.Appearance.ApplicationThemeManager.GetAppTheme() == Wpf.Ui.Appearance.ApplicationTheme.Dark;
+            byte alpha = (byte)Math.Clamp((int)(FolderFanOpacity * 255), 0, 255);
+
+            System.Windows.Media.Color baseColor;
+            if (isDark)
+            {
+                baseColor = BackdropType switch
+                {
+                    "Acrylic" => System.Windows.Media.Color.FromArgb(alpha, 32, 32, 36),
+                    "Mica" => System.Windows.Media.Color.FromArgb(alpha, 24, 24, 28),
+                    _ => System.Windows.Media.Color.FromArgb(alpha, 18, 18, 18)
+                };
+            }
+            else
+            {
+                baseColor = System.Windows.Media.Color.FromArgb(alpha, 245, 245, 250);
+            }
+
+            return new System.Windows.Media.SolidColorBrush(baseColor);
+        }
+    }
+
+    public void RefreshFolderFanBackground()
+    {
+        OnPropertyChanged(nameof(FolderFanBackgroundBrush));
     }
 }
