@@ -85,6 +85,11 @@ Um das Einstellungsfenster zu öffnen, klicken Sie mit der rechten Maustaste auf
   * *Acrylic:* Transluzenter Milchglaseffekt. Reagiert ebenfalls dynamisch auf Änderungen des Systemdesigns (hell/dunkel).
 * **Symbolgröße:**
   * Sie können die Symbolgröße wählen: **32px**, **40px**, **48px** oder **64px**. Die Leiste ändert ihre Größe sofort.
+  * Um ein Überstehen der Leiste über die Bildschirmränder zu verhindern, gelten maximale Element-Limits (inklusive Papierkorb):
+    * **32px:** bis zu 21 Elemente
+    * **40px:** bis zu 17 Elemente
+    * **48px:** bis zu 15 Elemente
+    * **64px:** bis zu 12 Elemente
 * **Im Vordergrund (Keep on Top):**
   * Wenn aktiviert, is die Leiste immer sichtbar und reserviert Platz auf dem Desktop. Wenn deaktiviert, verhält sich die Leiste wie ein normales Fenster und kann von anderen Programmen überdeckt werden.
 * **Oberflächensprache:**

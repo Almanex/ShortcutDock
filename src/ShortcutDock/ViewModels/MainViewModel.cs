@@ -120,8 +120,36 @@ public partial class MainViewModel : ObservableObject
         Persist();
     }
 
+    public int MaxShortcutsAllowed => GetMaxShortcutsAllowedForSize(IconSize);
+
+    public static int GetMaxShortcutsAllowedForSize(int iconSize) => iconSize switch
+    {
+        32 => 21,
+        40 => 17,
+        48 => 15,
+        64 => 12,
+        _ => 15
+    };
+
     partial void OnIconSizeChanged(int value)
     {
+        int maxAllowed = GetMaxShortcutsAllowedForSize(value);
+        if (Shortcuts.Count > maxAllowed)
+        {
+            var msgTemplate = System.Windows.Application.Current?.TryFindResource("ErrMaxShortcutsIconSize") as string
+                ?? "Cannot set icon size to {0} px. You currently have {1} items, but the limit for {0} px is {2} items. Please remove excess items first.";
+            var title = System.Windows.Application.Current?.TryFindResource("SettingsHeader") as string ?? "ShortcutDock";
+            System.Windows.MessageBox.Show(
+                string.Format(msgTemplate, value, Shortcuts.Count, maxAllowed),
+                title,
+                System.Windows.MessageBoxButton.OK,
+                System.Windows.MessageBoxImage.Warning
+            );
+
+            IconSize = Panel.IconSize;
+            return;
+        }
+
         Panel.IconSize = value;
         OnPropertyChanged(nameof(IconSizeString));
         Persist();
@@ -154,6 +182,22 @@ public partial class MainViewModel : ObservableObject
 
     partial void OnShowRecycleBinChanged(bool value)
     {
+        if (value && !Shortcuts.Any(s => s.IsRecycleBin) && Shortcuts.Count >= MaxShortcutsAllowed)
+        {
+            var msgTemplate = System.Windows.Application.Current?.TryFindResource("ErrMaxShortcutsLimit") as string
+                ?? "Maximum limit of items reached for current icon size ({0} px): max {1} items.";
+            var title = System.Windows.Application.Current?.TryFindResource("SettingsHeader") as string ?? "ShortcutDock";
+            System.Windows.MessageBox.Show(
+                string.Format(msgTemplate, IconSize, MaxShortcutsAllowed),
+                title,
+                System.Windows.MessageBoxButton.OK,
+                System.Windows.MessageBoxImage.Warning
+            );
+
+            ShowRecycleBin = false;
+            return;
+        }
+
         Panel.ShowRecycleBin = value;
         UpdateRecycleBinItem();
         Persist();
@@ -197,6 +241,20 @@ public partial class MainViewModel : ObservableObject
     /// <summary>Добавление ярлыка по пути файла (из DnD или диалога).</summary>
     public void AddFromFile(string path)
     {
+        if (Shortcuts.Count >= MaxShortcutsAllowed)
+        {
+            var msgTemplate = System.Windows.Application.Current?.TryFindResource("ErrMaxShortcutsLimit") as string
+                ?? "Maximum limit of items reached for current icon size ({0} px): max {1} items.";
+            var title = System.Windows.Application.Current?.TryFindResource("SettingsHeader") as string ?? "ShortcutDock";
+            System.Windows.MessageBox.Show(
+                string.Format(msgTemplate, IconSize, MaxShortcutsAllowed),
+                title,
+                System.Windows.MessageBoxButton.OK,
+                System.Windows.MessageBoxImage.Warning
+            );
+            return;
+        }
+
         try
         {
             var item = _resolver.Resolve(path);

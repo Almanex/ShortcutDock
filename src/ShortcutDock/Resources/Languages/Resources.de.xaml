@@ -50,5 +50,7 @@
     <sys:String x:Key="DlgChangeIconFilter">Bilder und Symbole (*.png;*.ico;*.jpg;*.jpeg)|*.png;*.ico;*.jpg;*.jpeg|Alle Dateien (*.*)|*.*</sys:String>
     <sys:String x:Key="ErrTargetNotFound">Zieldatei oder -ordner nicht gefunden</sys:String>
     <sys:String x:Key="ErrFileNotFound">Datei oder Ordner nicht gefunden</sys:String>
+    <sys:String x:Key="ErrMaxShortcutsLimit">Maximale Anzahl an Elementen für die aktuelle Symbolgröße ({0} px) erreicht: max. {1} Stk.</sys:String>
+    <sys:String x:Key="ErrMaxShortcutsIconSize">Symbolgröße kann nicht auf {0} px eingestellt werden. Es befinden sich {1} Elemente im Dock, das Limit für {0} px liegt bei {2} Stk. Bitte entfernen Sie zuerst überschüssige Elemente.</sys:String>
 
 </ResourceDictionary>

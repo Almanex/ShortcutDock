@@ -85,6 +85,11 @@ To open the settings window, right-click on any empty space on the panel or on t
   * *Acrylic:* Translucent frosted glass effect. Also dynamically adapts to system theme changes (light/dark).
 * **Icon Size:**
   * You can select icon sizes: **32px**, **40px**, **48px**, or **64px**. The panel resizes instantly.
+  * To prevent the dock from exceeding screen boundaries, maximum item limits apply (including Recycle Bin):
+    * **32px:** up to 21 items
+    * **40px:** up to 17 items
+    * **48px:** up to 15 items
+    * **64px:** up to 12 items
 * **Keep on Top:**
   * When enabled, the panel is always visible on top of other windows and reserves desktop space. When disabled, the panel behaves like a normal window and can be overlapped.
 * **Interface Language:**

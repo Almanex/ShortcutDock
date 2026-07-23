@@ -50,5 +50,7 @@
     <sys:String x:Key="DlgChangeIconFilter">Images and icons (*.png;*.ico;*.jpg;*.jpeg)|*.png;*.ico;*.jpg;*.jpeg|All files (*.*)|*.*</sys:String>
     <sys:String x:Key="ErrTargetNotFound">Target file or folder not found</sys:String>
     <sys:String x:Key="ErrFileNotFound">File or folder not found</sys:String>
+    <sys:String x:Key="ErrMaxShortcutsLimit">Maximum limit of items reached for current icon size ({0} px): max {1} items.</sys:String>
+    <sys:String x:Key="ErrMaxShortcutsIconSize">Cannot set icon size to {0} px. You currently have {1} items, but the limit for {0} px is {2} items. Please remove excess items first.</sys:String>
 
 </ResourceDictionary>
