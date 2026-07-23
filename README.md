@@ -14,7 +14,7 @@
   <img src="screenshots/screenshot4.png" width="48%" alt="ShortcutDock Context Menu" />
 </p>
 <p align="center">
-  <img src="screenshots/screenshot5.png" width="98%" alt="ShortcutDock Top Position" />
+  <img src="/screenshots/screenshot5.png" width="98%" alt="ShortcutDock Top Position" />
 </p>
 
 ## Overview
