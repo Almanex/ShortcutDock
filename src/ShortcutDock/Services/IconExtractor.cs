@@ -15,14 +15,6 @@ public sealed class IconExtractor
 {
     public IconExtractor()
     {
-        try
-        {
-            var emptyPath = Path.Combine(SettingsService.CacheFolder, "recycle_empty.png");
-            var fullPath = Path.Combine(SettingsService.CacheFolder, "recycle_full.png");
-            if (File.Exists(emptyPath)) File.Delete(emptyPath);
-            if (File.Exists(fullPath)) File.Delete(fullPath);
-        }
-        catch { }
     }
 
     private const int MAX_PATH = 260;

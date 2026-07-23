@@ -69,7 +69,10 @@ public partial class ShortcutViewModel : ObservableObject
         try
         {
             var expandedPath = SettingsService.GetExpandedPath(Model.TargetPath);
-            var processes = System.Diagnostics.Process.GetProcesses();
+            var exeName = Path.GetFileNameWithoutExtension(expandedPath);
+            if (string.IsNullOrEmpty(exeName)) return;
+
+            var processes = System.Diagnostics.Process.GetProcessesByName(exeName);
             foreach (var p in processes)
             {
                 try
@@ -93,6 +96,10 @@ public partial class ShortcutViewModel : ObservableObject
                 catch
                 {
                     // Игнорируем процессы без доступа
+                }
+                finally
+                {
+                    p.Dispose();
                 }
             }
         }

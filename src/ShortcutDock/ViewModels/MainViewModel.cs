@@ -98,14 +98,6 @@ public partial class MainViewModel : ObservableObject
         Language = Panel.Language;
         UpdatePanelOrientation();
 
-        // Clean up old cached Recycle Bin icons to query fresh ones from current system theme
-        try
-        {
-            File.Delete(Path.Combine(SettingsService.CacheFolder, "recycle_empty.png"));
-            File.Delete(Path.Combine(SettingsService.CacheFolder, "recycle_full.png"));
-        }
-        catch {}
-
         Shortcuts.Clear();
         foreach (var item in settings.Shortcuts)
         {
@@ -318,12 +310,13 @@ public partial class MainViewModel : ObservableObject
     }
 
     private System.Windows.Threading.DispatcherTimer? _processTrackerTimer;
+    private bool _isUpdatingProcessStatus;
 
     private void StartProcessTracker()
     {
         _processTrackerTimer = new System.Windows.Threading.DispatcherTimer
         {
-            Interval = TimeSpan.FromSeconds(1.5)
+            Interval = TimeSpan.FromSeconds(2.0)
         };
         _processTrackerTimer.Tick += (s, e) => UpdateRunningAppsStatus();
         _processTrackerTimer.Start();
@@ -340,42 +333,85 @@ public partial class MainViewModel : ObservableObject
             return;
         }
 
-        try
-        {
-            var runningPaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            var processes = System.Diagnostics.Process.GetProcesses();
-            foreach (var p in processes)
+        if (_isUpdatingProcessStatus) return;
+        _isUpdatingProcessStatus = true;
+
+        var shortcutTargets = Shortcuts
+            .Where(s => !s.IsRecycleBin && !string.IsNullOrWhiteSpace(s.Model.TargetPath))
+            .Select(s =>
             {
-                try
+                var expanded = SettingsService.GetExpandedPath(s.Model.TargetPath);
+                var exeName = Path.GetFileNameWithoutExtension(expanded);
+                return (VM: s, ExpandedPath: expanded, ExeName: exeName);
+            })
+            .ToList();
+
+        if (shortcutTargets.Count == 0)
+        {
+            _isUpdatingProcessStatus = false;
+            return;
+        }
+
+        Task.Run(() =>
+        {
+            try
+            {
+                var targetExeNames = new HashSet<string>(
+                    shortcutTargets.Select(x => x.ExeName),
+                    StringComparer.OrdinalIgnoreCase
+                );
+
+                var runningPaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                var processes = System.Diagnostics.Process.GetProcesses();
+
+                foreach (var p in processes)
                 {
-                    if (p.HasExited) continue;
-                    var path = p.MainModule?.FileName;
-                    if (!string.IsNullOrEmpty(path))
+                    try
                     {
-                        runningPaths.Add(path);
+                        if (p.HasExited) continue;
+
+                        if (targetExeNames.Contains(p.ProcessName))
+                        {
+                            var path = p.MainModule?.FileName;
+                            if (!string.IsNullOrEmpty(path))
+                            {
+                                runningPaths.Add(path);
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        // Ignore system processes
+                    }
+                    finally
+                    {
+                        p.Dispose();
                     }
                 }
-                catch
-                {
-                    // Игнорируем системные процессы
-                }
-            }
 
-            foreach (var s in Shortcuts)
+                System.Windows.Application.Current?.Dispatcher.BeginInvoke(new Action(() =>
+                {
+                    try
+                    {
+                        foreach (var target in shortcutTargets)
+                        {
+                            bool isRunningNow = runningPaths.Contains(target.ExpandedPath);
+                            if (target.VM.IsRunning != isRunningNow)
+                            {
+                                target.VM.IsRunning = isRunningNow;
+                            }
+                        }
+                    }
+                    finally
+                    {
+                        _isUpdatingProcessStatus = false;
+                    }
+                }));
+            }
+            catch
             {
-                if (s.IsRecycleBin) continue;
-
-                var expandedPath = SettingsService.GetExpandedPath(s.Model.TargetPath);
-                bool isRunningNow = runningPaths.Contains(expandedPath);
-                if (s.IsRunning != isRunningNow)
-                {
-                    s.IsRunning = isRunningNow;
-                }
+                _isUpdatingProcessStatus = false;
             }
-        }
-        catch
-        {
-            // Безопасность
-        }
+        });
     }
 }
