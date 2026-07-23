@@ -303,6 +303,8 @@ public partial class MainWindow : Window
         var hwnd = helper.Handle;
         if (hwnd == IntPtr.Zero) return;
 
+        AllowUipiDragDrop(hwnd);
+
         var ex = Native.Win32.GetWindowLongPtr(hwnd, Native.Win32.GWL_EXSTYLE).ToInt64();
         ex |= Native.Win32.WS_EX_TOOLWINDOW;
         ex &= ~Native.Win32.WS_EX_APPWINDOW;
@@ -313,15 +315,23 @@ public partial class MainWindow : Window
                                            ref corner, sizeof(int));
     }
 
+    [DllImport("user32.dll", SetLastError = true)]
+    private static extern bool ChangeWindowMessageFilterEx(IntPtr hWnd, uint msg, uint action, IntPtr pChangeFilterStruct);
 
+    private const uint MSGFLT_ALLOW = 1;
+    private const uint WM_DROPFILES = 0x0233;
+    private const uint WM_COPYDATA = 0x004A;
+    private const uint WM_COPYGLOBALDATA = 0x0049;
 
-    private void OnDragOver(object sender, System.Windows.DragEventArgs e)
+    private static void AllowUipiDragDrop(IntPtr hwnd)
     {
-        if (IsFileDrop(e.Data))
+        try
         {
-            e.Effects = System.Windows.DragDropEffects.Copy;
-            e.Handled = true;
+            ChangeWindowMessageFilterEx(hwnd, WM_DROPFILES, MSGFLT_ALLOW, IntPtr.Zero);
+            ChangeWindowMessageFilterEx(hwnd, WM_COPYDATA, MSGFLT_ALLOW, IntPtr.Zero);
+            ChangeWindowMessageFilterEx(hwnd, WM_COPYGLOBALDATA, MSGFLT_ALLOW, IntPtr.Zero);
         }
+        catch { }
     }
 
     private void Item_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
@@ -390,19 +400,118 @@ public partial class MainWindow : Window
         }
     }
 
+    private void OnPreviewDragOver(object sender, System.Windows.DragEventArgs e)
+    {
+        if (e.Data.GetDataPresent("ShortcutViewModel"))
+        {
+            e.Effects = System.Windows.DragDropEffects.Move;
+        }
+        else
+        {
+            // shell:AppsFolder разрешает ТОЛЬКО Link, Проводник — Copy|Move.
+            // Берём первый доступный эффект из того, что разрешил источник.
+            if (e.AllowedEffects.HasFlag(System.Windows.DragDropEffects.Copy))
+                e.Effects = System.Windows.DragDropEffects.Copy;
+            else if (e.AllowedEffects.HasFlag(System.Windows.DragDropEffects.Link))
+                e.Effects = System.Windows.DragDropEffects.Link;
+            else if (e.AllowedEffects.HasFlag(System.Windows.DragDropEffects.Move))
+                e.Effects = System.Windows.DragDropEffects.Move;
+            else
+                e.Effects = e.AllowedEffects;
+        }
+        e.Handled = true;
+    }
+
+    private void OnPreviewDrop(object sender, System.Windows.DragEventArgs e)
+    {
+        if (e.Data.GetDataPresent("ShortcutViewModel")) return;
+
+        // Диагностика: записываем все форматы и данные в лог-файл
+        try
+        {
+            var logPath = System.IO.Path.Combine(SettingsService.CacheFolder, "drop_debug.txt");
+            System.IO.Directory.CreateDirectory(SettingsService.CacheFolder);
+            var sb = new System.Text.StringBuilder();
+            sb.AppendLine($"=== DROP at {DateTime.Now:HH:mm:ss} AllowedEffects={e.AllowedEffects} ===");
+            sb.AppendLine("Available formats:");
+            foreach (var fmt in e.Data.GetFormats())
+            {
+                sb.Append($"  [{fmt}] ");
+                try
+                {
+                    var obj = e.Data.GetData(fmt);
+                    if (obj is string s) sb.Append($"string: \"{s}\"");
+                    else if (obj is string[] arr) sb.Append($"string[]: [{string.Join(", ", arr)}]");
+                    else if (obj is System.IO.MemoryStream ms) sb.Append($"MemoryStream: {ms.Length} bytes");
+                    else if (obj != null) sb.Append($"{obj.GetType().Name}: {obj}");
+                    else sb.Append("null");
+                }
+                catch (Exception ex) { sb.Append($"ERROR: {ex.Message}"); }
+                sb.AppendLine();
+            }
+            var resolvedFiles = GetDroppedFilePaths(e.Data);
+            sb.AppendLine($"Resolved paths ({resolvedFiles.Count}):");
+            foreach (var f in resolvedFiles) sb.AppendLine($"  -> {f}");
+            sb.AppendLine();
+            System.IO.File.AppendAllText(logPath, sb.ToString());
+        }
+        catch { }
+
+        var files = GetDroppedFilePaths(e.Data);
+        if (files.Count > 0)
+        {
+            foreach (var file in files)
+            {
+                _viewModel.AddFromFile(file);
+            }
+        }
+        else
+        {
+            // Резервный перебор всех доступных форматов в e.Data
+            foreach (var format in e.Data.GetFormats())
+            {
+                try
+                {
+                    var dataObj = e.Data.GetData(format);
+                    if (dataObj is string strPath && (System.IO.File.Exists(strPath) || System.IO.Directory.Exists(strPath) || strPath.Contains("!App") || strPath.StartsWith("shell:")))
+                    {
+                        _viewModel.AddFromFile(strPath);
+                        break;
+                    }
+                    else if (dataObj is string[] strArr)
+                    {
+                        foreach (var path in strArr)
+                        {
+                            if (System.IO.File.Exists(path) || System.IO.Directory.Exists(path) || path.Contains("!App") || path.StartsWith("shell:"))
+                                _viewModel.AddFromFile(path);
+                        }
+                    }
+                }
+                catch { }
+            }
+        }
+        e.Handled = true;
+    }
+
     private void Item_DragOver(object sender, System.Windows.DragEventArgs e)
     {
         var targetData = (sender as FrameworkElement)?.DataContext as ShortcutViewModel;
         if (e.Data.GetDataPresent("ShortcutViewModel") && targetData != null && !targetData.IsRecycleBin)
         {
             e.Effects = System.Windows.DragDropEffects.Move;
-            e.Handled = true;
         }
         else
         {
-            e.Effects = System.Windows.DragDropEffects.None;
-            e.Handled = true;
+            if (e.AllowedEffects.HasFlag(System.Windows.DragDropEffects.Copy))
+                e.Effects = System.Windows.DragDropEffects.Copy;
+            else if (e.AllowedEffects.HasFlag(System.Windows.DragDropEffects.Link))
+                e.Effects = System.Windows.DragDropEffects.Link;
+            else if (e.AllowedEffects.HasFlag(System.Windows.DragDropEffects.Move))
+                e.Effects = System.Windows.DragDropEffects.Move;
+            else
+                e.Effects = e.AllowedEffects;
         }
+        e.Handled = true;
     }
 
     private void Item_Drop(object sender, System.Windows.DragEventArgs e)
@@ -424,71 +533,91 @@ public partial class MainWindow : Window
             }
             e.Handled = true;
         }
-    }
-
-    private void OnDrop(object sender, System.Windows.DragEventArgs e)
-    {
-        var files = GetDroppedFilePaths(e.Data);
-        foreach (var file in files)
+        else
         {
-            _viewModel.AddFromFile(file);
+            OnPreviewDrop(sender, e);
         }
-        e.Handled = true;
     }
 
     private static bool IsFileDrop(System.Windows.IDataObject data) =>
         data.GetDataPresent(System.Windows.DataFormats.FileDrop) ||
         data.GetDataPresent("FileNameW") ||
         data.GetDataPresent("FileName") ||
-        data.GetDataPresent("Shell IDList Array");
+        data.GetDataPresent("Shell IDList Array") ||
+        (data.GetDataPresent("FileGroupDescriptorW") && data.GetDataPresent("FileContents"));
 
     public static List<string> GetDroppedFilePaths(System.Windows.IDataObject data)
     {
+        var rawResult = GetRawDroppedFilePaths(data);
+        return NormalizeDroppedPaths(rawResult);
+    }
+
+    private static List<string> NormalizeDroppedPaths(List<string> rawPaths)
+    {
+        var normalized = new List<string>();
+        foreach (var p in rawPaths)
+        {
+            if (string.IsNullOrWhiteSpace(p)) continue;
+            string clean = p.Trim();
+            if (!System.IO.File.Exists(clean) && !System.IO.Directory.Exists(clean) && !clean.StartsWith("shell:", StringComparison.OrdinalIgnoreCase))
+            {
+                if (clean.Contains("!") || clean.Contains(":::{") || (!clean.Contains("\\") && !clean.Contains("/")))
+                {
+                    clean = @"shell:AppsFolder\" + clean;
+                }
+            }
+            normalized.Add(clean);
+        }
+        return normalized;
+    }
+
+    private static List<string> GetRawDroppedFilePaths(System.Windows.IDataObject data)
+    {
         var result = new List<string>();
 
-        // 1. Стандартный FileDrop (Рабочий стол, Проводник)
-        if (data.GetDataPresent(System.Windows.DataFormats.FileDrop))
+        try
         {
-            if (data.GetData(System.Windows.DataFormats.FileDrop) is string[] files)
+            // 1. Стандартный FileDrop (Рабочий стол, Проводник, Меню Пуск AUMID)
+            if (data.GetDataPresent(System.Windows.DataFormats.FileDrop))
             {
-                result.AddRange(files.Where(f => !string.IsNullOrWhiteSpace(f)));
-                if (result.Count > 0) return result;
+                if (data.GetData(System.Windows.DataFormats.FileDrop) is string[] files)
+                {
+                    result.AddRange(files.Where(f => !string.IsNullOrWhiteSpace(f)));
+                    if (result.Count > 0) return result;
+                }
             }
-        }
 
-        // 2. FileNameW / FileName (Ярлыки из меню Пуск)
-        if (data.GetDataPresent("FileNameW"))
-        {
-            if (data.GetData("FileNameW") is string[] filesW)
+            // 2. FileNameW / FileName (Ярлыки из меню Пуск)
+            if (data.GetDataPresent("FileNameW"))
             {
-                result.AddRange(filesW.Where(f => !string.IsNullOrWhiteSpace(f)));
-                if (result.Count > 0) return result;
+                if (data.GetData("FileNameW") is string[] filesW)
+                {
+                    result.AddRange(filesW.Where(f => !string.IsNullOrWhiteSpace(f)));
+                    if (result.Count > 0) return result;
+                }
+                else if (data.GetData("FileNameW") is string singleW && !string.IsNullOrWhiteSpace(singleW))
+                {
+                    result.Add(singleW);
+                    return result;
+                }
             }
-            else if (data.GetData("FileNameW") is string singleW && !string.IsNullOrWhiteSpace(singleW))
-            {
-                result.Add(singleW);
-                return result;
-            }
-        }
 
-        if (data.GetDataPresent("FileName"))
-        {
-            if (data.GetData("FileName") is string[] filesA)
+            if (data.GetDataPresent("FileName"))
             {
-                result.AddRange(filesA.Where(f => !string.IsNullOrWhiteSpace(f)));
-                if (result.Count > 0) return result;
+                if (data.GetData("FileName") is string[] filesA)
+                {
+                    result.AddRange(filesA.Where(f => !string.IsNullOrWhiteSpace(f)));
+                    if (result.Count > 0) return result;
+                }
+                else if (data.GetData("FileName") is string singleA && !string.IsNullOrWhiteSpace(singleA))
+                {
+                    result.Add(singleA);
+                    return result;
+                }
             }
-            else if (data.GetData("FileName") is string singleA && !string.IsNullOrWhiteSpace(singleA))
-            {
-                result.Add(singleA);
-                return result;
-            }
-        }
 
-        // 3. Shell IDList Array (Прямое перетаскивание из меню Пуск и shell:AppsFolder для Microsoft Store)
-        if (data.GetDataPresent("Shell IDList Array"))
-        {
-            try
+            // 3. Shell IDList Array (Прямое перетаскивание из меню Пуск и shell:AppsFolder для Microsoft Store)
+            if (data.GetDataPresent("Shell IDList Array"))
             {
                 if (data.GetData("Shell IDList Array") is System.IO.MemoryStream ms)
                 {
@@ -500,13 +629,65 @@ public partial class MainWindow : Window
                     }
                 }
             }
-            catch
+
+            // 4. FileGroupDescriptorW + FileContents (Виртуальные .lnk стримы из меню Пуск Windows 11)
+            if (data.GetDataPresent("FileGroupDescriptorW") && data.GetDataPresent("FileContents"))
             {
-                // Fallback
+                var tempPath = ExtractVirtualLnkFromGroupDescriptor(data);
+                if (!string.IsNullOrEmpty(tempPath))
+                {
+                    result.Add(tempPath);
+                    return result;
+                }
             }
+
+            // 5. UnicodeText / Text
+            if (data.GetDataPresent(System.Windows.DataFormats.UnicodeText))
+            {
+                if (data.GetData(System.Windows.DataFormats.UnicodeText) is string text && !string.IsNullOrWhiteSpace(text))
+                {
+                    var cleanText = text.Trim('"').Trim();
+                    if (System.IO.File.Exists(cleanText) || System.IO.Directory.Exists(cleanText) || cleanText.Contains("!"))
+                    {
+                        result.Add(cleanText);
+                        return result;
+                    }
+                }
+            }
+        }
+        catch
+        {
+            // Fallback
         }
 
         return result;
+    }
+
+    private static string? ExtractVirtualLnkFromGroupDescriptor(System.Windows.IDataObject data)
+    {
+        try
+        {
+            if (data.GetData("FileGroupDescriptorW") is System.IO.MemoryStream msGroup &&
+                data.GetData("FileContents") is System.IO.MemoryStream msContents)
+            {
+                byte[] groupBytes = msGroup.ToArray();
+                if (groupBytes.Length < 80) return null;
+
+                // Читаем имя файла из cFileName структуры FILEDESCRIPTORW (смещение 76)
+                string fileName = System.Text.Encoding.Unicode.GetString(groupBytes, 76, 520).Split('\0')[0];
+                if (string.IsNullOrWhiteSpace(fileName)) fileName = "app.lnk";
+
+                System.IO.Directory.CreateDirectory(SettingsService.CacheFolder);
+                string tempLnkPath = System.IO.Path.Combine(SettingsService.CacheFolder, fileName);
+                System.IO.File.WriteAllBytes(tempLnkPath, msContents.ToArray());
+                return tempLnkPath;
+            }
+        }
+        catch
+        {
+            // Fallback
+        }
+        return null;
     }
 
     [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
@@ -554,6 +735,12 @@ public partial class MainWindow : Window
                         }
                         else if (SHGetNameFromIDList(fullPidl, SIGDN_DESKTOPABSOLUTEPARSING, out string parsingName) == 0 && !string.IsNullOrWhiteSpace(parsingName))
                         {
+                            // Если это AUMID (например Microsoft.WindowsCalculator_8wekyb3d8bbwe!App),
+                            // а не путь к файлу — добавляем префикс shell:AppsFolder\ для запуска и извлечения иконок.
+                            if (!System.IO.File.Exists(parsingName) && !System.IO.Directory.Exists(parsingName) && !parsingName.StartsWith("shell:", StringComparison.OrdinalIgnoreCase))
+                            {
+                                parsingName = @"shell:AppsFolder\" + parsingName;
+                            }
                             paths.Add(parsingName);
                         }
                     }

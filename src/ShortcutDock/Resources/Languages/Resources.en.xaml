@@ -38,6 +38,7 @@
     <sys:String x:Key="MenuChangeIcon">Change Icon...</sys:String>
     <sys:String x:Key="MenuRemoveFromPanel">Remove from Dock</sys:String>
     <sys:String x:Key="MenuAddApp">Add Application</sys:String>
+    <sys:String x:Key="MenuOpenAppsFolder">Open all installed apps folder (Store &amp; Win32)...</sys:String>
     <sys:String x:Key="MenuSettings">Panel Settings</sys:String>
     <sys:String x:Key="MenuClosePanel">Close Panel</sys:String>
     

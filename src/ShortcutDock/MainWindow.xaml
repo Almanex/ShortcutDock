@@ -16,9 +16,10 @@
         AllowsTransparency="False"
         Background="{x:Null}"
         AllowDrop="True"
-        Drop="OnDrop"
-        DragOver="OnDragOver"
-        PreviewDragOver="OnDragOver"
+        Drop="OnPreviewDrop"
+        DragOver="OnPreviewDragOver"
+        PreviewDragOver="OnPreviewDragOver"
+        PreviewDrop="OnPreviewDrop"
         UseLayoutRounding="True"
         SnapsToDevicePixels="True"
         SizeChanged="OnSizeChanged"
@@ -53,11 +54,13 @@
         </Storyboard>
     </Window.Resources>
 
-    <Grid>
+    <Grid AllowDrop="True">
         <Grid.ContextMenu>
             <ContextMenu Opened="ContextMenu_Opened" Closed="ContextMenu_Closed" DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
                 <MenuItem Header="{DynamicResource MenuAddApp}"
                           Command="{Binding AddViaDialogCommand}" />
+                <MenuItem Header="{DynamicResource MenuOpenAppsFolder}"
+                          Command="{Binding OpenAppsFolderCommand}" />
                 <MenuItem Header="{DynamicResource MenuSettings}"
                           Command="{Binding ShowSettingsCommand}" />
                 <Separator />
@@ -67,6 +70,7 @@
         </Grid.ContextMenu>
 
         <Border x:Name="RootBorder"
+                AllowDrop="True"
                 CornerRadius="10"
                 Background="Transparent">
             <Border.Style>

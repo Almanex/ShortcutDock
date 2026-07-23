@@ -58,9 +58,15 @@ public sealed class IconExtractor
     private static extern bool DestroyIcon(IntPtr hIcon);
 
     /// <summary>Извлекает иконку из exe/dll/папки и сохраняет PNG. Возвращает путь к PNG.</summary>
+    /// <summary>Извлекает иконку из exe/dll/папки и сохраняет PNG. Возвращает путь к PNG.</summary>
     public string ExtractToPng(string targetPath)
     {
-        if (!File.Exists(targetPath) && !Directory.Exists(targetPath))
+        bool isSpecial = targetPath.StartsWith("shell:", StringComparison.OrdinalIgnoreCase) ||
+                         targetPath.Contains(":::{") ||
+                         targetPath.Contains("!") ||
+                         targetPath.EndsWith(".lnk", StringComparison.OrdinalIgnoreCase);
+
+        if (!isSpecial && !File.Exists(targetPath) && !Directory.Exists(targetPath))
         {
             var errMsg = System.Windows.Application.Current?.TryFindResource("ErrTargetNotFound") as string ?? "Target file or folder not found";
             throw new FileNotFoundException(errMsg, targetPath);
@@ -71,35 +77,51 @@ public sealed class IconExtractor
         var cleanPath = targetPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
         var baseName = Path.GetFileNameWithoutExtension(cleanPath);
         if (string.IsNullOrEmpty(baseName))
-            baseName = "folder";
+            baseName = "app";
 
         var cachePath = Path.Combine(SettingsService.CacheFolder,
-            $"{baseName}_{targetPath.GetHashCode():X}.png");
+            $"{baseName}_{GetStableHash(targetPath)}.png");
 
         // Если иконка уже в кэше — не извлекаем повторно.
         if (File.Exists(cachePath)) return cachePath;
 
-        // Пробуем получить чистую 256x256 иконку без стрелочек ярлыков через IShellItemImageFactory
-        using var shellBmp = GetShellItemBitmap(targetPath);
-        if (shellBmp != null)
+        // 1. Пробуем получить чистую 256x256 иконку через IShellItemImageFactory
+        if (TryExtractShellItemPng(targetPath, cachePath))
         {
-            shellBmp.Save(cachePath, ImageFormat.Png);
             return cachePath;
         }
 
-        using var icon = GetHighResolutionIcon(targetPath)
-            ?? SystemIcons.Application;
+        // 2. Если targetPath это .lnk ярлык, пробуем получить иконку целевого файла
+        if (targetPath.EndsWith(".lnk", StringComparison.OrdinalIgnoreCase))
+        {
+            var target = ShortcutResolver.ResolveLnkTarget(targetPath);
+            if (!string.IsNullOrWhiteSpace(target) && (File.Exists(target) || target.StartsWith("shell:")))
+            {
+                if (TryExtractShellItemPng(target, cachePath))
+                {
+                    return cachePath;
+                }
+            }
+        }
+
+        // 3. Fallback: HighResolution Icon (JUMBO 256x256 -> EXTRALARGE 48x48 -> 32x32)
+        using var icon = GetHighResolutionIcon(targetPath) ?? SystemIcons.Application;
+        if (SaveHIconToPngFile(icon.Handle, cachePath))
+        {
+            return cachePath;
+        }
+
         using var bmp = icon.ToBitmap();
         bmp.Save(cachePath, ImageFormat.Png);
         return cachePath;
     }
 
-    [DllImport("shell32.dll", CharSet = CharSet.Unicode, PreserveSig = false)]
-    private static extern void SHCreateItemFromParsingName(
+    [DllImport("shell32.dll", CharSet = CharSet.Unicode)]
+    private static extern int SHCreateItemFromParsingName(
         [MarshalAs(UnmanagedType.LPWStr)] string pszPath,
         IntPtr pbc,
         ref Guid riid,
-        [MarshalAs(UnmanagedType.Interface)] out IShellItemImageFactory ppv);
+        out IntPtr ppv);
 
     [StructLayout(LayoutKind.Sequential)]
     private struct SIZE
@@ -109,52 +131,317 @@ public sealed class IconExtractor
         public SIZE(int cx, int cy) { this.cx = cx; this.cy = cy; }
     }
 
-    private static readonly Guid IID_IShellItemImageFactory = new("bcc82b79-4808-4754-8969-2cd854809861");
+    [StructLayout(LayoutKind.Sequential)]
+    private struct BITMAP
+    {
+        public int bmType;
+        public int bmWidth;
+        public int bmHeight;
+        public int bmWidthBytes;
+        public ushort bmPlanes;
+        public ushort bmBitsPixel;
+        public IntPtr bmBits;
+    }
+
+    [DllImport("gdi32.dll")]
+    private static extern int GetObject(IntPtr hgdiobj, int cbBuffer, ref BITMAP lpvObject);
+
+    private static readonly Guid IID_IShellItem = new("43826d1e-e718-42ee-bc55-a1e261c37bfe");
+    private static readonly Guid IID_IShellItemImageFactory = new("bcc18b79-ba16-442f-80c4-8a59c30c463b");
 
     [ComImport]
-    [Guid("bcc82b79-4808-4754-8969-2cd854809861")]
+    [Guid("bcc18b79-ba16-442f-80c4-8a59c30c463b")]
     [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
     private interface IShellItemImageFactory
     {
         [PreserveSig]
         int GetImage(
             [In] SIZE size,
-            [In] int flags, // SIIGBF_ICONONLY = 0x0
+            [In] int flags,
             [Out] out IntPtr phbm);
     }
 
     [DllImport("gdi32.dll")]
     private static extern bool DeleteObject(IntPtr hObject);
 
-    private static Bitmap? GetShellItemBitmap(string targetPath)
+    private static bool TryExtractShellItemPng(string targetPath, string cachePath)
+    {
+        var candidates = new List<string> { targetPath };
+        if (targetPath.StartsWith(@"shell:AppsFolder\", StringComparison.OrdinalIgnoreCase))
+        {
+            candidates.Add(targetPath.Substring(@"shell:AppsFolder\".Length));
+        }
+        else if (targetPath.Contains("!") && !targetPath.StartsWith("shell:", StringComparison.OrdinalIgnoreCase))
+        {
+            candidates.Add(@"shell:AppsFolder\" + targetPath);
+        }
+
+        foreach (var path in candidates)
+        {
+            if (TryExtractSingleShellItemPng(path, cachePath))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static bool TryExtractSingleShellItemPng(string parsingName, string cachePath)
+    {
+        IntPtr pShellItem = IntPtr.Zero;
+        IntPtr pFactory = IntPtr.Zero;
+        IntPtr hBitmap = IntPtr.Zero;
+
+        try
+        {
+            var iidItem = IID_IShellItem;
+            int hr = SHCreateItemFromParsingName(parsingName, IntPtr.Zero, ref iidItem, out pShellItem);
+            if (hr != 0 || pShellItem == IntPtr.Zero) return false;
+
+            var iidFactory = IID_IShellItemImageFactory;
+            hr = Marshal.QueryInterface(pShellItem, ref iidFactory, out pFactory);
+            if (hr != 0 || pFactory == IntPtr.Zero) return false;
+
+            var factory = (IShellItemImageFactory)Marshal.GetObjectForIUnknown(pFactory);
+
+            // SIIGBF_BIGGERSIZEOK = 0x1, SIIGBF_ICONONLY = 0x4 -> 0x5
+            hr = factory.GetImage(new SIZE(256, 256), 0x5, out hBitmap);
+            if (hr == 0 && hBitmap != IntPtr.Zero)
+            {
+                return SaveHBitmapToPngFile(hBitmap, cachePath);
+            }
+        }
+        catch { }
+        finally
+        {
+            if (hBitmap != IntPtr.Zero) DeleteObject(hBitmap);
+            if (pFactory != IntPtr.Zero) Marshal.Release(pFactory);
+            if (pShellItem != IntPtr.Zero) Marshal.Release(pShellItem);
+        }
+
+        return false;
+    }
+
+    private static bool SaveHBitmapToPngFile(IntPtr hBitmap, string destinationPath)
     {
         try
         {
-            var iid = IID_IShellItemImageFactory;
-            SHCreateItemFromParsingName(targetPath, IntPtr.Zero, ref iid, out var factory);
-            if (factory != null)
+            BITMAP bm = new BITMAP();
+            GetObject(hBitmap, Marshal.SizeOf(typeof(BITMAP)), ref bm);
+
+            Bitmap? argbBmp = null;
+            if (bm.bmBitsPixel == 32 && bm.bmBits != IntPtr.Zero)
             {
-                // SIIGBF_ICONONLY = 0x0 (чистая иконка без оверлея / стрелочки ярлыка)
-                int hr = factory.GetImage(new SIZE(256, 256), 0x0, out var hBitmap);
-                if (hr == 0 && hBitmap != IntPtr.Zero)
+                // DIB section: wrap memory directly
+                using var bmp = new Bitmap(bm.bmWidth, bm.bmHeight, bm.bmWidthBytes, PixelFormat.Format32bppArgb, bm.bmBits);
+                bmp.RotateFlip(RotateFlipType.RotateNoneFlipY); // DIBs are bottom-up
+                argbBmp = new Bitmap(bmp); // Copy to detach from bmBits
+            }
+            else
+            {
+                // Fallback (lose alpha)
+                using var rawBmp = Image.FromHbitmap(hBitmap);
+                argbBmp = new Bitmap(rawBmp.Width, rawBmp.Height, PixelFormat.Format32bppArgb);
+                using (var g = Graphics.FromImage(argbBmp))
                 {
-                    try
+                    g.DrawImage(rawBmp, 0, 0);
+                }
+            }
+
+            using (argbBmp)
+            {
+                RemoveSolidWhiteBackgroundIfNeeded(argbBmp);
+                using var cropped = CropTransparentMargins(argbBmp);
+                cropped.Save(destinationPath, ImageFormat.Png);
+            }
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private static bool SaveHIconToPngFile(IntPtr hIcon, string destinationPath)
+    {
+        try
+        {
+            using var icon = Icon.FromHandle(hIcon);
+            using var rawBmp = icon.ToBitmap();
+            using var argbBmp = new Bitmap(rawBmp.Width, rawBmp.Height, PixelFormat.Format32bppArgb);
+            using (var g = Graphics.FromImage(argbBmp))
+            {
+                g.DrawImage(rawBmp, 0, 0);
+            }
+
+            RemoveSolidWhiteBackgroundIfNeeded(argbBmp);
+            using var cropped = CropTransparentMargins(argbBmp);
+            cropped.Save(destinationPath, ImageFormat.Png);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private static void RemoveSolidWhiteBackgroundIfNeeded(Bitmap bmp)
+    {
+        int width = bmp.Width;
+        int height = bmp.Height;
+        if (width <= 0 || height <= 0) return;
+
+        var rect = new Rectangle(0, 0, width, height);
+        var data = bmp.LockBits(rect, ImageLockMode.ReadWrite, PixelFormat.Format32bppArgb);
+        try
+        {
+            unsafe
+            {
+                byte* ptr = (byte*)data.Scan0;
+                int stride = data.Stride;
+
+                byte* topLeft = ptr;
+                byte* topRight = ptr + (width - 1) * 4;
+                byte* bottomLeft = ptr + (height - 1) * stride;
+                byte* bottomRight = ptr + (height - 1) * stride + (width - 1) * 4;
+
+                // Проверяем 4 угла: если все они чисто белые (R>240, G>240, B>240, A=255)
+                bool isWhiteBg = (topLeft[0] > 240 && topLeft[1] > 240 && topLeft[2] > 240 && topLeft[3] == 255) &&
+                                 (topRight[0] > 240 && topRight[1] > 240 && topRight[2] > 240 && topRight[3] == 255) &&
+                                 (bottomLeft[0] > 240 && bottomLeft[1] > 240 && bottomLeft[2] > 240 && bottomLeft[3] == 255) &&
+                                 (bottomRight[0] > 240 && bottomRight[1] > 240 && bottomRight[2] > 240 && bottomRight[3] == 255);
+
+                if (isWhiteBg)
+                {
+                    for (int y = 0; y < height; y++)
                     {
-                        var bmp = Image.FromHbitmap(hBitmap);
-                        return bmp;
-                    }
-                    finally
-                    {
-                        DeleteObject(hBitmap);
+                        byte* row = ptr + (y * stride);
+                        for (int x = 0; x < width; x++)
+                        {
+                            byte b = row[x * 4];
+                            byte g = row[x * 4 + 1];
+                            byte r = row[x * 4 + 2];
+                            byte a = row[x * 4 + 3];
+
+                            if (r > 240 && g > 240 && b > 240 && a == 255)
+                            {
+                                row[x * 4 + 3] = 0; // Делаем прозрачным
+                            }
+                        }
                     }
                 }
             }
         }
-        catch
+        finally
         {
-            // Fallback на классический метод
+            bmp.UnlockBits(data);
         }
-        return null;
+    }
+
+    private static Bitmap CropTransparentMargins(Bitmap bmp)
+    {
+        int width = bmp.Width;
+        int height = bmp.Height;
+
+        // Тестируем пороги альфа-канала: от самого чувствительного (10) до высоких (30, 60, 90).
+        // Если при низком пороге иконка занимает почти весь холст (из-за мусора/теней на границах),
+        // повышаем порог, чтобы найти реальные границы основного изображения.
+        int[] thresholds = { 10, 30, 60, 90 };
+        int bestMinX = 0, bestMinY = 0, bestMaxX = width - 1, bestMaxY = height - 1;
+        bool foundBetter = false;
+
+        foreach (int threshold in thresholds)
+        {
+            int minX = width;
+            int minY = height;
+            int maxX = -1;
+            int maxY = -1;
+
+            var rect = new Rectangle(0, 0, width, height);
+            var data = bmp.LockBits(rect, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+            try
+            {
+                unsafe
+                {
+                    byte* ptr = (byte*)data.Scan0;
+                    int stride = data.Stride;
+
+                    for (int y = 0; y < height; y++)
+                    {
+                        byte* row = ptr + (y * stride);
+                        for (int x = 0; x < width; x++)
+                        {
+                            byte alpha = row[x * 4 + 3];
+                            if (alpha >= threshold)
+                            {
+                                if (x < minX) minX = x;
+                                if (x > maxX) maxX = x;
+                                if (y < minY) minY = y;
+                                if (y > maxY) maxY = y;
+                            }
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                bmp.UnlockBits(data);
+            }
+
+            if (maxX >= minX && maxY >= minY)
+            {
+                int cropW = maxX - minX + 1;
+                int cropH = maxY - minY + 1;
+
+                // Если обрезанная область стала меньше 85% холста, мы отсекли мусорные полупрозрачные границы!
+                if (cropW < width * 0.85 || cropH < height * 0.85)
+                {
+                    bestMinX = minX;
+                    bestMinY = minY;
+                    bestMaxX = maxX;
+                    bestMaxY = maxY;
+                    foundBetter = true;
+                    break;
+                }
+
+                // В качестве запасного варианта сохраняем результаты первого порога (10)
+                if (!foundBetter && threshold == 10)
+                {
+                    bestMinX = minX;
+                    bestMinY = minY;
+                    bestMaxX = maxX;
+                    bestMaxY = maxY;
+                }
+            }
+        }
+
+        int finalCropW = bestMaxX - bestMinX + 1;
+        int finalCropH = bestMaxY - bestMinY + 1;
+
+        // Если даже при высоком пороге изображение занимает весь холст, оставляем как есть
+        if (finalCropW >= width * 0.85 && finalCropH >= height * 0.85)
+            return (Bitmap)bmp.Clone();
+
+        int maxDim = Math.Max(finalCropW, finalCropH);
+        int padding = Math.Max(4, maxDim / 16);
+        int finalSize = maxDim + padding * 2;
+
+        var cropped = new Bitmap(finalSize, finalSize, PixelFormat.Format32bppArgb);
+        using (var g = Graphics.FromImage(cropped))
+        {
+            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+            g.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+            g.PixelOffsetMode = System.Drawing.Drawing2D.PixelOffsetMode.HighQuality;
+
+            int destX = padding + (maxDim - finalCropW) / 2;
+            int destY = padding + (maxDim - finalCropH) / 2;
+
+            g.DrawImage(bmp, new Rectangle(destX, destY, finalCropW, finalCropH),
+                             new Rectangle(bestMinX, bestMinY, finalCropW, finalCropH),
+                             GraphicsUnit.Pixel);
+        }
+
+        return cropped;
     }
 
     private static Icon? GetHighResolutionIcon(string targetPath)
@@ -264,5 +551,16 @@ public sealed class IconExtractor
             }
         }
         return null;
+    }
+
+    private static string GetStableHash(string input)
+    {
+        if (input == null) return "0";
+        uint hash = 2166136261;
+        foreach (char c in input)
+        {
+            hash = (hash ^ c) * 16777619;
+        }
+        return hash.ToString("X8");
     }
 }

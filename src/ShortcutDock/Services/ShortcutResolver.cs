@@ -19,15 +19,47 @@ public sealed class ShortcutResolver
     /// <summary>Создаёт ShortcutItem из перетаскиваемого/выбранного пути.</summary>
     public ShortcutItem Resolve(string sourcePath)
     {
-        if (string.IsNullOrWhiteSpace(sourcePath) || (!File.Exists(sourcePath) && !Directory.Exists(sourcePath)))
+        if (string.IsNullOrWhiteSpace(sourcePath))
+        {
+            var errMsg = System.Windows.Application.Current?.TryFindResource("ErrFileNotFound") as string ?? "File or folder not found";
+            throw new FileNotFoundException(errMsg, sourcePath);
+        }
+
+        // Если передано просто имя программы (например "Ubuntu" или "LM Studio"), пытаемся найти ярлык в меню Пуск
+        sourcePath = FindShortcutByName(sourcePath);
+
+        bool isUwpOrSpecial = sourcePath.StartsWith("shell:AppsFolder", StringComparison.OrdinalIgnoreCase) ||
+                              sourcePath.StartsWith("shell:", StringComparison.OrdinalIgnoreCase) ||
+                              sourcePath.Contains(":::{") ||
+                              sourcePath.Contains("!") ||
+                              sourcePath.EndsWith(".lnk", StringComparison.OrdinalIgnoreCase);
+
+        if (!isUwpOrSpecial && !File.Exists(sourcePath) && !Directory.Exists(sourcePath))
         {
             var errMsg = System.Windows.Application.Current?.TryFindResource("ErrFileNotFound") as string ?? "File or folder not found";
             throw new FileNotFoundException(errMsg, sourcePath);
         }
 
         string targetPath = sourcePath;
+        string name = string.Empty;
+
+        // Если это виртуальный путь shell:AppsFolder или ::: GUID от приложений Microsoft Store
+        if (sourcePath.StartsWith("shell:AppsFolder", StringComparison.OrdinalIgnoreCase) || sourcePath.Contains(":::{") || sourcePath.Contains("!App"))
+        {
+            name = GetShellItemDisplayName(sourcePath);
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                name = Path.GetFileNameWithoutExtension(sourcePath);
+            }
+            return new ShortcutItem
+            {
+                Name = name,
+                TargetPath = sourcePath
+            };
+        }
+
         var cleanPath = sourcePath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-        string name = Path.GetFileNameWithoutExtension(cleanPath);
+        name = Path.GetFileNameWithoutExtension(cleanPath);
         if (string.IsNullOrEmpty(name))
         {
             name = sourcePath;
@@ -40,7 +72,7 @@ public sealed class ShortcutResolver
 
             // Если GetPath вернул пустую строку (приложения Microsoft Store / UWP) или несуществующий путь,
             // сохраняем сам путь к .lnk ярлыку как рабочий targetPath.
-            if (string.IsNullOrWhiteSpace(targetPath) || (!File.Exists(targetPath) && !Directory.Exists(targetPath)))
+            if (string.IsNullOrWhiteSpace(targetPath) || (!File.Exists(targetPath) && !Directory.Exists(targetPath) && !targetPath.Contains("!App")))
             {
                 targetPath = sourcePath;
                 name = sourceName;
@@ -48,10 +80,10 @@ public sealed class ShortcutResolver
             else
             {
                 var cleanTarget = targetPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-                name = Path.GetFileNameWithoutExtension(cleanTarget);
-                if (string.IsNullOrEmpty(name))
+                var resolvedName = Path.GetFileNameWithoutExtension(cleanTarget);
+                if (!string.IsNullOrEmpty(resolvedName))
                 {
-                    name = sourceName;
+                    name = resolvedName;
                 }
             }
         }
@@ -63,8 +95,92 @@ public sealed class ShortcutResolver
         };
     }
 
+    [DllImport("shell32.dll", CharSet = CharSet.Unicode, PreserveSig = false)]
+    private static extern void SHCreateItemFromParsingName(
+        [MarshalAs(UnmanagedType.LPWStr)] string pszPath,
+        IntPtr pbc,
+        ref Guid riid,
+        [MarshalAs(UnmanagedType.Interface)] out IShellItem ppv);
+
+    private static readonly Guid IID_IShellItem = new("438269e8-e70a-49e2-be7b-3d22cbe7536e");
+
+    [ComImport]
+    [Guid("438269e8-e70a-49e2-be7b-3d22cbe7536e")]
+    [InterfaceType(ComInterfaceType.InterfaceIsIUnknown)]
+    private interface IShellItem
+    {
+        void BindToHandler(IntPtr pbc, ref Guid bhid, ref Guid riid, out IntPtr ppv);
+        void GetParent(out IShellItem ppsi);
+        [PreserveSig]
+        int GetDisplayName(uint sigdnName, [MarshalAs(UnmanagedType.LPWStr)] out string ppszName);
+        void GetAttributes(uint sfgaoMask, out uint psfgaoAttribs);
+        void Compare(IShellItem psi, uint hint, out int piOrder);
+    }
+
+    private const uint SIGDN_NORMALDISPLAY = 0x00000000;
+
+    private static string GetShellItemDisplayName(string parsingName)
+    {
+        try
+        {
+            var iid = IID_IShellItem;
+            SHCreateItemFromParsingName(parsingName, IntPtr.Zero, ref iid, out var item);
+            if (item != null)
+            {
+                if (item.GetDisplayName(SIGDN_NORMALDISPLAY, out string name) == 0 && !string.IsNullOrWhiteSpace(name))
+                {
+                    return name;
+                }
+            }
+        }
+        catch { }
+
+        return Path.GetFileNameWithoutExtension(parsingName);
+    }
+
+    public static string FindShortcutByName(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name)) return name;
+
+        // Если это существующий файл, папка или виртуальный путь
+        if (File.Exists(name) || Directory.Exists(name) || name.StartsWith("shell:", StringComparison.OrdinalIgnoreCase))
+            return name;
+
+        try
+        {
+            string[] startFolders = new string[]
+            {
+                Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu),
+                Environment.GetFolderPath(Environment.SpecialFolder.StartMenu),
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonStartMenu), "Programs"),
+                Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.StartMenu), "Programs")
+            };
+
+            foreach (var folder in startFolders)
+            {
+                if (Directory.Exists(folder))
+                {
+                    var files = Directory.GetFiles(folder, "*.lnk", SearchOption.AllDirectories);
+                    foreach (var file in files)
+                    {
+                        var fileName = Path.GetFileNameWithoutExtension(file);
+                        if (fileName.Equals(name, StringComparison.OrdinalIgnoreCase) ||
+                            fileName.StartsWith(name, StringComparison.OrdinalIgnoreCase) ||
+                            name.StartsWith(fileName, StringComparison.OrdinalIgnoreCase))
+                        {
+                            return file;
+                        }
+                    }
+                }
+            }
+        }
+        catch { }
+
+        return name;
+    }
+
     /// <summary>Извлекает целевой путь из .lnk через COM ShellLink.</summary>
-    private static string ResolveLnkTarget(string lnkPath)
+    public static string ResolveLnkTarget(string lnkPath)
     {
         var type = Type.GetTypeFromCLSID(CLSID_ShellLink)
                    ?? throw new InvalidOperationException("ShellLink COM недоступен");
@@ -85,6 +201,10 @@ public sealed class ShortcutResolver
             link.GetPath(buffer, buffer.Capacity, findData, 4u);
 
             var resolved = buffer.ToString();
+            if (!string.IsNullOrWhiteSpace(resolved))
+            {
+                resolved = Environment.ExpandEnvironmentVariables(resolved);
+            }
             // Если путь пустой (ярлык Microsoft Store / UWP), возвращаем исходный .lnk путь
             return string.IsNullOrWhiteSpace(resolved) ? lnkPath : resolved;
         }

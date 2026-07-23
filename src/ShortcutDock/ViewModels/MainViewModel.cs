@@ -108,9 +108,26 @@ public partial class MainViewModel : ObservableObject
         Shortcuts.Clear();
         foreach (var item in settings.Shortcuts)
         {
-            // Пропускаем записи с отсутствующей иконкой/целью.
-            if (!File.Exists(SettingsService.GetExpandedPath(item.IconPath)))
-                continue;
+            // Если иконка отсутствует в кэше — пробуем извлечь заново
+            var fullIconPath = SettingsService.GetExpandedPath(item.IconPath);
+            if (!File.Exists(fullIconPath))
+            {
+                try
+                {
+                    item.IconPath = _iconExtractor.ExtractToPng(item.TargetPath);
+                }
+                catch
+                {
+                    // Если целевой файл физически отсутствует (и это не специальный путь) — пропускаем ярлык
+                    bool isSpecial = item.TargetPath.StartsWith("shell:", StringComparison.OrdinalIgnoreCase) ||
+                                     item.TargetPath.Contains(":::{") ||
+                                     item.TargetPath.Contains("!");
+                    if (!isSpecial && !File.Exists(SettingsService.GetExpandedPath(item.TargetPath)) && !Directory.Exists(SettingsService.GetExpandedPath(item.TargetPath)))
+                    {
+                        continue;
+                    }
+                }
+            }
             Shortcuts.Add(new ShortcutViewModel(item, _launcher, Remove, Persist));
         }
 
@@ -329,15 +346,29 @@ public partial class MainViewModel : ObservableObject
     [RelayCommand]
     private void AddViaDialog()
     {
-        var filter = System.Windows.Application.Current.TryFindResource("DlgAddAppFilter") as string ?? "Applications and shortcuts (*.exe;*.lnk)|*.exe;*.lnk|All files (*.*)|*.*";
-        var title = System.Windows.Application.Current.TryFindResource("DlgAddAppTitle") as string ?? "Select an application to add to the dock";
-        var dlg = new Microsoft.Win32.OpenFileDialog
+        int maxAllowed = GetMaxShortcutsAllowedForSize(IconSize);
+        if (Shortcuts.Count >= maxAllowed)
         {
-            Filter = filter,
-            Title = title
+            return;
+        }
+
+        var dialog = new Microsoft.Win32.OpenFileDialog
+        {
+            Title = System.Windows.Application.Current?.TryFindResource("DlgAddAppTitle") as string ?? "Select Application",
+            Filter = System.Windows.Application.Current?.TryFindResource("DlgAddAppFilter") as string ?? "Apps (*.exe;*.lnk)|*.exe;*.lnk|All (*.*)|*.*",
+            Multiselect = false
         };
-        if (dlg.ShowDialog() == true)
-            AddFromFile(dlg.FileName);
+
+        if (dialog.ShowDialog() == true)
+        {
+            AddFromFile(dialog.FileName);
+        }
+    }
+
+    [RelayCommand]
+    private void OpenAppsFolder()
+    {
+        _launcher.Start("shell:AppsFolder");
     }
 
     [RelayCommand]

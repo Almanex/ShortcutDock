@@ -19,7 +19,8 @@ public sealed class ProcessLauncher
         bool isSpecial = targetPath.StartsWith("shell:", StringComparison.OrdinalIgnoreCase) || 
                          targetPath.StartsWith("http:", StringComparison.OrdinalIgnoreCase) || 
                          targetPath.StartsWith("https:", StringComparison.OrdinalIgnoreCase) ||
-                         targetPath.Contains(":::{");
+                         targetPath.Contains(":::{") ||
+                         targetPath.Contains("!App");
 
         if (!isSpecial && !File.Exists(targetPath) && !Directory.Exists(targetPath))
             return;

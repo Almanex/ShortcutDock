@@ -14,8 +14,8 @@
 ShortcutDock is a modern, lightweight Windows desktop dock panel designed to organize your shortcuts. It features Mica and Acrylic blur effects that sync with the active Windows system theme, support for Drag-and-Drop, automatic vertical and horizontal layout orientation, system AppBar reservation, and tray integration.
 
 > [!IMPORTANT]
-> **Latest release v2.1.0 available!**  
-> You can download the ready-made compiled file **`ShortcutDock.exe`** on the [Releases](https://github.com/Almanex/ShortcutDock/releases/tag/v2.1.0) page and run it on your computer without installing additional libraries.
+> **Latest release v2.1.1 available!**  
+> You can download the ready-made compiled file **`ShortcutDock.exe`** on the [Releases](https://github.com/Almanex/ShortcutDock/releases/tag/v2.1.1) page and run it on your computer without installing additional libraries.
 
 For detailed instructions on configuring all features, read the [User Guide (GUIDE.md)](docs/GUIDE.md).
 
