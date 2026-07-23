@@ -23,7 +23,7 @@ For detailed instructions on configuring all features, read the [User Guide (GUI
 
 ## Key Features
 
-- Desktop Panel: Drag-and-drop `.exe`, `.lnk`, or folders directly onto the panel to add shortcuts.
+- Desktop Panel: Drag-and-drop `.exe`, `.lnk`, folders, or Microsoft Store (UWP) apps directly onto the panel to add shortcuts.
 - Folder Stacks (Fan View): Popup grid preview for folder shortcuts with 1-click file launching, theme synchronization, and adjustable background transparency.
 - Open File Location: Quick context menu option to reveal target executable files in Windows Explorer.
 - Dynamic Monitor-Aware Capacity: Automatically calculates maximum allowed dock items based on active screen resolution and DPI scaling.

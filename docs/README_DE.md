@@ -23,7 +23,7 @@ Ausführliche Anweisungen zur Konfiguration aller Funktionen finden Sie im [Benu
 
 ## Hauptfunktionen
 
-- Desktop-Leiste: Ziehen Sie `.exe`-, `.lnk`-Dateien oder Ordner einfach per Drag-and-Drop direkt auf die Leiste, um sie hinzuzufügen.
+- Desktop-Leiste: Ziehen Sie `.exe`-, `.lnk`-Dateien, Ordner oder Microsoft Store (UWP) Apps einfach per Drag-and-Drop direkt auf die Leiste, um sie hinzuzufügen.
 - Ordner-Fächer (Folder Stacks): Popup-Fächeransicht für Ordnerverknüpfungen mit 1-Klick-Dateistart, Systemdesign-Synchronisation und anpassbarer Transparenz.
 - Dateipfad öffnen: Schnelle Kontextmenüoption zum Anzeigen von Ziel-Dateien im Windows-Explorer.
 - Dynamische Kapazitätsberechnung: Automatische Berechnung der maximalen Anzahl von Verknüpfungen basierend auf Bildschirmauflösung und DPI-Skalierung.

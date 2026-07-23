@@ -35,12 +35,24 @@ public sealed class ShortcutResolver
 
         if (sourcePath.EndsWith(".lnk", StringComparison.OrdinalIgnoreCase))
         {
+            var sourceName = name;
             targetPath = ResolveLnkTarget(sourcePath);
-            var cleanTarget = targetPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-            name = Path.GetFileNameWithoutExtension(cleanTarget);
-            if (string.IsNullOrEmpty(name))
+
+            // Если GetPath вернул пустую строку (приложения Microsoft Store / UWP) или несуществующий путь,
+            // сохраняем сам путь к .lnk ярлыку как рабочий targetPath.
+            if (string.IsNullOrWhiteSpace(targetPath) || (!File.Exists(targetPath) && !Directory.Exists(targetPath)))
             {
-                name = targetPath;
+                targetPath = sourcePath;
+                name = sourceName;
+            }
+            else
+            {
+                var cleanTarget = targetPath.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+                name = Path.GetFileNameWithoutExtension(cleanTarget);
+                if (string.IsNullOrEmpty(name))
+                {
+                    name = sourceName;
+                }
             }
         }
 
@@ -72,7 +84,9 @@ public sealed class ShortcutResolver
             // SLGP_RAWPATH = 4 (без попытки найти фактический файл — быстрее и стабильнее)
             link.GetPath(buffer, buffer.Capacity, findData, 4u);
 
-            return buffer.ToString();
+            var resolved = buffer.ToString();
+            // Если путь пустой (ярлык Microsoft Store / UWP), возвращаем исходный .lnk путь
+            return string.IsNullOrWhiteSpace(resolved) ? lnkPath : resolved;
         }
         finally
         {
