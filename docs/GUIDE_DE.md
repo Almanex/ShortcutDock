@@ -63,6 +63,9 @@ Sie können neue Programme, Ordner oder Laufwerke auf drei Arten zur Leiste hinz
 ### Als Administrator ausführen
 * Klicken Sie mit der rechten Maustaste (RMB) auf die gewünschte Anwendung auf der Leiste und wählen Sie **„Als Administrator ausführen“**.
 
+### Dateipfad öffnen
+* Klicken Sie mit der rechten Maustaste auf die Verknüpfung auf der Leiste und wählen Sie **„Dateipfad öffnen“**, um den Zielordner im Windows-Explorer mit markierter Datei zu öffnen.
+
 ### Symbol (Icon) ändern
 1. Klicken Sie mit der rechten Maustaste auf die Verknüpfung und wählen Sie **„Symbol ändern...“**.
 2. Wählen Sie ein beliebiges `.png`-Bild oder eine `.ico`-Symboldatei aus. Die Leiste aktualisiert die Anzeige des Symbols sofort.

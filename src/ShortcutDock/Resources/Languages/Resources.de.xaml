@@ -31,6 +31,7 @@
 
     <!-- Context Menus & Tray -->
     <sys:String x:Key="MenuRunAsAdmin">Als Administrator ausführen</sys:String>
+    <sys:String x:Key="MenuOpenFileLocation">Dateipfad öffnen</sys:String>
     <sys:String x:Key="MenuEmptyRecycleBin">Papierkorb leeren</sys:String>
     <sys:String x:Key="MenuChangeIcon">Symbol ändern...</sys:String>
     <sys:String x:Key="MenuRemoveFromPanel">Vom Panel entfernen</sys:String>

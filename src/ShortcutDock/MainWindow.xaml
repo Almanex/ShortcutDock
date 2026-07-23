@@ -139,6 +139,18 @@
                                                 </Style>
                                             </MenuItem.Style>
                                         </MenuItem>
+                                        <MenuItem Header="{DynamicResource MenuOpenFileLocation}"
+                                                  Command="{Binding OpenFileLocationCommand}">
+                                            <MenuItem.Style>
+                                                <Style TargetType="MenuItem">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsRecycleBin}" Value="True">
+                                                            <Setter Property="Visibility" Value="Collapsed" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </MenuItem.Style>
+                                        </MenuItem>
                                         <MenuItem Header="{DynamicResource MenuEmptyRecycleBin}"
                                                   Command="{Binding EmptyRecycleBinCommand}">
                                             <MenuItem.Style>

@@ -63,6 +63,9 @@ You can add new programs, folders, or drives to the panel in three ways:
 ### Run as Administrator
 * Right-click (RMB) the desired application on the panel and select **"Run as Administrator"**.
 
+### Open File Location
+* Right-click the shortcut on the panel and select **"Open File Location"** to open the target folder in Windows Explorer with the file selected.
+
 ### Changing the Icon
 1. Right-click the shortcut and select **"Change Icon..."**.
 2. Select any `.png` image or `.ico` icon file. The panel will instantly update the icon.

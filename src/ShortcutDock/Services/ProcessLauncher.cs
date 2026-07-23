@@ -58,4 +58,26 @@ public sealed class ProcessLauncher
             System.Diagnostics.Debug.WriteLine($"[ShortcutDock] Не удалось запустить {targetPath}: {ex.Message}");
         }
     }
+
+    public void OpenLocation(string targetPath)
+    {
+        if (string.IsNullOrWhiteSpace(targetPath)) return;
+
+        var expandedPath = SettingsService.GetExpandedPath(targetPath);
+        try
+        {
+            if (File.Exists(expandedPath))
+            {
+                Process.Start("explorer.exe", $"/select,\"{expandedPath}\"");
+            }
+            else if (Directory.Exists(expandedPath))
+            {
+                Process.Start("explorer.exe", $"\"{expandedPath}\"");
+            }
+        }
+        catch (Exception ex)
+        {
+            System.Diagnostics.Debug.WriteLine($"[ShortcutDock] Не удалось открыть расположение '{targetPath}': {ex.Message}");
+        }
+    }
 }

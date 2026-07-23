@@ -110,6 +110,13 @@ public partial class ShortcutViewModel : ObservableObject
     private void RunAsAdmin() => _launcher.Start(Model.TargetPath, runAsAdmin: true);
 
     [RelayCommand]
+    private void OpenFileLocation()
+    {
+        if (IsRecycleBin) return;
+        _launcher.OpenLocation(Model.TargetPath);
+    }
+
+    [RelayCommand]
     private void Remove() => _onRemove(this);
 
     [RelayCommand]

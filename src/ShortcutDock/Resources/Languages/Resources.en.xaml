@@ -31,6 +31,7 @@
 
     <!-- Context Menus & Tray -->
     <sys:String x:Key="MenuRunAsAdmin">Run as administrator</sys:String>
+    <sys:String x:Key="MenuOpenFileLocation">Open file location</sys:String>
     <sys:String x:Key="MenuEmptyRecycleBin">Empty Recycle Bin</sys:String>
     <sys:String x:Key="MenuChangeIcon">Change Icon...</sys:String>
     <sys:String x:Key="MenuRemoveFromPanel">Remove from Dock</sys:String>
