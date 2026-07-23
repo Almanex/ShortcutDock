@@ -298,7 +298,23 @@ public sealed class AppBarService
             widthPx = (int)Math.Ceiling(dipWidth * scaleX);
             heightPx = (int)Math.Ceiling(dipHeight * scaleY);
 
-            topPx = _reservedTop + (_reservedBottom - _reservedTop - heightPx) / 2;
+            var mon = Win32.MonitorFromWindow(_hwnd, Win32.MONITOR_DEFAULTTONEAREST);
+            var mi = new MONITORINFO { cbSize = Marshal.SizeOf<MONITORINFO>() };
+            GetMonitorInfo(mon, ref mi);
+
+            int workTop = mi.rcWork.Top;
+            int workBottom = mi.rcWork.Bottom;
+
+            topPx = workTop + (workBottom - workTop - heightPx) / 2;
+
+            if (topPx + heightPx > workBottom)
+            {
+                topPx = workBottom - heightPx;
+            }
+            if (topPx < workTop)
+            {
+                topPx = workTop;
+            }
 
             if (_edge == 2) // ABE_RIGHT: прижимаем к правой границе экрана
             {
