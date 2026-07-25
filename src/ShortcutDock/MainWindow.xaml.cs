@@ -85,8 +85,7 @@ public partial class MainWindow : Window
             e.PropertyName == nameof(MainViewModel.KeepOnTop) ||
             e.PropertyName == nameof(MainViewModel.BackdropType) ||
             e.PropertyName == nameof(MainViewModel.AutoHide) ||
-            e.PropertyName == nameof(MainViewModel.HoverZoom) ||
-            e.PropertyName == nameof(MainViewModel.ShowRunningIndicators))
+            e.PropertyName == nameof(MainViewModel.HoverZoom))
         {
             Dispatcher.BeginInvoke(new Action(ApplySettings));
         }

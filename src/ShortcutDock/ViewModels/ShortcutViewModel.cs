@@ -32,9 +32,6 @@ public partial class ShortcutViewModel : ObservableObject
     [ObservableProperty]
     private string _iconPath;
 
-    [ObservableProperty]
-    private bool _isRunning = false;
-
     public ShortcutViewModel(ShortcutItem model, ProcessLauncher launcher, Action<ShortcutViewModel> onRemove, Action onChanged)
     {
         Model = model;
@@ -49,61 +46,7 @@ public partial class ShortcutViewModel : ObservableObject
     [RelayCommand]
     private void Launch()
     {
-        if (IsRunning && !IsRecycleBin)
-        {
-            ActivateExistingWindow();
-            return;
-        }
-
         _launcher.Start(Model.TargetPath, runAsAdmin: false);
-
-        // Сразу обновляем статус, чтобы индикатор появился быстрее
-        if (App.Current.MainWindow?.DataContext is MainViewModel mainVM)
-        {
-            mainVM.UpdateRunningAppsStatus();
-        }
-    }
-
-    private void ActivateExistingWindow()
-    {
-        try
-        {
-            var expandedPath = SettingsService.GetExpandedPath(Model.TargetPath);
-            var exeName = Path.GetFileNameWithoutExtension(expandedPath);
-            if (string.IsNullOrEmpty(exeName)) return;
-
-            var processes = System.Diagnostics.Process.GetProcessesByName(exeName);
-            foreach (var p in processes)
-            {
-                try
-                {
-                    if (p.HasExited) continue;
-                    var path = p.MainModule?.FileName;
-                    if (string.Equals(path, expandedPath, StringComparison.OrdinalIgnoreCase))
-                    {
-                        var hwnd = p.MainWindowHandle;
-                        if (hwnd != IntPtr.Zero)
-                        {
-                            if (Native.Win32.IsIconic(hwnd))
-                            {
-                                Native.Win32.ShowWindow(hwnd, Native.Win32.SW_RESTORE);
-                            }
-                            Native.Win32.SetForegroundWindow(hwnd);
-                            return;
-                        }
-                    }
-                }
-                catch
-                {
-                    // Игнорируем процессы без доступа
-                }
-                finally
-                {
-                    p.Dispose();
-                }
-            }
-        }
-        catch { }
     }
 
     [RelayCommand]

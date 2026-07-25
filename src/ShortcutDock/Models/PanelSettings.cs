@@ -34,9 +34,6 @@ public sealed class PanelSettings
     [JsonPropertyName("HoverZoom")]
     public bool HoverZoom { get; set; } = true;
 
-    [JsonPropertyName("ShowRunningIndicators")]
-    public bool ShowRunningIndicators { get; set; } = true;
-
     [JsonPropertyName("FolderFanOpacity")]
     public double FolderFanOpacity { get; set; } = 0.15;
 

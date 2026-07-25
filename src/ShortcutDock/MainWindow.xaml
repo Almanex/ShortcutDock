@@ -233,7 +233,7 @@
                                     <Grid>
                                         <Image x:Name="IconImage"
                                                Source="{Binding IconPath}"
-                                               Margin="4,4,4,8"
+                                               Margin="4"
                                                Stretch="Uniform"
                                                RenderOptions.BitmapScalingMode="HighQuality"
                                                HorizontalAlignment="Center" VerticalAlignment="Center"
@@ -242,28 +242,6 @@
                                                 <TranslateTransform X="0" Y="0" />
                                             </Image.RenderTransform>
                                         </Image>
-
-                                        <!-- Точка-индикатор запущенной программы -->
-                                        <Ellipse Width="5" Height="5"
-                                                 Fill="{DynamicResource SystemAccentColorBrush}"
-                                                 HorizontalAlignment="Center"
-                                                 VerticalAlignment="Bottom"
-                                                 Margin="0,0,0,2">
-                                            <Ellipse.Style>
-                                                <Style TargetType="Ellipse">
-                                                    <Setter Property="Visibility" Value="Collapsed" />
-                                                    <Style.Triggers>
-                                                        <MultiDataTrigger>
-                                                            <MultiDataTrigger.Conditions>
-                                                                <Condition Binding="{Binding IsRunning}" Value="True" />
-                                                                <Condition Binding="{Binding IsRecycleBin}" Value="False" />
-                                                            </MultiDataTrigger.Conditions>
-                                                            <Setter Property="Visibility" Value="Visible" />
-                                                        </MultiDataTrigger>
-                                                    </Style.Triggers>
-                                                </Style>
-                                            </Ellipse.Style>
-                                        </Ellipse>
                                     </Grid>
                                 </Border>
                             </Border>

@@ -24,7 +24,6 @@
     <sys:String x:Key="SettingShowRecycleBin">Отображать Корзину на панели</sys:String>
     <sys:String x:Key="SettingAutoHide">Автоматически скрывать панель (Auto-Hide)</sys:String>
     <sys:String x:Key="SettingHoverZoom">Эффект увеличения при наведении (Hover Zoom)</sys:String>
-    <sys:String x:Key="SettingShowRunningIndicators">Индикаторы запущенных программ</sys:String>
     <sys:String x:Key="SettingFolderFanOpacity">Прозрачность фона веера папок</sys:String>
     <sys:String x:Key="BtnClose">Закрыть</sys:String>
     <sys:String x:Key="OpenInExplorerText">Открыть в Проводнике</sys:String>

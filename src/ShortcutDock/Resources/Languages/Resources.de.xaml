@@ -24,7 +24,6 @@
     <sys:String x:Key="SettingShowRecycleBin">Papierkorb im Dock anzeigen</sys:String>
     <sys:String x:Key="SettingAutoHide">Panel automatisch ausblenden (Auto-Hide)</sys:String>
     <sys:String x:Key="SettingHoverZoom">Vergrößerungseffekt beim Zeigen (Hover Zoom)</sys:String>
-    <sys:String x:Key="SettingShowRunningIndicators">Indikatoren für laufende Programme</sys:String>
     <sys:String x:Key="SettingFolderFanOpacity">Ordner-Fächer Transparenz</sys:String>
     <sys:String x:Key="BtnClose">Schließen</sys:String>
     <sys:String x:Key="OpenInExplorerText">Im Explorer öffnen</sys:String>

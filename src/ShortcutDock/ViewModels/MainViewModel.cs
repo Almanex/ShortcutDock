@@ -52,9 +52,6 @@ public partial class MainViewModel : ObservableObject
     private bool _hoverZoom = true;
 
     [ObservableProperty]
-    private bool _showRunningIndicators = true;
-
-    [ObservableProperty]
     private double _folderFanOpacity = 0.15;
 
     public string FolderFanOpacityPercentString => $"{(int)Math.Round(FolderFanOpacity * 100)}%";
@@ -100,7 +97,6 @@ public partial class MainViewModel : ObservableObject
         StartWithWindows = AutoStartService.IsAutoStartEnabled();
         AutoHide = Panel.AutoHide;
         HoverZoom = Panel.HoverZoom;
-        ShowRunningIndicators = Panel.ShowRunningIndicators;
         FolderFanOpacity = Panel.FolderFanOpacity >= 0 ? Panel.FolderFanOpacity : 0.15;
         Language = Panel.Language ?? "en";
         UpdatePanelOrientation();
@@ -134,7 +130,6 @@ public partial class MainViewModel : ObservableObject
         ShowRecycleBin = Panel.ShowRecycleBin;
         UpdateRecycleBinItem();
         StartRecycleBinTimer();
-        StartProcessTracker();
     }
 
     partial void OnPositionChanged(string value)
@@ -280,12 +275,6 @@ public partial class MainViewModel : ObservableObject
         Persist();
     }
 
-    partial void OnShowRunningIndicatorsChanged(bool value)
-    {
-        Panel.ShowRunningIndicators = value;
-        Persist();
-    }
-
     partial void OnFolderFanOpacityChanged(double value)
     {
         Panel.FolderFanOpacity = value;
@@ -334,7 +323,6 @@ public partial class MainViewModel : ObservableObject
 
             Shortcuts.Add(new ShortcutViewModel(item, _launcher, Remove, Persist));
             Persist();
-            UpdateRunningAppsStatus();
         }
         catch (Exception ex)
         {
@@ -451,112 +439,6 @@ public partial class MainViewModel : ObservableObject
                 Shortcuts.Remove(existing);
             }
         }
-    }
-
-    private System.Windows.Threading.DispatcherTimer? _processTrackerTimer;
-    private bool _isUpdatingProcessStatus;
-
-    private void StartProcessTracker()
-    {
-        _processTrackerTimer = new System.Windows.Threading.DispatcherTimer
-        {
-            Interval = TimeSpan.FromSeconds(2.0)
-        };
-        _processTrackerTimer.Tick += (s, e) => UpdateRunningAppsStatus();
-        _processTrackerTimer.Start();
-    }
-
-    public void UpdateRunningAppsStatus()
-    {
-        if (!ShowRunningIndicators)
-        {
-            foreach (var s in Shortcuts)
-            {
-                if (s.IsRunning) s.IsRunning = false;
-            }
-            return;
-        }
-
-        if (_isUpdatingProcessStatus) return;
-        _isUpdatingProcessStatus = true;
-
-        var shortcutTargets = Shortcuts
-            .Where(s => !s.IsRecycleBin && !string.IsNullOrWhiteSpace(s.Model.TargetPath))
-            .Select(s =>
-            {
-                var expanded = SettingsService.GetExpandedPath(s.Model.TargetPath);
-                var exeName = Path.GetFileNameWithoutExtension(expanded);
-                return (VM: s, ExpandedPath: expanded, ExeName: exeName);
-            })
-            .ToList();
-
-        if (shortcutTargets.Count == 0)
-        {
-            _isUpdatingProcessStatus = false;
-            return;
-        }
-
-        Task.Run(() =>
-        {
-            try
-            {
-                var targetExeNames = new HashSet<string>(
-                    shortcutTargets.Select(x => x.ExeName),
-                    StringComparer.OrdinalIgnoreCase
-                );
-
-                var runningPaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-                var processes = System.Diagnostics.Process.GetProcesses();
-
-                foreach (var p in processes)
-                {
-                    try
-                    {
-                        if (p.HasExited) continue;
-
-                        if (targetExeNames.Contains(p.ProcessName))
-                        {
-                            var path = p.MainModule?.FileName;
-                            if (!string.IsNullOrEmpty(path))
-                            {
-                                runningPaths.Add(path);
-                            }
-                        }
-                    }
-                    catch
-                    {
-                        // Ignore system processes
-                    }
-                    finally
-                    {
-                        p.Dispose();
-                    }
-                }
-
-                System.Windows.Application.Current?.Dispatcher.BeginInvoke(new Action(() =>
-                {
-                    try
-                    {
-                        foreach (var target in shortcutTargets)
-                        {
-                            bool isRunningNow = runningPaths.Contains(target.ExpandedPath);
-                            if (target.VM.IsRunning != isRunningNow)
-                            {
-                                target.VM.IsRunning = isRunningNow;
-                            }
-                        }
-                    }
-                    finally
-                    {
-                        _isUpdatingProcessStatus = false;
-                    }
-                }));
-            }
-            catch
-            {
-                _isUpdatingProcessStatus = false;
-            }
-        });
     }
 
     // --- Веер Папок (Folder Stack / Fan) ---

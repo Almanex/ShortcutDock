@@ -123,14 +123,6 @@
                     <ui:ToggleSwitch IsChecked="{Binding HoverZoom, Mode=TwoWay}" />
                 </ui:CardControl>
 
-                <!-- Show Running Indicators -->
-                <ui:CardControl Header="{DynamicResource SettingShowRunningIndicators}" Margin="0,0,0,8">
-                    <ui:CardControl.Icon>
-                        <ui:SymbolIcon Symbol="Status24" />
-                    </ui:CardControl.Icon>
-                    <ui:ToggleSwitch IsChecked="{Binding ShowRunningIndicators, Mode=TwoWay}" />
-                </ui:CardControl>
-
                 <!-- Folder Fan Opacity -->
                 <ui:CardControl Header="{DynamicResource SettingFolderFanOpacity}" Margin="0,0,0,16">
                     <ui:CardControl.Icon>

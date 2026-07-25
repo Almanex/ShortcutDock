@@ -24,7 +24,6 @@
     <sys:String x:Key="SettingShowRecycleBin">Show Recycle Bin on dock</sys:String>
     <sys:String x:Key="SettingAutoHide">Automatically hide panel (Auto-Hide)</sys:String>
     <sys:String x:Key="SettingHoverZoom">Icon zoom on hover (Hover Zoom)</sys:String>
-    <sys:String x:Key="SettingShowRunningIndicators">Indicators for running applications</sys:String>
     <sys:String x:Key="SettingFolderFanOpacity">Folder fan background transparency</sys:String>
     <sys:String x:Key="BtnClose">Close</sys:String>
     <sys:String x:Key="OpenInExplorerText">Open in Explorer</sys:String>
