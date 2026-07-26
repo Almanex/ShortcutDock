@@ -878,6 +878,12 @@ public partial class MainWindow : Window
 
         _autoHideTimer?.Stop();
 
+        if (FolderFanPopup.IsOpen)
+        {
+            ResetIconScales();
+            return;
+        }
+
         if (!_viewModel.HoverZoom)
         {
             ResetIconScales();
