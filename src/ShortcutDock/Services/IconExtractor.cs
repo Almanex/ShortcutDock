@@ -11,7 +11,7 @@ namespace ShortcutDock.Services;
 /// с fallback на 48x48 и 32x32), сохраняет как PNG в папке кэша.
 /// Используются прямые Win32 P/Invoke (SHGetFileInfo + SHGetImageList + IImageList).
 /// </summary>
-public sealed class IconExtractor
+public class IconExtractor
 {
     public IconExtractor()
     {
@@ -59,7 +59,7 @@ public sealed class IconExtractor
 
     /// <summary>Извлекает иконку из exe/dll/папки и сохраняет PNG. Возвращает путь к PNG.</summary>
     /// <summary>Извлекает иконку из exe/dll/папки и сохраняет PNG. Возвращает путь к PNG.</summary>
-    public string ExtractToPng(string targetPath)
+    public virtual string ExtractToPng(string targetPath)
     {
         bool isSpecial = targetPath.StartsWith("shell:", StringComparison.OrdinalIgnoreCase) ||
                          targetPath.Contains(":::{") ||

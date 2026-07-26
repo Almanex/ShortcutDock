@@ -10,14 +10,14 @@ namespace ShortcutDock.Services;
 /// для .lnk программно извлекает целевой .exe через COM (IShellLinkW + IPersistFile),
 /// без зависимости от Windows Script Host. Для .exe используется путь напрямую.
 /// </summary>
-public sealed class ShortcutResolver
+public class ShortcutResolver
 {
     // CLSID_ShellLink — стандартный COM-объект для ярлыков Windows.
     private static readonly Guid CLSID_ShellLink = new("00021401-0000-0000-C000-000000000046");
     private const int MAX_PATH = 260;
 
     /// <summary>Создаёт ShortcutItem из перетаскиваемого/выбранного пути.</summary>
-    public ShortcutItem Resolve(string sourcePath)
+    public virtual ShortcutItem Resolve(string sourcePath)
     {
         if (string.IsNullOrWhiteSpace(sourcePath))
         {

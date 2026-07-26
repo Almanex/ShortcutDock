@@ -8,9 +8,9 @@ namespace ShortcutDock.Services;
 /// Запуск целевого приложения. UseShellExecute=true, как требует ТЗ.
 /// Параметр runAsAdmin=true добавляет Verb="runas" (запрос UAC).
 /// </summary>
-public sealed class ProcessLauncher
+public class ProcessLauncher
 {
-    public void Start(string targetPath, bool runAsAdmin = false)
+    public virtual void Start(string targetPath, bool runAsAdmin = false)
     {
         if (string.IsNullOrWhiteSpace(targetPath))
             return;
@@ -60,7 +60,7 @@ public sealed class ProcessLauncher
         }
     }
 
-    public void OpenLocation(string targetPath)
+    public virtual void OpenLocation(string targetPath)
     {
         if (string.IsNullOrWhiteSpace(targetPath)) return;
 

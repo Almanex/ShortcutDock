@@ -22,3 +22,9 @@ Desktop.ini
 
 # AI Context
 AI_CONTEXT.md
+
+# Release assets
+ShortcutDock-v2.2.0-win-x64.zip
+ShortcutDock.exe
+*.zip
+*.exe
