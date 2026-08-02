@@ -52,7 +52,7 @@ public partial class MainViewModel : ObservableObject
     private bool _hoverZoom = true;
 
     [ObservableProperty]
-    private double _folderFanOpacity = 0.15;
+    private double _folderFanOpacity = 0.85;
 
     public string FolderFanOpacityPercentString => $"{(int)Math.Round(FolderFanOpacity * 100)}%";
 
@@ -97,7 +97,7 @@ public partial class MainViewModel : ObservableObject
         StartWithWindows = AutoStartService.IsAutoStartEnabled();
         AutoHide = Panel.AutoHide;
         HoverZoom = Panel.HoverZoom;
-        FolderFanOpacity = Panel.FolderFanOpacity >= 0 ? Panel.FolderFanOpacity : 0.15;
+        FolderFanOpacity = Panel.FolderFanOpacity >= 0 ? Panel.FolderFanOpacity : 0.85;
         Language = Panel.Language ?? "en";
         UpdatePanelOrientation();
 
@@ -448,6 +448,8 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty] private ObservableCollection<FolderItemViewModel> _folderFanItems = new();
     [ObservableProperty] private System.Windows.UIElement? _folderFanPlacementTarget;
     [ObservableProperty] private System.Windows.Controls.Primitives.PlacementMode _folderFanPlacement = System.Windows.Controls.Primitives.PlacementMode.Top;
+    [ObservableProperty] private double _folderFanVerticalOffset = -12.0;
+    [ObservableProperty] private double _folderFanHorizontalOffset = 0.0;
 
     public void OpenFolderFan(ShortcutViewModel shortcutVM, System.Windows.UIElement placementTarget)
     {
@@ -458,13 +460,13 @@ public partial class MainViewModel : ObservableObject
         FolderFanPath = expandedPath;
         FolderFanPlacementTarget = placementTarget;
 
-        FolderFanPlacement = Position switch
+        (FolderFanPlacement, FolderFanVerticalOffset, FolderFanHorizontalOffset) = Position switch
         {
-            "Bottom" => System.Windows.Controls.Primitives.PlacementMode.Top,
-            "Top" => System.Windows.Controls.Primitives.PlacementMode.Bottom,
-            "Left" => System.Windows.Controls.Primitives.PlacementMode.Right,
-            "Right" => System.Windows.Controls.Primitives.PlacementMode.Left,
-            _ => System.Windows.Controls.Primitives.PlacementMode.Top
+            "Bottom" => (System.Windows.Controls.Primitives.PlacementMode.Top, -12.0, 0.0),
+            "Top" => (System.Windows.Controls.Primitives.PlacementMode.Bottom, 12.0, 0.0),
+            "Left" => (System.Windows.Controls.Primitives.PlacementMode.Right, 0.0, 12.0),
+            "Right" => (System.Windows.Controls.Primitives.PlacementMode.Left, 0.0, -12.0),
+            _ => (System.Windows.Controls.Primitives.PlacementMode.Top, -12.0, 0.0)
         };
 
         FolderFanItems.Clear();
@@ -539,7 +541,7 @@ public partial class MainViewModel : ObservableObject
         get
         {
             bool isDark = Wpf.Ui.Appearance.ApplicationThemeManager.GetAppTheme() == Wpf.Ui.Appearance.ApplicationTheme.Dark;
-            byte alpha = (byte)Math.Clamp((int)((1.0 - FolderFanOpacity) * 255), 0, 255);
+            byte alpha = (byte)Math.Clamp((int)(FolderFanOpacity * 255), 0, 255);
 
             System.Windows.Media.Color baseColor;
             if (isDark)
@@ -548,12 +550,12 @@ public partial class MainViewModel : ObservableObject
                 {
                     "Acrylic" => System.Windows.Media.Color.FromArgb(alpha, 32, 32, 36),
                     "Mica" => System.Windows.Media.Color.FromArgb(alpha, 24, 24, 28),
-                    _ => System.Windows.Media.Color.FromArgb(alpha, 18, 18, 18)
+                    _ => System.Windows.Media.Color.FromArgb(alpha, 24, 24, 28)
                 };
             }
             else
             {
-                baseColor = System.Windows.Media.Color.FromArgb(alpha, 245, 245, 250);
+                baseColor = System.Windows.Media.Color.FromArgb(alpha, 248, 248, 250);
             }
 
             return new System.Windows.Media.SolidColorBrush(baseColor);

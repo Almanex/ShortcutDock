@@ -47,17 +47,58 @@ public sealed class SettingsService
         {
             Directory.CreateDirectory(AppDataFolder);
             if (!File.Exists(SettingsPath))
-                return new Settings();
+                return CreateDefaultSettings();
 
             var json = File.ReadAllText(SettingsPath);
             var settings = JsonSerializer.Deserialize<Settings>(json, JsonOptions);
-            return settings ?? new Settings();
+            return settings ?? CreateDefaultSettings();
         }
         catch
         {
             // Повреждённый конфиг не должен крашить приложение — стартуем с дефолтами.
-            return new Settings();
+            return CreateDefaultSettings();
         }
+    }
+
+    public Settings CreateDefaultSettings()
+    {
+        var settings = new Settings();
+
+        string winDir = Environment.GetFolderPath(Environment.SpecialFolder.Windows);
+        string sysDir = Environment.GetFolderPath(Environment.SpecialFolder.System);
+
+        var explorerPath = Path.Combine(winDir, "explorer.exe");
+        var notepadPath = Path.Combine(sysDir, "notepad.exe");
+        var calcPath = Path.Combine(sysDir, "calc.exe");
+
+        if (File.Exists(explorerPath))
+        {
+            settings.Shortcuts.Add(new ShortcutItem
+            {
+                Name = "Explorer",
+                TargetPath = explorerPath
+            });
+        }
+
+        if (File.Exists(notepadPath))
+        {
+            settings.Shortcuts.Add(new ShortcutItem
+            {
+                Name = "Notepad",
+                TargetPath = notepadPath
+            });
+        }
+
+        if (File.Exists(calcPath))
+        {
+            settings.Shortcuts.Add(new ShortcutItem
+            {
+                Name = "Calculator",
+                TargetPath = calcPath
+            });
+        }
+
+        return settings;
     }
 
     public void Save(Settings settings)

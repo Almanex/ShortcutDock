@@ -31,8 +31,8 @@ public partial class MainWindow : Window
 
         InitializeComponent();
 
-        // Отслеживаем системную тему и автоматически обновляем тему приложения
-        Wpf.Ui.Appearance.SystemThemeWatcher.Watch(this);
+        // Синхронизируем начальную тему приложения с системной темой ОС
+        Wpf.Ui.Appearance.ApplicationThemeManager.ApplySystemTheme();
         Wpf.Ui.Appearance.ApplicationThemeManager.Changed += OnThemeChanged;
 
         Loaded += OnLoaded;
@@ -48,6 +48,28 @@ public partial class MainWindow : Window
     {
         base.OnSourceInitialized(e);
         ApplyWindowChromeAndEffects();
+
+        var helper = new WindowInteropHelper(this);
+        var source = HwndSource.FromHwnd(helper.Handle);
+        source?.AddHook(WndProc);
+    }
+
+    private const int WM_SETTINGCHANGE = 0x001A;
+    private const int WM_THEMECHANGED = 0x031E;
+
+    private IntPtr WndProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+    {
+        if (msg == WM_SETTINGCHANGE || msg == WM_THEMECHANGED)
+        {
+            Dispatcher.BeginInvoke(new Action(() =>
+            {
+                Wpf.Ui.Appearance.ApplicationThemeManager.ApplySystemTheme();
+                Background = null;
+                ApplyBackdrop(_viewModel.BackdropType);
+                _viewModel.RefreshFolderFanBackground();
+            }), System.Windows.Threading.DispatcherPriority.Background);
+        }
+        return IntPtr.Zero;
     }
 
     private void OnLoaded(object sender, RoutedEventArgs e)
@@ -178,6 +200,9 @@ public partial class MainWindow : Window
 
     private void ApplyBackdrop(string type)
     {
+        // Принудительно очищаем фоновую заливку окна, чтобы WPF.UI при смене темы не перекрывал окно сплошным цветом
+        Background = null;
+
         var helper = new WindowInteropHelper(this);
         var hwnd = helper.Handle;
         if (hwnd == IntPtr.Zero) return;
@@ -289,9 +314,12 @@ public partial class MainWindow : Window
 
     private void OnThemeChanged(Wpf.Ui.Appearance.ApplicationTheme currentTheme, System.Windows.Media.Color systemAccent)
     {
-        // Переприменяем размытие с новыми параметрами темной/светлой темы
-        ApplyBackdrop(_viewModel.BackdropType);
-        _viewModel.RefreshFolderFanBackground();
+        Dispatcher.BeginInvoke(new Action(() =>
+        {
+            Background = null;
+            ApplyBackdrop(_viewModel.BackdropType);
+            _viewModel.RefreshFolderFanBackground();
+        }), System.Windows.Threading.DispatcherPriority.Background);
     }
 
     private void OnCloseClick(object sender, RoutedEventArgs e) => Close();
