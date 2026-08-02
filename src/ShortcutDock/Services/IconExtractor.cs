@@ -199,7 +199,7 @@ public class IconExtractor
             if (hr != 0 || pShellItem == IntPtr.Zero) return false;
 
             var iidFactory = IID_IShellItemImageFactory;
-            hr = Marshal.QueryInterface(pShellItem, ref iidFactory, out pFactory);
+            hr = Marshal.QueryInterface(pShellItem, in iidFactory, out pFactory);
             if (hr != 0 || pFactory == IntPtr.Zero) return false;
 
             var factory = (IShellItemImageFactory)Marshal.GetObjectForIUnknown(pFactory);
@@ -444,6 +444,24 @@ public class IconExtractor
         return cropped;
     }
 
+    private static Icon? IconFromHandleAndDestroy(IntPtr hIcon)
+    {
+        if (hIcon == IntPtr.Zero) return null;
+        try
+        {
+            using var temp = Icon.FromHandle(hIcon);
+            return (Icon)temp.Clone();
+        }
+        catch
+        {
+            return null;
+        }
+        finally
+        {
+            DestroyIcon(hIcon);
+        }
+    }
+
     private static Icon? GetHighResolutionIcon(string targetPath)
     {
         // Получаем индекс иконки файла в системном image list.
@@ -456,8 +474,8 @@ public class IconExtractor
         {
             if (TryGetIconFromImageList(listId, shfi.iIcon, out var hIcon) && hIcon != IntPtr.Zero)
             {
-                try { return Icon.FromHandle(hIcon); }
-                catch { DestroyIcon(hIcon); }
+                var icon = IconFromHandleAndDestroy(hIcon);
+                if (icon != null) return icon;
             }
         }
 
@@ -467,8 +485,8 @@ public class IconExtractor
             (uint)Marshal.SizeOf<SHFILEINFO>(), SHGFI_ICON | SHGFI_LARGEICON);
         if (shfi2.hIcon != IntPtr.Zero)
         {
-            try { return Icon.FromHandle(shfi2.hIcon); }
-            catch { DestroyIcon(shfi2.hIcon); }
+            var icon = IconFromHandleAndDestroy(shfi2.hIcon);
+            if (icon != null) return icon;
         }
         return null;
     }
@@ -531,8 +549,8 @@ public class IconExtractor
                 {
                     if (TryGetIconFromImageList(listId, shfi.iIcon, out var hIcon) && hIcon != IntPtr.Zero)
                     {
-                        try { return Icon.FromHandle(hIcon); }
-                        catch { DestroyIcon(hIcon); }
+                        var icon = IconFromHandleAndDestroy(hIcon);
+                        if (icon != null) return icon;
                     }
                 }
 
@@ -541,8 +559,8 @@ public class IconExtractor
                 SHGetFileInfo(pidl, 0, ref shfi2, (uint)Marshal.SizeOf<SHFILEINFO>(), 0x8 | 0x100 | 0x0);
                 if (shfi2.hIcon != IntPtr.Zero)
                 {
-                    try { return Icon.FromHandle(shfi2.hIcon); }
-                    catch { DestroyIcon(shfi2.hIcon); }
+                    var icon = IconFromHandleAndDestroy(shfi2.hIcon);
+                    if (icon != null) return icon;
                 }
             }
             finally

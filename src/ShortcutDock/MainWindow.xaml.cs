@@ -566,13 +566,6 @@ public partial class MainWindow : Window
         }
     }
 
-    private static bool IsFileDrop(System.Windows.IDataObject data) =>
-        data.GetDataPresent(System.Windows.DataFormats.FileDrop) ||
-        data.GetDataPresent("FileNameW") ||
-        data.GetDataPresent("FileName") ||
-        data.GetDataPresent("Shell IDList Array") ||
-        (data.GetDataPresent("FileGroupDescriptorW") && data.GetDataPresent("FileContents"));
-
     public static List<string> GetDroppedFilePaths(System.Windows.IDataObject data)
     {
         var rawResult = GetRawDroppedFilePaths(data);
@@ -920,7 +913,7 @@ public partial class MainWindow : Window
 
         var mousePos = e.GetPosition(this);
         var isVertical = _viewModel.PanelOrientation == System.Windows.Controls.Orientation.Vertical;
-        var containers = FindVisualChildren<Border>(this).Where(b => b.Name == "IconContainer").ToList();
+        var containers = GetIconContainers();
 
         foreach (var container in containers)
         {
@@ -952,6 +945,17 @@ public partial class MainWindow : Window
         }
     }
 
+    private List<Border> _cachedIconContainers = new();
+
+    private List<Border> GetIconContainers()
+    {
+        if (_cachedIconContainers.Count != _viewModel.Shortcuts.Count)
+        {
+            _cachedIconContainers = FindVisualChildren<Border>(this).Where(b => b.Name == "IconContainer").ToList();
+        }
+        return _cachedIconContainers;
+    }
+
     private void Window_MouseLeave(object sender, System.Windows.Input.MouseEventArgs e)
     {
         ResetIconScales();
@@ -964,7 +968,7 @@ public partial class MainWindow : Window
 
     private void ResetIconScales()
     {
-        var containers = FindVisualChildren<Border>(this).Where(b => b.Name == "IconContainer").ToList();
+        var containers = GetIconContainers();
         foreach (var container in containers)
         {
             var transformGroup = container.RenderTransform as TransformGroup;

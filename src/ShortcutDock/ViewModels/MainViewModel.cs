@@ -393,7 +393,10 @@ public partial class MainViewModel : ObservableObject
             Interval = TimeSpan.FromSeconds(2)
         };
         _recycleBinTimer.Tick += (s, e) => CheckRecycleBinState();
-        _recycleBinTimer.Start();
+        if (ShowRecycleBin)
+        {
+            _recycleBinTimer.Start();
+        }
     }
 
     public void CheckRecycleBinState()
@@ -431,6 +434,11 @@ public partial class MainViewModel : ObservableObject
             {
                 existing.Name = binName;
             }
+
+            if (_recycleBinTimer != null && !_recycleBinTimer.IsEnabled)
+            {
+                _recycleBinTimer.Start();
+            }
         }
         else
         {
@@ -438,6 +446,7 @@ public partial class MainViewModel : ObservableObject
             {
                 Shortcuts.Remove(existing);
             }
+            _recycleBinTimer?.Stop();
         }
     }
 
